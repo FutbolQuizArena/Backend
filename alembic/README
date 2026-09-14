@@ -1,0 +1,6 @@
+Migraciones genéricas de base de datos con Alembic para FutbolQuiz Arena.
+Para crear una nueva migración:
+    alembic revision --autogenerate -m "descripcion_del_cambio"
+Para aplicar las migraciones:
+    alembic upgrade head
+
