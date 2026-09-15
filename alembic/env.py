@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from app.core.config import CONFIGURACION
 from app.core.database import Base
+import app.models  # noqa: F401
 
 # Configuración de loggers desde el archivo ini
 config = context.config
