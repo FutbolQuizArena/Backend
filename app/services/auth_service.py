@@ -2,7 +2,6 @@
 
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
-import bcrypt
 import jwt
 from sqlalchemy.orm import Session
 
@@ -10,17 +9,6 @@ from app.core.config import CONFIGURACION
 from app.core.exceptions import CredencialesInvalidasError, ExcepcionNoAutorizado
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
-
-
-def verificar_password(password_plano: str, password_hash: str) -> bool:
-    """Verifica si una contraseña en texto plano coincide con el hash almacenado mediante bcrypt."""
-    try:
-        return bcrypt.checkpw(
-            password_plano.encode("utf-8"),
-            password_hash.encode("utf-8"),
-        )
-    except Exception:
-        return False
 
 
 def generar_token_jwt(usuario: Usuario) -> str:
@@ -81,13 +69,13 @@ def autenticar_usuario(db: Session, email: str, password: str) -> Usuario:
 
     Flujo según diagrama de secuencia (pasos 14 a 16):
       1. Busca al usuario por email utilizando usuario_repository.obtener_por_email.
-      2. Si no existe, o si la verificación de la contraseña falla, lanza CredencialesInvalidasError
+      2. Si no existe, o si usuario.autenticar(password) devuelve False, lanza CredencialesInvalidasError
          con respuesta 401 uniforme, protegiendo contra enumeración de usuarios.
       3. Si las credenciales coinciden, retorna la entidad Usuario autenticada.
     """
     usuario = usuario_repository.obtener_por_email(db, email=email)
 
-    if usuario is None or not verificar_password(password, usuario.password_hash):
+    if usuario is None or not usuario.autenticar(password):
         raise CredencialesInvalidasError(
             mensaje="Credenciales inválidas",
             detalle=None,

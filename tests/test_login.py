@@ -166,15 +166,15 @@ def test_login_body_invalido(cliente: TestClient) -> None:
 # ==============================================================================
 
 
-def test_auth_service_verificar_password() -> None:
-    """Prueba unitaria para verificar_password comparando texto plano y hash bcrypt."""
-    password = "claveSuperSecreta"
-    hash_correcto = usuario_service.hashear_password(password)
+def test_usuario_metodo_autenticar(usuario_registrado: Usuario) -> None:
+    """Prueba unitaria del método de instancia Usuario.autenticar() del modelo de dominio.
 
-    assert auth_service.verificar_password(password, hash_correcto) is True
-    assert auth_service.verificar_password("otraClave", hash_correcto) is False
-    assert auth_service.verificar_password("", hash_correcto) is False
-    assert auth_service.verificar_password(password, "hash_invalido") is False
+    Verifica que la contraseña correcta retorne True y que contraseñas incorrectas o vacías retornen False,
+    encapsulando el acceso a password_hash según el diagrama de clases E4.
+    """
+    assert usuario_registrado.autenticar("passwordCampeon10") is True
+    assert usuario_registrado.autenticar("otraClaveIncorrecta") is False
+    assert usuario_registrado.autenticar("") is False
 
 
 def test_auth_service_autenticar_usuario_exitoso(
