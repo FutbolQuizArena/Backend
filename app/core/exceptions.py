@@ -107,6 +107,22 @@ class EmailYaRegistradoError(ExcepcionBase):
         )
 
 
+class CredencialesInvalidasError(ExcepcionBase):
+    """Excepción lanzada cuando las credenciales de acceso proporcionadas no son válidas."""
+
+    def __init__(
+        self,
+        mensaje: str = "Credenciales inválidas",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="CREDENCIALES_INVALIDAS",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
 def _construir_respuesta_error(
     codigo: str,
     mensaje: str,

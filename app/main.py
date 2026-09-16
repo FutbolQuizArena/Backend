@@ -36,6 +36,31 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(salud_router)
     aplicacion.include_router(auth_router)
 
+    # Configuración de OpenAPI para habilitar el botón "Authorize" (Bearer JWT) en Swagger UI
+    from fastapi.openapi.utils import get_openapi
+
+    def openapi_personalizado():
+        if aplicacion.openapi_schema:
+            return aplicacion.openapi_schema
+        schema = get_openapi(
+            title=aplicacion.title,
+            version=aplicacion.version,
+            description=aplicacion.description,
+            routes=aplicacion.routes,
+        )
+        schema.setdefault("components", {})["securitySchemes"] = {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Ingrese el token JWT obtenido en /api/auth/login para autorizar peticiones.",
+            }
+        }
+        aplicacion.openapi_schema = schema
+        return aplicacion.openapi_schema
+
+    aplicacion.openapi = openapi_personalizado
+
     return aplicacion
 
 
