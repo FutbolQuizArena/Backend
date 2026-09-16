@@ -91,6 +91,22 @@ class ExcepcionBaseDatos(ExcepcionBase):
         )
 
 
+class EmailYaRegistradoError(ExcepcionBase):
+    """Excepción lanzada cuando se intenta registrar un usuario con un email que ya existe."""
+
+    def __init__(
+        self,
+        mensaje: str = "El correo electrónico ya se encuentra registrado",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="EMAIL_YA_REGISTRADO",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_409_CONFLICT,
+        )
+
+
 def _construir_respuesta_error(
     codigo: str,
     mensaje: str,

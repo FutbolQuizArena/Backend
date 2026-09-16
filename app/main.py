@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import CONFIGURACION
 from app.core.exceptions import registrar_manejadores_excepcion
+from app.routes.auth_router import auth_router
 from app.routes.salud_router import salud_router
 
 
@@ -33,6 +34,7 @@ def crear_aplicacion() -> FastAPI:
 
     # Inclusión de routers
     aplicacion.include_router(salud_router)
+    aplicacion.include_router(auth_router)
 
     return aplicacion
 
