@@ -113,3 +113,22 @@ def test_esquema_usuario_response_desde_modelo(sesion_db: Session) -> None:
     assert "password_hash" not in dump
     assert "password" not in dump
 
+
+def test_usuario_metodo_autenticar_directo() -> None:
+    """Verifica que el método autenticar() de Usuario valide contraseñas contra su hash."""
+    from app.services.usuario_service import hashear_password
+
+    clave_valida = "claveSeguraJulian9"
+    usuario = Usuario(
+        nombre="Julian Alvarez",
+        email="julian@futbolquiz.com",
+        password_hash=hashear_password(clave_valida),
+    )
+
+    # Contraseña correcta -> True
+    assert usuario.autenticar(clave_valida) is True
+    # Contraseña incorrecta -> False
+    assert usuario.autenticar("claveTotalmenteErronea") is False
+    # Contraseña vacía -> False
+    assert usuario.autenticar("") is False
+

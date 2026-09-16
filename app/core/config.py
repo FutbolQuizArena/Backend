@@ -12,6 +12,7 @@ class Configuracion(BaseSettings):
     # Autenticación y JWT
     JWT_SECRET: str = "super_secreto_futbolquiz_arena_cambiar_en_produccion"
     JWT_EXPIRATION_MIN: int = 60
+    JWT_ALGORITMO: str = "HS256"
 
     # Metadatos de la aplicación
     TITULO_APP: str = "FutbolQuiz Arena API"

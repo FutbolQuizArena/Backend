@@ -1,6 +1,7 @@
 """Modelo de base de datos para la entidad Usuario."""
 
 from datetime import datetime, timezone
+import bcrypt
 from sqlalchemy import Boolean, Column, DateTime, Enum as SQLEnum, Integer, String, func
 from sqlalchemy.sql import expression
 
@@ -39,3 +40,18 @@ class Usuario(Base):
 
     def __repr__(self) -> str:
         return f"<Usuario(id={self.id}, email='{self.email}', rol='{self.rol}')>"
+
+    def autenticar(self, password_ingresado: str) -> bool:
+        """Valida si la contraseña ingresada coincide con el hash del usuario.
+
+        Encapsula el acceso a password_hash según el diagrama de clases E4.
+        """
+        if not self.password_hash or not password_ingresado:
+            return False
+        try:
+            return bcrypt.checkpw(
+                password_ingresado.encode("utf-8"),
+                self.password_hash.encode("utf-8"),
+            )
+        except Exception:
+            return False
