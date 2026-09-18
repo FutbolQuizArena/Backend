@@ -3,7 +3,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import EmailYaRegistradoError
+from app.core.exceptions import CredencialesInvalidasError, EmailYaRegistradoError
 from app.models.enums import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
@@ -58,16 +58,30 @@ def actualizar_perfil_usuario(
     usuario_actual: Usuario,
     nombre: str,
     email: str,
+    password_actual: str | None = None,
+    nueva_password: str | None = None,
 ) -> Usuario:
-    """Actualiza el perfil de un usuario validando que el correo no esté ocupado por otro usuario.
+    """Actualiza el perfil de un usuario validando unicidad de correo y cambio opcional de contraseña.
 
     Flujo:
-      1. Si el nuevo email es distinto al actual, verifica en la base de datos que ningún
-         otro usuario lo esté utilizando (distinto id). Si está ocupado, lanza EmailYaRegistradoError (HTTP 409).
-      2. Invoca usuario_actual.actualizar_perfil(nombre, email) para delegar la mutación en el modelo.
-      3. Persiste las modificaciones mediante usuario_repository.actualizar(db, usuario_actual).
-      4. Retorna la entidad Usuario actualizada.
+      1. Si se proporciona nueva_password:
+         a. Valida que password_actual sea correcta mediante usuario_actual.autenticar().
+         b. Si no coincide o falta, lanza CredencialesInvalidasError (HTTP 401).
+         c. Hashea la nueva contraseña y delega la mutación en usuario_actual.cambiar_password().
+      2. Si el nuevo email es distinto al actual, verifica que no esté en uso por otro usuario (HTTP 409).
+      3. Invoca usuario_actual.actualizar_perfil(nombre, email).
+      4. Persiste los cambios mediante usuario_repository.actualizar(db, usuario_actual).
+      5. Retorna la entidad Usuario actualizada.
     """
+    if nueva_password:
+        if not password_actual or not usuario_actual.autenticar(password_actual):
+            raise CredencialesInvalidasError(
+                mensaje="La contraseña actual es incorrecta",
+                detalle=None,
+            )
+        nuevo_hash = hashear_password(nueva_password)
+        usuario_actual.cambiar_password(nuevo_hash)
+
     if email.lower() != usuario_actual.email.lower():
         usuario_existente = usuario_repository.obtener_por_email(db, email=email)
         if usuario_existente is not None and usuario_existente.id != usuario_actual.id:
@@ -77,5 +91,22 @@ def actualizar_perfil_usuario(
             )
 
     usuario_actual.actualizar_perfil(nombre=nombre, email=email)
+    return usuario_repository.actualizar(db, usuario_actual)
+
+
+def cambiar_password_usuario(
+    db: Session,
+    usuario_actual: Usuario,
+    password_actual: str,
+    nueva_password: str,
+) -> Usuario:
+    """Actualiza la contraseña del usuario validando la clave actual."""
+    if not usuario_actual.autenticar(password_actual):
+        raise CredencialesInvalidasError(
+            mensaje="La contraseña actual es incorrecta",
+            detalle=None,
+        )
+    nuevo_hash = hashear_password(nueva_password)
+    usuario_actual.cambiar_password(nuevo_hash)
     return usuario_repository.actualizar(db, usuario_actual)
 

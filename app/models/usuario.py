@@ -63,3 +63,10 @@ class Usuario(Base):
         """
         self.nombre = nombre
         self.email = email
+
+    def cambiar_password(self, nuevo_password_hash: str) -> None:
+        """Actualiza el hash de la contraseña del usuario.
+
+        Lógica de mutación de dominio según el Diagrama de clases E4.
+        """
+        self.password_hash = nuevo_password_hash

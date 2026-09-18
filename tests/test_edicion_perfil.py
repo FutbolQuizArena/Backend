@@ -235,3 +235,116 @@ def test_edicion_perfil_body_invalido_retorna_422(
     assert resp_sin_email.status_code == 422
     assert resp_sin_email.json()["code"] == "ERROR_VALIDACION"
 
+
+def test_edicion_perfil_con_cambio_password_exitoso(
+    cliente: TestClient,
+    sesion_db: Session,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica cambio de contraseña exitoso desde el formulario general (PATCH /api/usuarios/me)."""
+    token = auth_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "nombre": "Lionel Messi",
+        "email": usuario_principal.email,
+        "password_actual": "passwordMessi10",
+        "nueva_password": "nuevaPasswordSegura123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me", headers=encabezados, json=payload)
+    assert respuesta.status_code == 200
+
+    sesion_db.refresh(usuario_principal)
+    assert usuario_principal.autenticar("nuevaPasswordSegura123") is True
+    assert usuario_principal.autenticar("passwordMessi10") is False
+
+
+def test_edicion_perfil_con_password_actual_incorrecta_retorna_401(
+    cliente: TestClient,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica 401 si la contraseña actual provista es incorrecta en PATCH /api/usuarios/me."""
+    token = auth_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "nombre": "Lionel Messi",
+        "email": usuario_principal.email,
+        "password_actual": "contraseñaTotalmenteErronea",
+        "nueva_password": "nuevaPasswordSegura123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me", headers=encabezados, json=payload)
+    assert respuesta.status_code == 401
+    assert respuesta.json()["code"] == "CREDENCIALES_INVALIDAS"
+
+
+def test_edicion_perfil_nueva_password_sin_password_actual_retorna_422(
+    cliente: TestClient,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica 422 si se envía nueva_password sin proporcionar password_actual."""
+    token = auth_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "nombre": "Lionel Messi",
+        "email": usuario_principal.email,
+        "nueva_password": "nuevaPasswordSegura123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me", headers=encabezados, json=payload)
+    assert respuesta.status_code == 422
+    assert respuesta.json()["code"] == "ERROR_VALIDACION"
+
+
+def test_modal_cambio_password_exitoso(
+    cliente: TestClient,
+    sesion_db: Session,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica cambio de contraseña exitoso desde el endpoint del modal (PATCH /api/usuarios/me/password)."""
+    token = auth_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "password_actual": "passwordMessi10",
+        "nueva_password": "passwordModalSuper123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me/password", headers=encabezados, json=payload)
+    assert respuesta.status_code == 200
+
+    sesion_db.refresh(usuario_principal)
+    assert usuario_principal.autenticar("passwordModalSuper123") is True
+
+
+def test_modal_cambio_password_erroneo_retorna_401(
+    cliente: TestClient,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica 401 si la contraseña actual provista en el modal es incorrecta."""
+    token = auth_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    payload = {
+        "password_actual": "claveIncorrecta",
+        "nueva_password": "passwordModalSuper123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me/password", headers=encabezados, json=payload)
+    assert respuesta.status_code == 401
+    assert respuesta.json()["code"] == "CREDENCIALES_INVALIDAS"
+
+
+def test_modal_cambio_password_sin_token_retorna_401(cliente: TestClient) -> None:
+    """Verifica 401 si se intenta llamar al endpoint del modal sin token."""
+    payload = {
+        "password_actual": "passwordMessi10",
+        "nueva_password": "passwordModalSuper123",
+    }
+
+    respuesta = cliente.patch("/api/usuarios/me/password", json=payload)
+    assert respuesta.status_code == 401
+
