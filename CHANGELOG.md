@@ -1,5 +1,15 @@
 # Changelog
 
+## 18/9 [1.1.5] Endpoint edición de perfil
+
+- **Modelo de dominio y mutación:** Incorporación del método de instancia `Usuario.actualizar_perfil(nombre, email)` en `app/models/usuario.py` para actualizar datos in-place, respetando el Diagrama de clases E4 y manteniendo la encapsulación en la entidad.
+- **Capa de persistencia:** Implementación de la función `actualizar` en `app/repositories/usuario_repository.py` con `db.commit()` y `db.refresh(usuario)` para sincronizar entidades modificadas.
+- **Capa de lógica de negocio:** Creación de `actualizar_perfil_usuario` en `app/services/usuario_service.py` con validación de unicidad de email contra terceros (`EmailYaRegistradoError`, HTTP 409), soporte de conservación del email propio y delegación en el modelo.
+- **Esquemas Pydantic:** Creación de `UsuarioUpdate` (`nombre`, `email`) en `app/schemas/usuario_schema.py` y reutilización de `UsuarioResponse` para asegurar que nunca se expongan datos sensibles como contraseñas o hashes.
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/usuario_router.py` con el endpoint `PATCH /api/usuarios/me` (código `200 OK`), protegido mediante la inyección de dependencias con `obtener_usuario_actual`.
+- **Integración de rutas y OpenAPI:** Registro de `usuario_router` en `app/main.py` y configuración refinada del esquema de seguridad `BearerAuth` en OpenAPI para permitir autorización fluida con token JWT en Swagger UI.
+- **Testing automatizado:** Suite de pruebas en `tests/test_edicion_perfil.py` (8 tests unitarios y de integración con `TestClient`) cubriendo edición exitosa (200), ausencia de token (401), conflicto de email en uso por otro usuario (409), conservación del email propio (200), validación de esquemas (422), y pruebas de dominio y servicio.
+
 ## 18/9 [1.1.4] Middleware de autorización por rol
 
 - **Middleware y dependencias de seguridad:** Creación de `app/core/seguridad.py` implementando el esquema `OAuth2PasswordBearer` (`tokenUrl="/api/auth/login"`), la dependencia `obtener_usuario_actual` (validación de JWT, extracción de identidad y verificación de usuario habilitado) y la fábrica de dependencias `requiere_rol` para autorización basada en roles (RBAC) según el enum `RolUsuario`.

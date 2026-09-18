@@ -22,3 +22,10 @@ def crear(db: Session, usuario: Usuario) -> Usuario:
     db.refresh(usuario)
     return usuario
 
+
+def actualizar(db: Session, usuario: Usuario) -> Usuario:
+    """Confirma los cambios de una entidad Usuario modificada en la base de datos."""
+    db.commit()
+    db.refresh(usuario)
+    return usuario
+

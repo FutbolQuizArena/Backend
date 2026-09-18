@@ -52,3 +52,30 @@ def registrar_usuario(db: Session, datos: UsuarioCreate) -> Usuario:
 
     return usuario_repository.crear(db, nuevo_usuario)
 
+
+def actualizar_perfil_usuario(
+    db: Session,
+    usuario_actual: Usuario,
+    nombre: str,
+    email: str,
+) -> Usuario:
+    """Actualiza el perfil de un usuario validando que el correo no esté ocupado por otro usuario.
+
+    Flujo:
+      1. Si el nuevo email es distinto al actual, verifica en la base de datos que ningún
+         otro usuario lo esté utilizando (distinto id). Si está ocupado, lanza EmailYaRegistradoError (HTTP 409).
+      2. Invoca usuario_actual.actualizar_perfil(nombre, email) para delegar la mutación en el modelo.
+      3. Persiste las modificaciones mediante usuario_repository.actualizar(db, usuario_actual).
+      4. Retorna la entidad Usuario actualizada.
+    """
+    if email.lower() != usuario_actual.email.lower():
+        usuario_existente = usuario_repository.obtener_por_email(db, email=email)
+        if usuario_existente is not None and usuario_existente.id != usuario_actual.id:
+            raise EmailYaRegistradoError(
+                mensaje="El correo electrónico ya se encuentra registrado",
+                detalle=None,
+            )
+
+    usuario_actual.actualizar_perfil(nombre=nombre, email=email)
+    return usuario_repository.actualizar(db, usuario_actual)
+

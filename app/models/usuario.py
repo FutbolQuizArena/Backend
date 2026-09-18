@@ -55,3 +55,11 @@ class Usuario(Base):
             )
         except Exception:
             return False
+
+    def actualizar_perfil(self, nombre: str, email: str) -> None:
+        """Actualiza el nombre y correo electrónico del usuario in-place.
+
+        Lógica de mutación de dominio según el Diagrama de clases E4.
+        """
+        self.nombre = nombre
+        self.email = email

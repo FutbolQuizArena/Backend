@@ -20,6 +20,13 @@ class UsuarioCreate(UsuarioBase):
     rol: RolUsuario = Field(default=RolUsuario.JUGADOR, description="Rol asignado al usuario")
 
 
+class UsuarioUpdate(UsuarioBase):
+    """Esquema para actualización de datos de perfil del usuario autenticado."""
+
+    nombre: str = Field(..., min_length=1, max_length=100, description="Nombre o apodo actualizado del usuario")
+    email: EmailStr = Field(..., max_length=255, description="Correo electrónico actualizado del usuario")
+
+
 class UsuarioResponse(BaseModel):
     """Esquema de respuesta devuelto al frontend. Nunca expone password_hash ni password."""
 

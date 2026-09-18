@@ -7,6 +7,7 @@ from app.core.config import CONFIGURACION
 from app.core.exceptions import registrar_manejadores_excepcion
 from app.routes.auth_router import auth_router
 from app.routes.salud_router import salud_router
+from app.routes.usuario_router import usuario_router
 
 
 def crear_aplicacion() -> FastAPI:
@@ -35,6 +36,7 @@ def crear_aplicacion() -> FastAPI:
     # Inclusión de routers
     aplicacion.include_router(salud_router)
     aplicacion.include_router(auth_router)
+    aplicacion.include_router(usuario_router)
 
     # Configuración de OpenAPI para habilitar el botón "Authorize" (Bearer JWT) en Swagger UI
     from fastapi.openapi.utils import get_openapi
@@ -48,14 +50,21 @@ def crear_aplicacion() -> FastAPI:
             description=aplicacion.description,
             routes=aplicacion.routes,
         )
+        # Configuración de BearerAuth estándar en componentes OpenAPI
         schema.setdefault("components", {})["securitySchemes"] = {
             "BearerAuth": {
                 "type": "http",
                 "scheme": "bearer",
                 "bearerFormat": "JWT",
-                "description": "Ingrese el token JWT obtenido en /api/auth/login para autorizar peticiones.",
+                "description": "Pegá el token JWT obtenido en /api/auth/login (sin las comillas ni 'Bearer').",
             }
         }
+        # Asociar BearerAuth a todas las operaciones que requieren autenticación
+        for path, path_item in schema.get("paths", {}).items():
+            for method, operation in path_item.items():
+                if isinstance(operation, dict) and "security" in operation:
+                    operation["security"] = [{"BearerAuth": []}]
+
         aplicacion.openapi_schema = schema
         return aplicacion.openapi_schema
 
