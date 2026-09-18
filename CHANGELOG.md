@@ -1,5 +1,12 @@
 # Changelog
 
+## 18/9 [1.1.4] Middleware de autorización por rol
+
+- **Middleware y dependencias de seguridad:** Creación de `app/core/seguridad.py` implementando el esquema `OAuth2PasswordBearer` (`tokenUrl="/api/auth/login"`), la dependencia `obtener_usuario_actual` (validación de JWT, extracción de identidad y verificación de usuario habilitado) y la fábrica de dependencias `requiere_rol` para autorización basada en roles (RBAC) según el enum `RolUsuario`.
+- **Capa de persistencia:** Incorporación del método `obtener_por_id` en `app/repositories/usuario_repository.py` para consulta de usuarios por identificador único.
+- **Manejo de excepciones de dominio:** Creación de `TokenInvalidoError` (código `TOKEN_INVALIDO`, HTTP 401) y `AccesoDenegadoError` (código `ACCESO_DENEGADO`, HTTP 403) en `app/core/exceptions.py`, preservando la estructura estándar `{ "code", "message", "detail" }`.
+- **Testing automatizado:** Suite de pruebas exhaustiva en `tests/test_seguridad.py` (14 tests unitarios y de integración HTTP vía `TestClient`) validando autenticación Bearer, tokens inválidos/expirados, usuarios deshabilitados o inexistentes, y control de acceso estricto por rol (`JUGADOR` vs `ADMINISTRADOR`).
+
 ## 16/9 [1.1.3] Endpoint de login + JWT
 
 - **Modelo de dominio y encapsulamiento:** Incorporación del método de instancia `Usuario.autenticar(password_ingresado)` en `app/models/usuario.py` para validar contraseñas de forma segura con `bcrypt.checkpw`, respetando el diagrama de clases E4 y el encapsulamiento de `password_hash`.
