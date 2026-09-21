@@ -1,5 +1,29 @@
 # Changelog
 
+## 21/9 [1.1.6] Endpoint de logout
+
+- **Capa de presentación (API REST):** Implementación del endpoint `POST /api/auth/logout` en `app/routes/auth_router.py` (código `200 OK`), protegido con la dependencia `obtener_usuario_actual`. En un esquema JWT stateless, valida la existencia de una sesión activa antes de confirmar el cierre, siendo la invalidación efectiva responsabilidad del cliente al descartar el token.
+- **Esquemas Pydantic comunes:** Creación de `app/schemas/common_schema.py` con `MensajeResponse` para respuestas informativas estándar (`{"mensaje": str}`) sin acoplar el logout a esquemas específicos de entidad.
+- **Documentación OpenAPI y Swagger:** Configuración exhaustiva del endpoint con respuestas 200 y 401, y requerimiento de autorización `BearerAuth`.
+- **Testing automatizado:** Suite de pruebas en `tests/test_logout.py` (5 tests de integración con `TestClient`) cubriendo logout exitoso (200), ausencia de token (401), token malformado (401), token expirado (401) y flujo integral login -> logout.
+
+## 18/9 [1.1.5] Endpoint edición de perfil
+
+- **Modelo de dominio y mutación:** Incorporación de los métodos de instancia `Usuario.actualizar_perfil(nombre, email)` y `Usuario.cambiar_password(nuevo_password_hash)` en `app/models/usuario.py` para mutación in-place, respetando el Diagrama de clases E4 y el encapsulamiento de datos sensibles.
+- **Capa de persistencia:** Implementación de la función `actualizar` en `app/repositories/usuario_repository.py` con `db.commit()` y `db.refresh(usuario)` para sincronizar entidades modificadas.
+- **Capa de lógica de negocio:** Creación de `actualizar_perfil_usuario` (soporte de cambio opcional de contraseña validando clave actual) y `cambiar_password_usuario` en `app/services/usuario_service.py` con validación de unicidad de email contra terceros (`EmailYaRegistradoError`, HTTP 409) y autenticación previa de clave actual (`CredencialesInvalidasError`, HTTP 401).
+- **Esquemas Pydantic:** Creación de `UsuarioUpdate` (`nombre`, `email`, `password_actual`, `nueva_password`) con validación condicional de contraseña y `CambiarPasswordRequest` en `app/schemas/usuario_schema.py`, reutilizando `UsuarioResponse` para asegurar que nunca se expongan datos sensibles como contraseñas o hashes.
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/usuario_router.py` con los endpoints `PATCH /api/usuarios/me` (edición de perfil con cambio de clave opcional) y `PATCH /api/usuarios/me/password` (modal específico de cambio de clave), ambos protegidos mediante `obtener_usuario_actual`.
+- **Integración de rutas y OpenAPI:** Registro de `usuario_router` en `app/main.py` y configuración del esquema de seguridad `BearerAuth` en OpenAPI para autorización en Swagger UI.
+- **Testing automatizado:** Suite de pruebas en `tests/test_edicion_perfil.py` (14 tests unitarios y de integración con `TestClient`) cubriendo edición exitosa (200), cambio de contraseña opcional en perfil (200/401/422), modal de contraseña (200/401), ausencia de token (401), conflicto de email en uso por otro usuario (409), conservación del email propio (200), validación de esquemas (422), y pruebas de dominio y servicio.
+
+## 18/9 [1.1.4] Middleware de autorización por rol
+
+- **Middleware y dependencias de seguridad:** Creación de `app/core/seguridad.py` implementando el esquema `OAuth2PasswordBearer` (`tokenUrl="/api/auth/login"`), la dependencia `obtener_usuario_actual` (validación de JWT, extracción de identidad y verificación de usuario habilitado) y la fábrica de dependencias `requiere_rol` para autorización basada en roles (RBAC) según el enum `RolUsuario`.
+- **Capa de persistencia:** Incorporación del método `obtener_por_id` en `app/repositories/usuario_repository.py` para consulta de usuarios por identificador único.
+- **Manejo de excepciones de dominio:** Creación de `TokenInvalidoError` (código `TOKEN_INVALIDO`, HTTP 401) y `AccesoDenegadoError` (código `ACCESO_DENEGADO`, HTTP 403) en `app/core/exceptions.py`, preservando la estructura estándar `{ "code", "message", "detail" }`.
+- **Testing automatizado:** Suite de pruebas exhaustiva en `tests/test_seguridad.py` (14 tests unitarios y de integración HTTP vía `TestClient`) validando autenticación Bearer, tokens inválidos/expirados, usuarios deshabilitados o inexistentes, y control de acceso estricto por rol (`JUGADOR` vs `ADMINISTRADOR`).
+
 ## 16/9 [1.1.3] Endpoint de login + JWT
 
 - **Modelo de dominio y encapsulamiento:** Incorporación del método de instancia `Usuario.autenticar(password_ingresado)` en `app/models/usuario.py` para validar contraseñas de forma segura con `bcrypt.checkpw`, respetando el diagrama de clases E4 y el encapsulamiento de `password_hash`.

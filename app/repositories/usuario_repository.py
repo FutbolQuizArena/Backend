@@ -10,9 +10,21 @@ def obtener_por_email(db: Session, email: str) -> Usuario | None:
     return db.query(Usuario).filter(Usuario.email == email).first()
 
 
+def obtener_por_id(db: Session, id: int) -> Usuario | None:
+    """Obtiene un usuario a partir de su identificador único (ID). Retorna None si no existe."""
+    return db.query(Usuario).filter(Usuario.id == id).first()
+
+
 def crear(db: Session, usuario: Usuario) -> Usuario:
     """Persiste una nueva entidad Usuario en la base de datos."""
     db.add(usuario)
+    db.commit()
+    db.refresh(usuario)
+    return usuario
+
+
+def actualizar(db: Session, usuario: Usuario) -> Usuario:
+    """Confirma los cambios de una entidad Usuario modificada en la base de datos."""
     db.commit()
     db.refresh(usuario)
     return usuario

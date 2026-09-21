@@ -123,6 +123,38 @@ class CredencialesInvalidasError(ExcepcionBase):
         )
 
 
+class TokenInvalidoError(ExcepcionBase):
+    """Excepción lanzada cuando un token JWT es inválido, ha expirado o no corresponde a un usuario activo."""
+
+    def __init__(
+        self,
+        mensaje: str = "Token de autenticación inválido o expirado",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="TOKEN_INVALIDO",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
+class AccesoDenegadoError(ExcepcionBase):
+    """Excepción lanzada cuando el usuario no posee los permisos requeridos para acceder al recurso."""
+
+    def __init__(
+        self,
+        mensaje: str = "No tenés permisos para realizar esta acción",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="ACCESO_DENEGADO",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_403_FORBIDDEN,
+        )
+
+
 def _construir_respuesta_error(
     codigo: str,
     mensaje: str,
