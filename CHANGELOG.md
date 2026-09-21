@@ -1,5 +1,12 @@
 # Changelog
 
+## 21/9 [1.1.6] Endpoint de logout
+
+- **Capa de presentación (API REST):** Implementación del endpoint `POST /api/auth/logout` en `app/routes/auth_router.py` (código `200 OK`), protegido con la dependencia `obtener_usuario_actual`. En un esquema JWT stateless, valida la existencia de una sesión activa antes de confirmar el cierre, siendo la invalidación efectiva responsabilidad del cliente al descartar el token.
+- **Esquemas Pydantic comunes:** Creación de `app/schemas/common_schema.py` con `MensajeResponse` para respuestas informativas estándar (`{"mensaje": str}`) sin acoplar el logout a esquemas específicos de entidad.
+- **Documentación OpenAPI y Swagger:** Configuración exhaustiva del endpoint con respuestas 200 y 401, y requerimiento de autorización `BearerAuth`.
+- **Testing automatizado:** Suite de pruebas en `tests/test_logout.py` (5 tests de integración con `TestClient`) cubriendo logout exitoso (200), ausencia de token (401), token malformado (401), token expirado (401) y flujo integral login -> logout.
+
 ## 18/9 [1.1.5] Endpoint edición de perfil
 
 - **Modelo de dominio y mutación:** Incorporación de los métodos de instancia `Usuario.actualizar_perfil(nombre, email)` y `Usuario.cambiar_password(nuevo_password_hash)` en `app/models/usuario.py` para mutación in-place, respetando el Diagrama de clases E4 y el encapsulamiento de datos sensibles.
