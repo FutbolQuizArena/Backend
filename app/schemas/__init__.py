@@ -5,6 +5,8 @@ from app.schemas.torneo_schema import (
     CruceResponse,
     ParticipanteTorneoResponse,
     TorneoBase,
+    TorneoCreadoResponse,
+    TorneoCreate,
     TorneoResponse,
 )
 from app.schemas.usuario_schema import (
@@ -18,6 +20,8 @@ __all__ = [
     "MensajeResponse",
     "ParticipanteTorneoResponse",
     "TorneoBase",
+    "TorneoCreadoResponse",
+    "TorneoCreate",
     "TorneoResponse",
     "UsuarioBase",
     "UsuarioCreate",

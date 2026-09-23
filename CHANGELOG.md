@@ -1,5 +1,14 @@
 # Changelog
 
+## 23/9 [3.1.2] Endpoint crear torneo
+
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/torneo_router.py` implementando el endpoint `POST /api/torneos` (código `201 Created`), protegido mediante la dependencia `obtener_usuario_actual`. Documentación completa en OpenAPI con respuestas 201, 401 y 422, y esquema de seguridad `BearerAuth`.
+- **Capa de lógica de negocio:** Creación de `app/services/torneo_service.py` con la función `crear_torneo`, implementando el flujo del Diagrama de Secuencia Nº3 (pasos 1 a 7): asignación de estado `ESPERANDO_JUGADORES`, invocación de `Torneo.generar_codigo_acceso()`, verificación de no colisión, hashing seguro con `bcrypt` de `contrasena_acceso` (opcional), persistencia del torneo e inscripción automática del creador como primer participante (`ParticipanteTorneo`).
+- **Capa de persistencia:** Creación de `app/repositories/torneo_repository.py` con métodos `crear`, `agregar_participante`, `obtener_por_id` y `obtener_por_codigo`.
+- **Esquemas Pydantic:** Creación de `TorneoCreate` (validando nombre no vacío y `cantidad_participantes` en `{4, 8, 16}`) y `TorneoCreadoResponse` (serialización segura protegiendo contraseña) en `app/schemas/torneo_schema.py`.
+- **Integración de rutas:** Registro de `torneo_router` en `app/main.py` con tag `"Torneos"`.
+- **Testing automatizado:** Suite de pruebas en `tests/test_crear_torneo.py` (20 tests unitarios y de integración con `TestClient`) cubriendo creación exitosa sin contraseña (201), creación con contraseña hasheada y segura (201), inscripción automática del creador en BD, validaciones de cupo (`422`), validaciones de nombre vacío/ausente (`422`), acceso no autenticado (`401`) y unicidad de código de acceso entre torneos.
+
 ## 23/9 [3.1.1] Modelo: Torneo/Participante/Cruce
 
 - **Modelos de dominio y persistencia ORM:** Implementación de las entidades del Módulo 3 en SQLAlchemy respetando el Diagrama de clases E4:
