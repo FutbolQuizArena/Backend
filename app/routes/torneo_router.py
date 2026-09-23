@@ -1,14 +1,16 @@
 """Controlador para rutas de gestión y participación en Torneos."""
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
 from app.schemas.torneo_schema import (
+    FiltroTorneoEnum,
     TorneoCreadoResponse,
     TorneoCreate,
+    TorneoListItemResponse,
     TorneoResponse,
     TorneoUnirseRequest,
 )
@@ -139,3 +141,63 @@ def unirse_a_torneo(
         usuario_actual=usuario_actual,
     )
     return TorneoResponse.model_validate(torneo)
+
+
+@torneo_router.get(
+    "",
+    response_model=list[TorneoListItemResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Listar torneos según filtro",
+    description=(
+        "Obtiene el listado de torneos filtrados por categoría:\n"
+        "- `mios` (por defecto): Torneos donde el usuario autenticado está inscripto como participante.\n"
+        "- `disponibles`: Torneos en estado ESPERANDO_JUGADORES con cupo disponible donde el usuario aún no participa.\n"
+        "- `finalizados`: Torneos en estado FINALIZADO en los que el usuario participó.\n\n"
+        "Protege datos sensibles: nunca expone la contraseña de acceso y únicamente incluye el código de acceso "
+        "en aquellos torneos donde el usuario autenticado es el creador."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Listado de torneos recuperado exitosamente.",
+            "model": list[TorneoListItemResponse],
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TOKEN_INVALIDO",
+                        "message": "Token de autenticación inválido o expirado",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
+            "description": "Filtro no reconocido (valores permitidos: mios, disponibles, finalizados).",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "ERROR_VALIDACION",
+                        "message": "Error de validación en los datos de la solicitud",
+                        "detail": "[...]",
+                    }
+                }
+            },
+        },
+    },
+)
+def listar_torneos(
+    filtro: FiltroTorneoEnum = Query(
+        default=FiltroTorneoEnum.MIOS,
+        description="Filtro de torneos a consultar: 'mios', 'disponibles' o 'finalizados'",
+    ),
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> list[TorneoListItemResponse]:
+    """Endpoint para listar torneos delegando la consulta al servicio."""
+    return torneo_service.listar_torneos(
+        db=db,
+        filtro=filtro,
+        usuario_actual=usuario_actual,
+    )

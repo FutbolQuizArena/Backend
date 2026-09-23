@@ -2,13 +2,18 @@
 
 from sqlalchemy.orm import Session
 
-from app.core.excepciones import TorneoNoDisponibleError
+from app.core.excepciones import ExcepcionValidacion, TorneoNoDisponibleError
 from app.models.enumeraciones import EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
 from app.models.usuario import Usuario
 from app.repositories import torneo_repository
-from app.schemas.torneo_schema import TorneoCreate, TorneoUnirseRequest
+from app.schemas.torneo_schema import (
+    FiltroTorneoEnum,
+    TorneoCreate,
+    TorneoListItemResponse,
+    TorneoUnirseRequest,
+)
 from app.services.usuario_service import hashear_password
 
 
@@ -115,3 +120,49 @@ def unirse_a_torneo(
         )
 
     return torneo
+
+
+def listar_torneos(
+    db: Session,
+    filtro: FiltroTorneoEnum | str,
+    usuario_actual: Usuario,
+) -> list[TorneoListItemResponse]:
+    """Lista torneos según el filtro especificado (mios, disponibles, finalizados).
+
+    - 'mios': torneos donde el usuario es participante (cualquier estado).
+    - 'disponibles': torneos en ESPERANDO_JUGADORES con cupo disponible donde el usuario aún NO participa.
+    - 'finalizados': torneos con estado FINALIZADO en los que el usuario participó.
+
+    Evita consultas N+1 calculando el cupo actual en una única consulta SQL.
+    Solo expone codigo_acceso para aquellos torneos donde el usuario es el creador.
+    """
+    valor_filtro = filtro.value if isinstance(filtro, FiltroTorneoEnum) else str(filtro).lower()
+
+    if valor_filtro == FiltroTorneoEnum.MIOS.value:
+        resultados = torneo_repository.listar_por_participante(db, usuario_id=usuario_actual.id)
+    elif valor_filtro == FiltroTorneoEnum.DISPONIBLES.value:
+        resultados = torneo_repository.listar_disponibles(db, usuario_id=usuario_actual.id)
+    elif valor_filtro == FiltroTorneoEnum.FINALIZADOS.value:
+        resultados = torneo_repository.listar_finalizados_por_participante(db, usuario_id=usuario_actual.id)
+    else:
+        raise ExcepcionValidacion(
+            mensaje=f"Filtro inválido '{filtro}'. Valores permitidos: mios, disponibles, finalizados",
+            detalle=None,
+        )
+
+    items = []
+    for torneo, conteo in resultados:
+        item = TorneoListItemResponse(
+            id=torneo.id,
+            nombre=torneo.nombre,
+            cantidad_participantes=torneo.cantidad_participantes,
+            cantidad_participantes_actual=conteo or 0,
+            tiene_contrasena=torneo.contrasena_acceso is not None,
+            estado=torneo.estado,
+            fecha_creacion=torneo.fecha_creacion,
+            creador_id=torneo.creador_id,
+            codigo_acceso=torneo.codigo_acceso if torneo.creador_id == usuario_actual.id else None,
+        )
+        items.append(item)
+
+    return items

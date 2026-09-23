@@ -1,5 +1,13 @@
 # Changelog
 
+## 23/9 [3.1.4] Endpoint listar torneos
+
+- **Capa de presentación (API REST):** Implementación del endpoint `GET /api/torneos` en `app/routes/torneo_router.py` (código `200 OK`), protegido con `obtener_usuario_actual`. Soporta el parámetro de consulta `filtro` (`mios`, `disponibles`, `finalizados`), con valor por defecto `mios` y validación estricta con HTTP 422 ante valores no reconocidos. Documentación OpenAPI exhaustiva con esquema de seguridad `BearerAuth`.
+- **Capa de lógica de negocio:** Creación de `listar_torneos` en `app/services/torneo_service.py`, transformando resultados de persistencia en `TorneoListItemResponse`, calculando el flag seguro `tiene_contrasena` (sin exponer credenciales) y restringiendo la visibilidad del `codigo_acceso` exclusivamente a los torneos donde el usuario autenticado es el creador.
+- **Capa de persistencia:** Consolidación de métodos de consulta en `app/repositories/torneo_repository.py` (`obtener_por_codigo_acceso` como canónico) e incorporación de consultas optimizadas para evitar problemas de N+1 queries (`listar_por_participante`, `listar_disponibles` y `listar_finalizados_por_participante`), utilizando subqueries escalares correlacionadas para computar `cantidad_participantes_actual`.
+- **Esquemas Pydantic:** Creación de `FiltroTorneoEnum` (`mios`, `disponibles`, `finalizados`) y `TorneoListItemResponse` (`id`, `nombre`, `cantidad_participantes`, `cantidad_participantes_actual`, `tiene_contrasena`, `estado`, `fecha_creacion`, `creador_id`, `codigo_acceso` condicional) en `app/schemas/torneo_schema.py`.
+- **Testing automatizado:** Suite de pruebas en `tests/test_listar_torneos.py` (9 tests unitarios y de integración) cubriendo filtros `mios`, `disponibles`, `finalizados`, valor por defecto, cálculo exacto de cupo actual, bandera segura de contraseña, control de exposición de código de acceso, validación de filtro inválido (422) y autenticación requerida (401).
+
 ## 23/9 [3.1.3] Endpoint ingresar por código
 
 - **Modelo de dominio:** Implementación del método de instancia `Torneo.unirse(usuario, contrasena_ingresada)` en `app/models/torneo.py` según el Diagrama de clases E4, validando estado `ESPERANDO_JUGADORES`, verificación de cupo (`esta_completo()`) y comprobación criptográfica segura de contraseña con `bcrypt.checkpw`.

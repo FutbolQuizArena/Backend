@@ -1,6 +1,7 @@
 """Esquemas Pydantic para la entidad Torneo y sus componentes."""
 
 from datetime import datetime
+from enum import Enum
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.models.enumeraciones import EstadoCruce, EstadoTorneo
@@ -101,4 +102,31 @@ class TorneoUnirseRequest(BaseModel):
         if not valor_limpio:
             raise ValueError("El código de acceso no puede estar vacío ni contener solo espacios")
         return valor_limpio
+
+
+class FiltroTorneoEnum(str, Enum):
+    """Filtros disponibles para la consulta de torneos."""
+
+    MIOS = "mios"
+    DISPONIBLES = "disponibles"
+    FINALIZADOS = "finalizados"
+
+
+class TorneoListItemResponse(BaseModel):
+    """Esquema de respuesta optimizado para ítems en el listado de torneos."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int = Field(..., description="Identificador único del torneo")
+    nombre: str = Field(..., description="Nombre del torneo")
+    cantidad_participantes: int = Field(..., description="Cupo máximo de participantes")
+    cantidad_participantes_actual: int = Field(..., description="Cantidad actual de participantes inscriptos")
+    tiene_contrasena: bool = Field(..., description="Indica si el torneo requiere contraseña de acceso")
+    estado: EstadoTorneo = Field(..., description="Estado actual del torneo")
+    fecha_creacion: datetime = Field(..., description="Fecha y hora de creación")
+    creador_id: int = Field(..., description="Identificador del usuario creador")
+    codigo_acceso: str | None = Field(
+        default=None,
+        description="Código de acceso del torneo (visible únicamente para el creador)",
+    )
 
