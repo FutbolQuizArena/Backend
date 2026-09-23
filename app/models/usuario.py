@@ -5,8 +5,8 @@ import bcrypt
 from sqlalchemy import Boolean, Column, DateTime, Enum as SQLEnum, Integer, String, func
 from sqlalchemy.sql import expression
 
-from app.core.database import Base
-from app.models.enums import RolUsuario
+from app.core.base_datos import Base
+from app.models.enumeraciones import RolUsuario
 
 
 class Usuario(Base):

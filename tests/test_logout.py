@@ -6,11 +6,11 @@ from fastapi.testclient import TestClient
 import jwt
 from sqlalchemy.orm import Session
 
-from app.core.config import CONFIGURACION
-from app.models.enums import RolUsuario
+from app.core.configuracion import CONFIGURACION
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import UsuarioCreate
-from app.services import auth_service, usuario_service
+from app.services import autenticacion_service, usuario_service
 
 
 # ==============================================================================
@@ -33,7 +33,7 @@ def usuario_autenticado(sesion_db: Session) -> Usuario:
 @pytest.fixture
 def token_valido(usuario_autenticado: Usuario) -> str:
     """Genera un token JWT válido para el usuario de prueba."""
-    return auth_service.generar_token_jwt(usuario_autenticado)
+    return autenticacion_service.generar_token_jwt(usuario_autenticado)
 
 
 @pytest.fixture

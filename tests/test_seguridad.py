@@ -7,15 +7,15 @@ from fastapi.testclient import TestClient
 import jwt
 from sqlalchemy.orm import Session
 
-from app.core.config import CONFIGURACION
-from app.core.exceptions import AccesoDenegadoError, TokenInvalidoError
+from app.core.configuracion import CONFIGURACION
+from app.core.excepciones import AccesoDenegadoError, TokenInvalidoError
 from app.core.seguridad import obtener_usuario_actual, requiere_rol
 from app.main import app
-from app.models.enums import RolUsuario
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
 from app.schemas.usuario_schema import UsuarioCreate
-from app.services import auth_service, usuario_service
+from app.services import autenticacion_service, usuario_service
 
 # Router de prueba para verificar dependencias vía HTTP
 router_pruebas = APIRouter(prefix="/api/pruebas-seguridad", tags=["Pruebas Seguridad"])
@@ -113,7 +113,7 @@ def test_obtener_usuario_actual_token_valido(
     usuario_jugador: Usuario,
 ) -> None:
     """Verifica que obtener_usuario_actual retorne el Usuario correspondiente ante un token válido."""
-    token = auth_service.generar_token_jwt(usuario_jugador)
+    token = autenticacion_service.generar_token_jwt(usuario_jugador)
     usuario_obtenido = obtener_usuario_actual(token=token, db=sesion_db)
 
     assert usuario_obtenido.id == usuario_jugador.id
@@ -174,7 +174,7 @@ def test_obtener_usuario_actual_usuario_deshabilitado(
     usuario_jugador.esta_habilitado = False
     sesion_db.commit()
 
-    token = auth_service.generar_token_jwt(usuario_jugador)
+    token = autenticacion_service.generar_token_jwt(usuario_jugador)
 
     with pytest.raises(TokenInvalidoError) as exc_info:
         obtener_usuario_actual(token=token, db=sesion_db)
@@ -218,7 +218,7 @@ def test_http_endpoint_protegido_token_valido(
     usuario_jugador: Usuario,
 ) -> None:
     """Verifica acceso exitoso (HTTP 200) al enviar token Bearer válido."""
-    token = auth_service.generar_token_jwt(usuario_jugador)
+    token = autenticacion_service.generar_token_jwt(usuario_jugador)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     respuesta = cliente.get("/api/pruebas-seguridad/perfil", headers=encabezados)
@@ -264,7 +264,7 @@ def test_http_endpoint_protegido_usuario_deshabilitado(
     usuario_jugador: Usuario,
 ) -> None:
     """Verifica HTTP 401 si el usuario asociado al token fue deshabilitado."""
-    token = auth_service.generar_token_jwt(usuario_jugador)
+    token = autenticacion_service.generar_token_jwt(usuario_jugador)
 
     usuario_jugador.esta_habilitado = False
     sesion_db.commit()
@@ -283,7 +283,7 @@ def test_http_requiere_rol_admin_con_usuario_jugador_retorna_403(
     usuario_jugador: Usuario,
 ) -> None:
     """Verifica HTTP 403 y mensaje uniforme cuando un JUGADOR accede a ruta de ADMINISTRADOR."""
-    token = auth_service.generar_token_jwt(usuario_jugador)
+    token = autenticacion_service.generar_token_jwt(usuario_jugador)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     respuesta = cliente.get("/api/pruebas-seguridad/solo-admin", headers=encabezados)
@@ -300,7 +300,7 @@ def test_http_requiere_rol_admin_con_usuario_administrador_retorna_200(
     usuario_administrador: Usuario,
 ) -> None:
     """Verifica HTTP 200 cuando un ADMINISTRADOR accede a ruta protegida con requiere_rol."""
-    token = auth_service.generar_token_jwt(usuario_administrador)
+    token = autenticacion_service.generar_token_jwt(usuario_administrador)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     respuesta = cliente.get("/api/pruebas-seguridad/solo-admin", headers=encabezados)
@@ -315,8 +315,8 @@ def test_http_requiere_rol_multiples_roles_autorizados(
     usuario_administrador: Usuario,
 ) -> None:
     """Verifica que ambos roles (JUGADOR y ADMINISTRADOR) tengan acceso si están en la lista."""
-    token_jugador = auth_service.generar_token_jwt(usuario_jugador)
-    token_admin = auth_service.generar_token_jwt(usuario_administrador)
+    token_jugador = autenticacion_service.generar_token_jwt(usuario_jugador)
+    token_admin = autenticacion_service.generar_token_jwt(usuario_administrador)
 
     resp_jugador = cliente.get(
         "/api/pruebas-seguridad/ambos-roles",

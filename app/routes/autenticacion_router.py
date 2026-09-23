@@ -3,18 +3,19 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.database import obtener_db
+from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
-from app.schemas.auth_schema import LoginRequest, TokenResponse
-from app.schemas.common_schema import MensajeResponse
+from app.schemas.autenticacion_schema import LoginRequest, TokenResponse
+from app.schemas.comun_schema import MensajeResponse
 from app.schemas.usuario_schema import UsuarioCreate, UsuarioResponse
-from app.services import auth_service, usuario_service
+from app.services import autenticacion_service, usuario_service
 
-auth_router = APIRouter(prefix="/api/auth", tags=["Autenticación"])
+autenticacion_router = APIRouter(prefix="/api/auth", tags=["Autenticación"])
+auth_router = autenticacion_router  # Alias para compatibilidad
 
 
-@auth_router.post(
+@autenticacion_router.post(
     "/registro",
     response_model=UsuarioResponse,
     status_code=status.HTTP_201_CREATED,
@@ -64,7 +65,7 @@ def registrar(
     return UsuarioResponse.model_validate(usuario_creado)
 
 
-@auth_router.post(
+@autenticacion_router.post(
     "/login",
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
@@ -110,16 +111,16 @@ def login(
     db: Session = Depends(obtener_db),
 ) -> TokenResponse:
     """Endpoint para iniciar sesión y emitir el token JWT de acceso."""
-    usuario = auth_service.autenticar_usuario(
+    usuario = autenticacion_service.autenticar_usuario(
         db=db,
         email=datos.email,
         password=datos.password,
     )
-    token = auth_service.generar_token_jwt(usuario)
+    token = autenticacion_service.generar_token_jwt(usuario)
     return TokenResponse(access_token=token, token_type="bearer")
 
 
-@auth_router.post(
+@autenticacion_router.post(
     "/logout",
     response_model=MensajeResponse,
     status_code=status.HTTP_200_OK,
@@ -154,3 +155,4 @@ def cerrar_sesion(
 ) -> MensajeResponse:
     """Endpoint para cerrar la sesión del usuario autenticado."""
     return MensajeResponse(mensaje="Sesión cerrada exitosamente")
+

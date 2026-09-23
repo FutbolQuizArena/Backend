@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 
 from app.main import app
-from app.core.database import Base, obtener_db
+from app.core.base_datos import Base, obtener_db
 
 # Motor SQLite en memoria para tests aislados sin dependencia de Supabase
 motor_pruebas = create_engine(

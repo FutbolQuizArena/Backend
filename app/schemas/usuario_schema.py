@@ -3,7 +3,7 @@
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 
-from app.models.enums import RolUsuario
+from app.models.enumeraciones import RolUsuario
 
 
 class UsuarioBase(BaseModel):

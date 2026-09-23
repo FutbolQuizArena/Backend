@@ -3,7 +3,7 @@
 from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
-from app.core.config import CONFIGURACION
+from app.core.configuracion import CONFIGURACION
 
 # Normalización de URL para PostgreSQL / Supabase
 # Muchos proveedores (Supabase, Render) entregan el esquema como postgres://

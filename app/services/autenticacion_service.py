@@ -5,8 +5,8 @@ from typing import Any, Dict
 import jwt
 from sqlalchemy.orm import Session
 
-from app.core.config import CONFIGURACION
-from app.core.exceptions import CredencialesInvalidasError, ExcepcionNoAutorizado
+from app.core.configuracion import CONFIGURACION
+from app.core.excepciones import CredencialesInvalidasError, ExcepcionNoAutorizado
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
 

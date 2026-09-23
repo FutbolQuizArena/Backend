@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.core.database import obtener_db
-from app.core.exceptions import ExcepcionBaseDatos
+from app.core.base_datos import obtener_db
+from app.core.excepciones import ExcepcionBaseDatos
 
 salud_router = APIRouter(prefix="/api", tags=["Salud"])
 

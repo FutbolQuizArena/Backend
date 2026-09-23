@@ -6,12 +6,12 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 import jwt
 
-from app.core.config import CONFIGURACION
-from app.core.exceptions import CredencialesInvalidasError, ExcepcionNoAutorizado
-from app.models.enums import RolUsuario
+from app.core.configuracion import CONFIGURACION
+from app.core.excepciones import CredencialesInvalidasError, ExcepcionNoAutorizado
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import UsuarioCreate
-from app.services import auth_service, usuario_service
+from app.services import autenticacion_service, usuario_service
 
 
 # ==============================================================================
@@ -114,7 +114,7 @@ def test_login_token_contenido_y_decodificacion(
     assert respuesta.status_code == 200
 
     token = respuesta.json()["access_token"]
-    datos_token = auth_service.decodificar_token_jwt(token)
+    datos_token = autenticacion_service.decodificar_token_jwt(token)
 
     # Verifica claims requeridos
     assert datos_token["id"] == usuario_registrado.id
@@ -162,7 +162,7 @@ def test_login_body_invalido(cliente: TestClient) -> None:
 
 
 # ==============================================================================
-# Pruebas Unitarias del Servicio (auth_service)
+# Pruebas Unitarias del Servicio (autenticacion_service)
 # ==============================================================================
 
 
@@ -177,12 +177,12 @@ def test_usuario_metodo_autenticar(usuario_registrado: Usuario) -> None:
     assert usuario_registrado.autenticar("") is False
 
 
-def test_auth_service_autenticar_usuario_exitoso(
+def test_autenticacion_service_autenticar_usuario_exitoso(
     sesion_db: Session,
     usuario_registrado: Usuario,
 ) -> None:
     """Prueba unitaria de autenticar_usuario devolviendo el Usuario ante credenciales válidas."""
-    usuario = auth_service.autenticar_usuario(
+    usuario = autenticacion_service.autenticar_usuario(
         sesion_db,
         email=usuario_registrado.email,
         password="passwordCampeon10",
@@ -191,14 +191,14 @@ def test_auth_service_autenticar_usuario_exitoso(
     assert usuario.email == usuario_registrado.email
 
 
-def test_auth_service_autenticar_usuario_fallido_lanza_excepcion(
+def test_autenticacion_service_autenticar_usuario_fallido_lanza_excepcion(
     sesion_db: Session,
     usuario_registrado: Usuario,
 ) -> None:
     """Prueba unitaria de autenticar_usuario lanzando CredencialesInvalidasError."""
     # Email inexistente
     with pytest.raises(CredencialesInvalidasError) as exc_email:
-        auth_service.autenticar_usuario(
+        autenticacion_service.autenticar_usuario(
             sesion_db,
             email="fantasma@futbolquiz.com",
             password="passwordCampeon10",
@@ -208,7 +208,7 @@ def test_auth_service_autenticar_usuario_fallido_lanza_excepcion(
 
     # Contraseña incorrecta
     with pytest.raises(CredencialesInvalidasError) as exc_pass:
-        auth_service.autenticar_usuario(
+        autenticacion_service.autenticar_usuario(
             sesion_db,
             email=usuario_registrado.email,
             password="claveIncorrecta",
@@ -217,7 +217,7 @@ def test_auth_service_autenticar_usuario_fallido_lanza_excepcion(
     assert exc_pass.value.codigo_estado == 401
 
 
-def test_auth_service_token_expirado_lanza_excepcion() -> None:
+def test_autenticacion_service_token_expirado_lanza_excepcion() -> None:
     """Verifica que un token expirado lance ExcepcionNoAutorizado al decodificarse."""
     ahora = datetime.now(timezone.utc)
     payload_expirado = {
@@ -235,14 +235,14 @@ def test_auth_service_token_expirado_lanza_excepcion() -> None:
     )
 
     with pytest.raises(ExcepcionNoAutorizado) as exc_info:
-        auth_service.decodificar_token_jwt(token_expirado)
+        autenticacion_service.decodificar_token_jwt(token_expirado)
 
     assert exc_info.value.codigo == "NO_AUTORIZADO"
     assert exc_info.value.codigo_estado == 401
     assert "expirado" in exc_info.value.mensaje.lower()
 
 
-def test_auth_service_token_invalido_lanza_excepcion() -> None:
+def test_autenticacion_service_token_invalido_lanza_excepcion() -> None:
     """Verifica que un token corrupto o con firma incorrecta lance ExcepcionNoAutorizado."""
     token_firma_erronea = jwt.encode(
         {"sub": "1", "id": 1, "rol": "JUGADOR"},
@@ -251,10 +251,10 @@ def test_auth_service_token_invalido_lanza_excepcion() -> None:
     )
 
     with pytest.raises(ExcepcionNoAutorizado) as exc_info:
-        auth_service.decodificar_token_jwt(token_firma_erronea)
+        autenticacion_service.decodificar_token_jwt(token_firma_erronea)
 
     assert exc_info.value.codigo == "NO_AUTORIZADO"
     assert exc_info.value.codigo_estado == 401
 
     with pytest.raises(ExcepcionNoAutorizado):
-        auth_service.decodificar_token_jwt("este-no-es-un-jwt-valido")
+        autenticacion_service.decodificar_token_jwt("este-no-es-un-jwt-valido")

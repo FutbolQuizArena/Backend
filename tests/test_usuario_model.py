@@ -5,7 +5,7 @@ from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.models.enums import RolUsuario
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import UsuarioBase, UsuarioCreate, UsuarioResponse
 

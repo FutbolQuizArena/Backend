@@ -12,9 +12,10 @@ El sistema adopta una **arquitectura en 3 capas**, manteniendo desacoplada la pr
 app/
 ├── main.py              # Inicialización de FastAPI (título, versión, CORS, middlewares y routers)
 ├── core/
-│   ├── config.py        # Configuración centralizada y lectura de variables de entorno (.env)
-│   ├── database.py      # Conexión única a PostgreSQL / Supabase, sesión y Base declarativa
-│   └── exceptions.py    # Manejadores globales de error con estructura fija {code, message, detail}
+│   ├── configuracion.py # Configuración centralizada y lectura de variables de entorno (.env)
+│   ├── base_datos.py    # Conexión única a PostgreSQL / Supabase, sesión y Base declarativa
+│   ├── excepciones.py   # Manejadores globales de error con estructura fija {code, message, detail}
+│   └── seguridad.py     # Dependencias de seguridad, extracción de JWT y RBAC
 ├── models/              # Modelos SQLAlchemy para la base de datos
 ├── schemas/             # Esquemas Pydantic para validación de entrada y serialización
 ├── repositories/        # Capa de persistencia y consultas a base de datos
@@ -32,7 +33,7 @@ requirements.txt         # Dependencias del proyecto
 
 Para mantener coherencia estricta en el equipo, **todo el backend se codifica en español**:
 
-- **Archivos y módulos**: `snake_case` en español (ej: `torneo_service.py`, `auth_router.py`, `usuario_repository.py`).
+- **Archivos y módulos**: `snake_case` en español (ej: `torneo_service.py`, `autenticacion_router.py`, `usuario_repository.py`).
 - **Variables y funciones**: `snake_case` en español (ej: `obtener_usuario_por_id()`, `verificar_salud()`).
 - **Clases (modelos, schemas)**: `PascalCase` en español (ej: `Usuario`, `Torneo`, `PreguntaSchema`).
 - **Constantes**: `UPPER_SNAKE_CASE` en español (ej: `MAX_JUGADORES_TORNEO`, `CONFIGURACION`).

@@ -5,7 +5,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.core.database import obtener_db
+from app.core.base_datos import obtener_db
 
 
 def test_verificar_salud_exitoso(cliente: TestClient) -> None:

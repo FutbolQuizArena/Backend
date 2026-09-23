@@ -1,5 +1,14 @@
 # Changelog
 
+## 23/9 [Refactorización] Estandarización de módulos y archivos a español
+
+- **Núcleo (`app/core`):** Renombrado de `config.py` a `configuracion.py`, `database.py` a `base_datos.py` y `exceptions.py` a `excepciones.py`, actualizando la totalidad de imports en routers, modelos, servicios, seguridad y configuración de Alembic (`alembic/env.py`).
+- **Modelos de dominio (`app/models`):** Renombrado de `enums.py` a `enumeraciones.py`, manteniendo el enum `RolUsuario`.
+- **Esquemas Pydantic (`app/schemas`):** Renombrado de `common_schema.py` a `comun_schema.py` (`MensajeResponse`) y de `auth_schema.py` a `autenticacion_schema.py` (`LoginRequest`, `TokenResponse`).
+- **Capa de lógica de negocio (`app/services`):** Renombrado de `auth_service.py` a `autenticacion_service.py`, adaptando llamadas y firmas.
+- **Capa de presentación (`app/routes`):** Renombrado de `auth_router.py` a `autenticacion_router.py`, manteniendo intactos los prefijos y contratos de la API REST (`prefix="/api/auth"` con `/login`, `/registro`, `/logout`) para garantizar compatibilidad total con el frontend.
+- **Testing automatizado:** Actualización integral de imports y llamadas en los 8 módulos de pruebas (`tests/`), verificando la aprobación del 100% de la suite (63 pruebas exitosas en `pytest`).
+
 ## 21/9 [1.1.6] Endpoint de logout
 
 - **Capa de presentación (API REST):** Implementación del endpoint `POST /api/auth/logout` en `app/routes/auth_router.py` (código `200 OK`), protegido con la dependencia `obtener_usuario_actual`. En un esquema JWT stateless, valida la existencia de una sesión activa antes de confirmar el cierre, siendo la invalidación efectiva responsabilidad del cliente al descartar el token.

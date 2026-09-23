@@ -3,7 +3,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.database import obtener_db
+from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import CambiarPasswordRequest, UsuarioResponse, UsuarioUpdate

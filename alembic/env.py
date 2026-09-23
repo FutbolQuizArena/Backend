@@ -9,8 +9,8 @@ from alembic import context
 # Agregar raíz del proyecto al sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.core.config import CONFIGURACION
-from app.core.database import Base
+from app.core.configuracion import CONFIGURACION
+from app.core.base_datos import Base
 import app.models  # noqa: F401
 
 # Configuración de loggers desde el archivo ini

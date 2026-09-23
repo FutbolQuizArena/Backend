@@ -3,8 +3,8 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import CredencialesInvalidasError, EmailYaRegistradoError
-from app.models.enums import RolUsuario
+from app.core.excepciones import CredencialesInvalidasError, EmailYaRegistradoError
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
 from app.schemas.usuario_schema import UsuarioCreate

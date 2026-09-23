@@ -5,12 +5,12 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-from app.core.exceptions import AccesoDenegadoError, TokenInvalidoError
-from app.models.enums import RolUsuario
+from app.core.base_datos import get_db
+from app.core.excepciones import AccesoDenegadoError, TokenInvalidoError
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
-from app.services import auth_service
+from app.services import autenticacion_service
 
 # Configuración del esquema Bearer para Swagger UI con endpoint de login
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -23,7 +23,7 @@ def obtener_usuario_actual(
     """Extrae y valida el token JWT del encabezado Authorization, retornando el usuario autenticado.
 
     Flujo:
-      1. Valida y decodifica el token mediante auth_service.decodificar_token_jwt.
+      1. Valida y decodifica el token mediante autenticacion_service.decodificar_token_jwt.
       2. Si el token es inválido o expiró, lanza TokenInvalidoError (HTTP 401).
       3. Obtiene el usuario de la base de datos a partir del id extraído del payload.
       4. Si el usuario no existe o se encuentra deshabilitado (esta_habilitado=False),
@@ -34,7 +34,7 @@ def obtener_usuario_actual(
         raise TokenInvalidoError()
 
     try:
-        payload: Dict[str, Any] = auth_service.decodificar_token_jwt(token)
+        payload: Dict[str, Any] = autenticacion_service.decodificar_token_jwt(token)
     except Exception:
         raise TokenInvalidoError()
 

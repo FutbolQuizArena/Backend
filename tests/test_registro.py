@@ -5,8 +5,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 import bcrypt
-from app.core.exceptions import EmailYaRegistradoError
-from app.models.enums import RolUsuario
+from app.core.excepciones import EmailYaRegistradoError
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
 from app.schemas.usuario_schema import UsuarioCreate

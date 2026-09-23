@@ -4,11 +4,11 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import EmailYaRegistradoError
-from app.models.enums import RolUsuario
+from app.core.excepciones import EmailYaRegistradoError
+from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import UsuarioCreate
-from app.services import auth_service, usuario_service
+from app.services import autenticacion_service, usuario_service
 
 
 # ==============================================================================
@@ -123,7 +123,7 @@ def test_edicion_perfil_con_token_valido_exitoso(
 
     Verifica que la respuesta contenga nombre y email modificados y que NO exponga password_hash ni password.
     """
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -153,7 +153,7 @@ def test_edicion_perfil_mismo_email_propio_exitoso(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica que modificar solo el nombre manteniendo el mismo email no cause conflicto (HTTP 200)."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -179,7 +179,7 @@ def test_edicion_perfil_email_en_uso_por_otro_usuario_retorna_409(
     usuario_secundario: Usuario,
 ) -> None:
     """Verifica que intentar cambiar el email a uno ya utilizado por otro usuario retorne 409 Conflict."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -205,7 +205,7 @@ def test_edicion_perfil_body_invalido_retorna_422(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica que datos mal formados (email inválido, campos vacíos o faltantes) retornen 422."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     # Email sin formato válido
@@ -242,7 +242,7 @@ def test_edicion_perfil_con_cambio_password_exitoso(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica cambio de contraseña exitoso desde el formulario general (PATCH /api/usuarios/me)."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -265,7 +265,7 @@ def test_edicion_perfil_con_password_actual_incorrecta_retorna_401(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica 401 si la contraseña actual provista es incorrecta en PATCH /api/usuarios/me."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -285,7 +285,7 @@ def test_edicion_perfil_nueva_password_sin_password_actual_retorna_422(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica 422 si se envía nueva_password sin proporcionar password_actual."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -305,7 +305,7 @@ def test_modal_cambio_password_exitoso(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica cambio de contraseña exitoso desde el endpoint del modal (PATCH /api/usuarios/me/password)."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
@@ -325,7 +325,7 @@ def test_modal_cambio_password_erroneo_retorna_401(
     usuario_principal: Usuario,
 ) -> None:
     """Verifica 401 si la contraseña actual provista en el modal es incorrecta."""
-    token = auth_service.generar_token_jwt(usuario_principal)
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
     encabezados = {"Authorization": f"Bearer {token}"}
 
     payload = {
