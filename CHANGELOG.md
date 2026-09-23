@@ -1,13 +1,17 @@
 # Changelog
 
-## 23/9 [Refactorización] Estandarización de módulos y archivos a español
+## 23/9 [3.1.1] Modelo: Torneo/Participante/Cruce
 
-- **Núcleo (`app/core`):** Renombrado de `config.py` a `configuracion.py`, `database.py` a `base_datos.py` y `exceptions.py` a `excepciones.py`, actualizando la totalidad de imports en routers, modelos, servicios, seguridad y configuración de Alembic (`alembic/env.py`).
-- **Modelos de dominio (`app/models`):** Renombrado de `enums.py` a `enumeraciones.py`, manteniendo el enum `RolUsuario`.
-- **Esquemas Pydantic (`app/schemas`):** Renombrado de `common_schema.py` a `comun_schema.py` (`MensajeResponse`) y de `auth_schema.py` a `autenticacion_schema.py` (`LoginRequest`, `TokenResponse`).
-- **Capa de lógica de negocio (`app/services`):** Renombrado de `auth_service.py` a `autenticacion_service.py`, adaptando llamadas y firmas.
-- **Capa de presentación (`app/routes`):** Renombrado de `auth_router.py` a `autenticacion_router.py`, manteniendo intactos los prefijos y contratos de la API REST (`prefix="/api/auth"` con `/login`, `/registro`, `/logout`) para garantizar compatibilidad total con el frontend.
-- **Testing automatizado:** Actualización integral de imports y llamadas en los 8 módulos de pruebas (`tests/`), verificando la aprobación del 100% de la suite (63 pruebas exitosas en `pytest`).
+- **Modelos de dominio y persistencia ORM:** Implementación de las entidades del Módulo 3 en SQLAlchemy respetando el Diagrama de clases E4:
+  - `Torneo` (`torneos`): atributos `id`, `nombre`, `cantidad_participantes`, `codigo_acceso` (único e indexado), `contrasena_acceso` (opcional), `estado` (`EstadoTorneo`), `creador_id` (FK a `usuarios.id`) y `fecha_creacion`. Relaciones de composición con `cascade="all, delete-orphan"` hacia `ParticipanteTorneo` y `Cruce`. Métodos de dominio: `generar_codigo_acceso()` (generación segura de código alfanumérico de 6 caracteres) y `esta_completo()` (validación contra cupo). Métodos `unirse()` y `generar_cruces()` declarados para sub-tareas 3.1.3 y 3.2.
+  - `ParticipanteTorneo` (`participantes_torneo`): atributos `id`, `usuario_id` (FK a `usuarios.id`), `torneo_id` (FK a `torneos.id`) y `fecha_ingreso` con default `func.now()`. Restricción de unicidad compuesta `(torneo_id, usuario_id)`.
+  - `Cruce` (`cruces_torneo`): atributos `id`, `torneo_id` (FK a `torneos.id`), `ronda`, `jugador_a_id` y `jugador_b_id` (FKs a `participantes_torneo.id`), `ganador_id` (FK nullable a `participantes_torneo.id`) y `estado` (`EstadoCruce`). Método `determinar_ganador()` declarado para sub-tarea 3.2.
+- **Enumeraciones de dominio:** Definición de `EstadoTorneo` (`ESPERANDO_JUGADORES`, `EN_CURSO`, `FINALIZADO`) y `EstadoCruce` (`PENDIENTE`, `JUGADO`) en `app/models/enumeraciones.py` con tipo `SQLEnum` nativo para PostgreSQL.
+- **Esquemas Pydantic:** Creación de `TorneoBase`, `TorneoResponse` (serialización segura para frontend, protegiendo credenciales sensibles al nunca exponer `contrasena_acceso`), `ParticipanteTorneoResponse` y `CruceResponse` en `app/schemas/torneo_schema.py`.
+- **Migración de base de datos:** Generación y aplicación de la migración de Alembic `50ca309bd94c_crear_tablas_torneos_participantes_cruces.py` para la creación de las tablas `torneos`, `participantes_torneo`, `cruces_torneo` e índices asociados en PostgreSQL (Supabase), con soporte de rollback para tipos enum.
+- **Testing automatizado:** Suite de pruebas en `tests/test_torneo_model.py` (10 tests unitarios) cubriendo persistencia de entidades, valores por defecto, relación con creador, unicidad y generación de código de acceso, verificación de cupo (`esta_completo`), serialización segura sin exponer contraseñas y eliminación en cascada de composición.
+
+## 23/9 [Refactorización] Estandarización de módulos y archivos 
 
 ## 21/9 [1.1.6] Endpoint de logout
 
