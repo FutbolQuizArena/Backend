@@ -345,8 +345,10 @@ def test_metodos_diferidos_no_lanzan_error(sesion_db: Session, usuario_creador: 
         jugador_b_id=2,
     )
 
-    # unirse() diferido a 3.1.3
-    assert torneo.unirse(usuario=usuario_creador, contrasena_ingresada="123") is None
+    # unirse() implementado en 3.1.3: retorna bool
+    torneo.estado = EstadoTorneo.ESPERANDO_JUGADORES
+    assert isinstance(torneo.unirse(usuario=usuario_creador), bool)
+    assert torneo.unirse(usuario=usuario_creador) is True
     # generar_cruces() diferido a 3.2
     assert torneo.generar_cruces() is None
     # determinar_ganador() diferido a 3.2

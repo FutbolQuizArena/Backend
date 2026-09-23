@@ -8,6 +8,7 @@ from app.schemas.torneo_schema import (
     TorneoCreadoResponse,
     TorneoCreate,
     TorneoResponse,
+    TorneoUnirseRequest,
 )
 from app.schemas.usuario_schema import (
     UsuarioBase,
@@ -23,6 +24,7 @@ __all__ = [
     "TorneoCreadoResponse",
     "TorneoCreate",
     "TorneoResponse",
+    "TorneoUnirseRequest",
     "UsuarioBase",
     "UsuarioCreate",
     "UsuarioResponse",

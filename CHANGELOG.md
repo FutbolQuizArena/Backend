@@ -1,5 +1,15 @@
 # Changelog
 
+## 23/9 [3.1.3] Endpoint ingresar por código
+
+- **Modelo de dominio:** Implementación del método de instancia `Torneo.unirse(usuario, contrasena_ingresada)` en `app/models/torneo.py` según el Diagrama de clases E4, validando estado `ESPERANDO_JUGADORES`, verificación de cupo (`esta_completo()`) y comprobación criptográfica segura de contraseña con `bcrypt.checkpw`.
+- **Capa de lógica de negocio:** Creación de `unirse_a_torneo` en `app/services/torneo_service.py` siguiendo el Diagrama de Secuencia Nº3 (pasos 10 a 24): búsqueda por código, prevención de doble inscripción, delegación en `Torneo.unirse()`, persistencia de `ParticipanteTorneo` y transición automática de estado a `EN_CURSO` al completarse el cupo.
+- **Capa de persistencia:** Incorporación de los métodos `obtener_por_codigo_acceso`, `actualizar_estado` y `es_participante` en `app/repositories/torneo_repository.py`.
+- **Manejo de excepciones de dominio:** Creación de `TorneoNoDisponibleError` (código `TORNEO_NO_DISPONIBLE`, HTTP 400) en `app/core/excepciones.py`, proveyendo una respuesta homogénea ante códigos inexistentes, contraseñas erróneas, torneos completos o torneos en curso, previniendo ataques de enumeración.
+- **Esquemas Pydantic:** Creación de `TorneoUnirseRequest` (`codigo_acceso`, `contrasena`) con normalización y validación de código en `app/schemas/torneo_schema.py`.
+- **Capa de presentación (API REST):** Incorporación del endpoint `POST /api/torneos/unirse` (código `200 OK`) en `app/routes/torneo_router.py`, protegido con la dependencia `obtener_usuario_actual` y documentado exhaustivamente en OpenAPI.
+- **Testing automatizado:** Suite de pruebas en `tests/test_unirse_torneo.py` (11 tests unitarios y de integración) cubriendo unión a torneo sin contraseña (200), torneo con contraseña correcta (200), rechazo por contraseña errónea (400), código inexistente (400), torneo completo (400), torneo no disponible (400), prevención de doble inscripción (400), transición automática a `EN_CURSO` y control de autenticación (401).
+
 ## 23/9 [3.1.2] Endpoint crear torneo
 
 - **Capa de presentación (API REST):** Creación del controlador `app/routes/torneo_router.py` implementando el endpoint `POST /api/torneos` (código `201 Created`), protegido mediante la dependencia `obtener_usuario_actual`. Documentación completa en OpenAPI con respuestas 201, 401 y 422, y esquema de seguridad `BearerAuth`.

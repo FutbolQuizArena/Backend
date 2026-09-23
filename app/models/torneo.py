@@ -1,6 +1,7 @@
 """Modelo de base de datos para la entidad Torneo."""
 
 from datetime import datetime, timezone
+import bcrypt
 import secrets
 import string
 from typing import TYPE_CHECKING
@@ -72,12 +73,33 @@ class Torneo(Base):
         return len(self.participantes or []) >= (self.cantidad_participantes or 0)
 
     def unirse(self, usuario: "Usuario", contrasena_ingresada: str | None = None) -> bool:
-        """Permite a un usuario incorporarse al torneo validando cupo y credenciales de acceso.
+        """Valida si un usuario puede unirse al torneo según estado, cupo y credenciales.
 
-        Se implementa en la sub-tarea 3.1.3 (endpoint ingresar por código), ya que
-        requiere lógica de persistencia y orquestación con la base de datos.
+        Devuelve True si pasa todas las validaciones de negocio. La persistencia y
+        creación del ParticipanteTorneo se realiza en la capa de servicios.
         """
-        pass
+        # Torneo debe estar esperando jugadores
+        if self.estado != EstadoTorneo.ESPERANDO_JUGADORES:
+            return False
+
+        # Torneo no debe estar completo
+        if self.esta_completo():
+            return False
+
+        # Si el torneo tiene contraseña de acceso, debe verificarse contra el hash
+        if self.contrasena_acceso:
+            if not contrasena_ingresada:
+                return False
+            try:
+                if not bcrypt.checkpw(
+                    contrasena_ingresada.encode("utf-8"),
+                    self.contrasena_acceso.encode("utf-8"),
+                ):
+                    return False
+            except Exception:
+                return False
+
+        return True
 
     def generar_cruces(self) -> None:
         """Genera el fixture inicial de cruces eliminatorios del torneo.

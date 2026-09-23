@@ -84,3 +84,21 @@ class CruceResponse(BaseModel):
     ganador_id: int | None = Field(default=None, description="Identificador del participante ganador")
     estado: EstadoCruce = Field(..., description="Estado del cruce")
 
+
+class TorneoUnirseRequest(BaseModel):
+    """Esquema de solicitud para unirse a un torneo mediante código de acceso."""
+
+    codigo_acceso: str = Field(..., min_length=1, description="Código de acceso del torneo al que desea unirse")
+    contrasena: str | None = Field(
+        default=None,
+        description="Contraseña de acceso opcional requerida si el torneo es privado",
+    )
+
+    @field_validator("codigo_acceso")
+    @classmethod
+    def validar_y_normalizar_codigo(cls, valor: str) -> str:
+        valor_limpio = valor.strip().upper()
+        if not valor_limpio:
+            raise ValueError("El código de acceso no puede estar vacío ni contener solo espacios")
+        return valor_limpio
+
