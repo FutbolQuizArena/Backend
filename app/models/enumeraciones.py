@@ -9,3 +9,18 @@ class RolUsuario(str, enum.Enum):
     JUGADOR = "JUGADOR"
     ADMINISTRADOR = "ADMINISTRADOR"
 
+
+class EstadoTorneo(str, enum.Enum):
+    """Estados posibles de un torneo."""
+
+    ESPERANDO_JUGADORES = "ESPERANDO_JUGADORES"
+    EN_CURSO = "EN_CURSO"
+    FINALIZADO = "FINALIZADO"
+
+
+class EstadoCruce(str, enum.Enum):
+    """Estados posibles de un cruce eliminatorio."""
+
+    PENDIENTE = "PENDIENTE"
+    JUGADO = "JUGADO"
+
