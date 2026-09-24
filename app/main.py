@@ -9,7 +9,7 @@ from app.routes.autenticacion_router import autenticacion_router
 from app.routes.salud_router import salud_router
 from app.routes.torneo_router import torneo_router
 from app.routes.usuario_router import usuario_router
-
+from app.routes.duelo_router import duelo_router
 
 def crear_aplicacion() -> FastAPI:
     """Crea y configura la instancia de FastAPI."""
@@ -39,6 +39,7 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(autenticacion_router)
     aplicacion.include_router(usuario_router)
     aplicacion.include_router(torneo_router)
+    aplicacion.include_router(duelo_router)
 
     # Configuración de OpenAPI para habilitar el botón "Authorize" (Bearer JWT) en Swagger UI
     from fastapi.openapi.utils import get_openapi
