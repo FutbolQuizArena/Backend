@@ -1,9 +1,12 @@
-"""Pruebas unitarias y de integración para la edición de perfil de usuario (PATCH /api/usuarios/me)."""
+"""Pruebas unitarias y de integración para consulta y edición de perfil de usuario (GET y PATCH /api/usuarios/me)."""
 
+from datetime import datetime, timedelta, timezone
+import jwt
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
+from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import EmailYaRegistradoError
 from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
@@ -40,9 +43,29 @@ def usuario_secundario(sesion_db: Session) -> Usuario:
     return usuario_service.registrar_usuario(sesion_db, datos)
 
 
+@pytest.fixture
+def token_expirado(usuario_principal: Usuario) -> str:
+    """Genera un token JWT con fecha de expiración en el pasado."""
+    ahora = datetime.now(timezone.utc)
+    payload_expirado = {
+        "sub": str(usuario_principal.id),
+        "id": usuario_principal.id,
+        "email": usuario_principal.email,
+        "rol": usuario_principal.rol.value,
+        "iat": ahora - timedelta(hours=2),
+        "exp": ahora - timedelta(hours=1),
+    }
+    return jwt.encode(
+        payload_expirado,
+        CONFIGURACION.JWT_SECRET,
+        algorithm=CONFIGURACION.JWT_ALGORITMO,
+    )
+
+
 # ==============================================================================
 # Pruebas Unitarias del Modelo y Servicio
 # ==============================================================================
+
 
 
 def test_modelo_usuario_actualizar_perfil() -> None:
@@ -93,6 +116,112 @@ def test_servicio_actualizar_perfil_email_duplicado_lanza_excepcion(
 
     assert exc_info.value.codigo == "EMAIL_YA_REGISTRADO"
     assert exc_info.value.codigo_estado == 409
+
+
+# ==============================================================================
+# Pruebas de Integración (Endpoint GET /api/usuarios/me - Consulta de Perfil)
+# ==============================================================================
+
+
+def test_obtener_perfil_con_token_valido_exitoso(
+    cliente: TestClient,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica que GET /api/usuarios/me con token válido devuelva los datos correctos del usuario logueado (200)."""
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    respuesta = cliente.get("/api/usuarios/me", headers=encabezados)
+
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+
+    assert datos["id"] == usuario_principal.id
+    assert datos["nombre"] == usuario_principal.nombre
+    assert datos["email"] == usuario_principal.email
+    assert datos["rol"] == usuario_principal.rol.value
+    assert datos["puntaje_total"] == usuario_principal.puntaje_total
+    assert datos["esta_habilitado"] is True
+    assert "fecha_alta" in datos
+    assert datos["fecha_alta"] is not None
+
+
+def test_obtener_perfil_sin_token_retorna_401(cliente: TestClient) -> None:
+    """Verifica que GET /api/usuarios/me sin token retorne 401 Unauthorized."""
+    respuesta = cliente.get("/api/usuarios/me")
+
+    assert respuesta.status_code == 401
+    cuerpo = respuesta.json()
+    assert "code" in cuerpo
+    assert cuerpo["code"] in ["TOKEN_INVALIDO", "ERROR_HTTP_401"]
+
+
+def test_obtener_perfil_token_invalido_retorna_401(cliente: TestClient) -> None:
+    """Verifica que GET /api/usuarios/me con token inválido retorne 401 y código TOKEN_INVALIDO."""
+    encabezados = {"Authorization": "Bearer token_falso_o_corrupto_123"}
+
+    respuesta = cliente.get("/api/usuarios/me", headers=encabezados)
+
+    assert respuesta.status_code == 401
+    cuerpo = respuesta.json()
+    assert cuerpo["code"] == "TOKEN_INVALIDO"
+
+
+def test_obtener_perfil_token_expirado_retorna_401(
+    cliente: TestClient,
+    token_expirado: str,
+) -> None:
+    """Verifica que GET /api/usuarios/me con token expirado retorne 401 y código TOKEN_INVALIDO."""
+    encabezados = {"Authorization": f"Bearer {token_expirado}"}
+
+    respuesta = cliente.get("/api/usuarios/me", headers=encabezados)
+
+    assert respuesta.status_code == 401
+    cuerpo = respuesta.json()
+    assert cuerpo["code"] == "TOKEN_INVALIDO"
+
+
+def test_obtener_perfil_no_incluye_datos_sensibles(
+    cliente: TestClient,
+    usuario_principal: Usuario,
+) -> None:
+    """Verifica que la respuesta de GET /api/usuarios/me no incluya password_hash ni datos sensibles."""
+    token = autenticacion_service.generar_token_jwt(usuario_principal)
+    encabezados = {"Authorization": f"Bearer {token}"}
+
+    respuesta = cliente.get("/api/usuarios/me", headers=encabezados)
+
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+
+    assert "password_hash" not in datos
+    assert "password" not in datos
+    campos_permitidos = {
+        "id",
+        "nombre",
+        "email",
+        "rol",
+        "puntaje_total",
+        "esta_habilitado",
+        "fecha_alta",
+    }
+    assert set(datos.keys()).issubset(campos_permitidos)
+
+
+def test_swagger_documentacion_endpoint_perfil_me(cliente: TestClient) -> None:
+    """Verifica que GET /api/usuarios/me esté documentado en OpenAPI con summary, description, 200, 401 y BearerAuth."""
+    respuesta = cliente.get("/openapi.json")
+    assert respuesta.status_code == 200
+    schema = respuesta.json()
+
+    assert "/api/usuarios/me" in schema["paths"]
+    op_get = schema["paths"]["/api/usuarios/me"]["get"]
+
+    assert op_get["summary"] == "Obtener perfil del usuario autenticado"
+    assert "description" in op_get and len(op_get["description"]) > 0
+    assert "200" in op_get["responses"]
+    assert "401" in op_get["responses"]
+    assert op_get["security"] == [{"BearerAuth": []}]
 
 
 # ==============================================================================

@@ -155,19 +155,36 @@ class AccesoDenegadoError(ExcepcionBase):
         )
 
 
+class TorneoAccesoDenegadoError(ExcepcionBase):
+    """Excepción lanzada cuando el usuario no tiene permisos para acceder al torneo (creador o participante requerido)."""
+
+    def __init__(
+        self,
+        mensaje: str = "No tienes permisos para acceder a este torneo",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="ACCESO_DENEGADO",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_403_FORBIDDEN,
+        )
+
+
 class TorneoNoDisponibleError(ExcepcionBase):
-    """Excepción lanzada cuando un torneo no está disponible para unirse o las credenciales no son válidas."""
+    """Excepción lanzada cuando un torneo no está disponible para unirse, no existe o las credenciales no son válidas."""
 
     def __init__(
         self,
         mensaje: str = "El torneo no se encuentra disponible para unirse",
         detalle: Optional[str] = None,
+        codigo_estado: int = status.HTTP_400_BAD_REQUEST,
     ) -> None:
         super().__init__(
             codigo="TORNEO_NO_DISPONIBLE",
             mensaje=mensaje,
             detalle=detalle,
-            codigo_estado=status.HTTP_400_BAD_REQUEST,
+            codigo_estado=codigo_estado,
         )
 
 

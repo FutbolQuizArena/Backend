@@ -11,6 +11,7 @@ from app.schemas.torneo_schema import (
     FiltroTorneoEnum,
     TorneoCreadoResponse,
     TorneoCreate,
+    TorneoDetalleResponse,
     TorneoListItemResponse,
     TorneoResponse,
     TorneoUnirseRequest,
@@ -200,6 +201,76 @@ def listar_torneos(
     return torneo_service.listar_torneos(
         db=db,
         filtro=filtro,
+        usuario_actual=usuario_actual,
+    )
+
+
+@torneo_router.get(
+    "/{torneo_id}",
+    response_model=TorneoDetalleResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Obtener estado, participantes y cuadro de un torneo",
+    description=(
+        "Obtiene la información detallada de la sala del torneo para el creador y los participantes inscriptos.\n\n"
+        "- Retorna los datos del torneo, el organizador (creador), el código de acceso y la lista completa de participantes.\n"
+        "- El campo `cuadro` incluye los cruces eliminatorios ordenados por ronda. Si el torneo aún se encuentra en "
+        "estado `ESPERANDO_JUGADORES`, `cuadro` viene como una lista vacía ya que los cruces se generan al completarse el cupo.\n"
+        "- En los cruces con estado `PENDIENTE`, el campo `ganador` viene como null (se completará con la resolución de partidas en 3.2.2).\n"
+        "- Control de acceso estricto: requiere que el usuario autenticado sea el creador o un participante inscripto del torneo (HTTP 403).\n\n"
+        "Requiere token JWT Bearer en el encabezado Authorization."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Detalle del torneo, participantes y cuadro obtenidos exitosamente.",
+            "model": TorneoDetalleResponse,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TOKEN_INVALIDO",
+                        "message": "Token de autenticación inválido o expirado",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+        status.HTTP_403_FORBIDDEN: {
+            "description": "Acceso denegado: el usuario no es creador ni participante del torneo.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "ACCESO_DENEGADO",
+                        "message": "No tienes permisos para acceder a este torneo",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "El torneo solicitado no fue encontrado.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TORNEO_NO_DISPONIBLE",
+                        "message": "No se encontró ningún torneo con el ID 1",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+    },
+)
+def obtener_detalle_torneo(
+    torneo_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> TorneoDetalleResponse:
+    """Endpoint para consultar la sala del torneo, participantes y cuadro de llaves."""
+    return torneo_service.obtener_detalle_torneo(
+        db=db,
+        torneo_id=torneo_id,
         usuario_actual=usuario_actual,
     )
 
