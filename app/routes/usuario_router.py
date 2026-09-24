@@ -12,6 +12,43 @@ from app.services import usuario_service
 usuario_router = APIRouter(prefix="/api/usuarios", tags=["Usuarios"])
 
 
+@usuario_router.get(
+    "/me",
+    response_model=UsuarioResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Obtener perfil del usuario autenticado",
+    description=(
+        "Obtiene la información del perfil del usuario autenticado (id, nombre, email, rol, "
+        "puntaje_total, esta_habilitado, fecha_alta). Permite precargar los datos antes de su edición. "
+        "Nunca expone contraseñas ni datos sensibles. "
+        "Requiere token JWT Bearer en el encabezado Authorization."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Datos del perfil del usuario autenticado recuperados exitosamente.",
+            "model": UsuarioResponse,
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TOKEN_INVALIDO",
+                        "message": "Token de autenticación inválido o expirado",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+    },
+)
+def obtener_perfil_me(
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+) -> UsuarioResponse:
+    """Endpoint protegido para consultar los datos del usuario autenticado."""
+    return UsuarioResponse.model_validate(usuario_actual)
+
+
 @usuario_router.patch(
     "/me",
     response_model=UsuarioResponse,

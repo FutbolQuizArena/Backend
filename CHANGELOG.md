@@ -1,5 +1,11 @@
 # Changelog
 
+## 24/9 [1.1] Endpoint consultar usuario autenticado (GET /api/usuarios/me)
+
+- **Capa de presentación (API REST):** Implementación del endpoint `GET /api/usuarios/me` en `app/routes/usuario_router.py` (código `200 OK` con `UsuarioResponse`), protegido mediante la dependencia `obtener_usuario_actual`. Permite consultar los datos del usuario autenticado (`id`, `nombre`, `email`, `rol`, `puntaje_total`, `esta_habilitado`, `fecha_alta`) para precargar el formulario de edición de perfil en el frontend sin exponer contraseñas ni datos sensibles. Documentación exhaustiva en OpenAPI y Swagger UI (códigos 200, 401 y esquema de seguridad `BearerAuth`).
+- **Esquemas Pydantic:** Reutilización del esquema `UsuarioResponse` en `app/schemas/usuario_schema.py` para la serialización segura de los datos del perfil público.
+- **Testing automatizado:** Incorporación de suite de pruebas en `tests/test_edicion_perfil.py` cubriendo consulta con token válido (200), ausencia de token (401), token manipulado/inválido (401), token con expiración vencida (401), verificación estricta de exclusión de `password_hash` y datos sensibles, y validación de la documentación OpenAPI/Swagger.
+
 ## 23/9 [3.1.5] Endpoint salir de torneo
 
 - **Modelo de dominio:** Incorporación del método de instancia `Torneo.salir(usuario)` en `app/models/torneo.py`, evaluando el estado del torneo (`ESPERANDO_JUGADORES`) y determinando la acción de dominio (`no_permitido`, `torneo_cancelado` para el creador o `participante_eliminado` para participantes regulares) sin acoplarse a la persistencia.
