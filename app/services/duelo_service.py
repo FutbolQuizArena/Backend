@@ -63,3 +63,44 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
     )
     db.refresh(duelo_nuevo)
     return duelo_nuevo
+
+    ...
+    db.refresh(duelo_nuevo)
+    return duelo_nuevo
+
+
+def iniciar_duelo_local(db: Session, usuario_actual: Usuario, nombre_invitado: str) -> PartidaDuelo:
+    """
+    Inicia un duelo LOCAL (Tarea 2.1.8/2.3.4): ambos jugadores usan el mismo dispositivo
+    por turnos, así que arranca directamente EN_CURSO, con las mismas 10 preguntas
+    asignadas a ambos jugadores (jugador 2 es un invitado sin cuenta).
+    """
+    categoria = categoria_repository.obtener_categoria_aleatoria(db)
+    if categoria is None:
+        raise ExcepcionValidacion(mensaje="No hay categorías disponibles para jugar")
+
+    preguntas = pregunta_repository.obtener_preguntas_aleatorias_sin_repeticion(
+        db=db, categoria_id=categoria.id, cantidad=CANTIDAD_PREGUNTAS_POR_PARTIDA
+    )
+    if not preguntas:
+        raise ExcepcionValidacion(mensaje="La categoría seleccionada no tiene preguntas cargadas")
+
+    duelo = duelo_repository.crear_duelo(
+        db=db,
+        jugador1_id=usuario_actual.id,
+        categoria_id=categoria.id,
+        modalidad=ModalidadDuelo.LOCAL,
+    )
+    duelo.nombre_invitado = nombre_invitado
+    db.add(duelo)
+    db.commit()
+
+    pregunta_ids = [pregunta.id for pregunta in preguntas]
+    partida_repository.agregar_preguntas_a_partida(
+        db=db, partida_id=duelo.id, pregunta_ids=pregunta_ids, numero_jugador=1
+    )
+    partida_repository.agregar_preguntas_a_partida(
+        db=db, partida_id=duelo.id, pregunta_ids=pregunta_ids, numero_jugador=2
+    )
+    db.refresh(duelo)
+    return duelo
