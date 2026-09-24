@@ -2,6 +2,7 @@
 
 from datetime import datetime, timezone
 import bcrypt
+import random
 import secrets
 import string
 from typing import TYPE_CHECKING
@@ -122,11 +123,18 @@ class Torneo(Base):
 
         return "participante_eliminado"
 
-    def generar_cruces(self) -> None:
-        """Genera el fixture inicial de cruces eliminatorios del torneo.
+    def generar_cruces(self) -> list[tuple["ParticipanteTorneo", "ParticipanteTorneo"]]:
+        """Genera los emparejamientos aleatorios para la Ronda 1 del torneo.
 
-        Se implementa en la sub-tarea 3.2 (motor de eliminación directa), ya que
-        requiere lógica de persistencia y orquestación con PartidaDuelo.
+        Toma los participantes inscriptos (self.participantes), los mezcla aleatoriamente
+        y arma pares consecutivos (jugador_a, jugador_b).
+        No interactúa con la base de datos ni instancia entidades Cruce.
         """
-        pass
+        participantes_mezclados = list(self.participantes or [])
+        random.shuffle(participantes_mezclados)
+        pares: list[tuple["ParticipanteTorneo", "ParticipanteTorneo"]] = []
+        for i in range(0, len(participantes_mezclados), 2):
+            if i + 1 < len(participantes_mezclados):
+                pares.append((participantes_mezclados[i], participantes_mezclados[i + 1]))
+        return pares
 

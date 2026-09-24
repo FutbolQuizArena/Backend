@@ -2,7 +2,8 @@
 
 from datetime import datetime
 from enum import Enum
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.models.enumeraciones import EstadoCruce, EstadoTorneo
 
@@ -72,18 +73,67 @@ class ParticipanteTorneoResponse(BaseModel):
     fecha_ingreso: datetime = Field(..., description="Fecha y hora de ingreso al torneo")
 
 
+class ParticipanteDetalleResponse(BaseModel):
+    """Detalle de un participante dentro del torneo para la vista de sala y cuadro."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int | None = Field(default=None, description="Identificador único de la inscripción")
+    usuario_id: int = Field(..., description="Identificador único del usuario")
+    nombre: str = Field(default="", description="Nombre del usuario participante")
+    es_creador: bool = Field(default=False, description="Indica si el participante es el creador/organizador del torneo")
+
+    @model_validator(mode="before")
+    @classmethod
+    def extraer_datos_de_modelo(cls, data: Any) -> Any:
+        if hasattr(data, "usuario_id"):
+            usr = getattr(data, "usuario", None)
+            nom = getattr(usr, "nombre", None) if usr else getattr(data, "nombre", "")
+            trn = getattr(data, "torneo", None)
+            creador_id = getattr(trn, "creador_id", None) if trn else None
+            es_cread = (data.usuario_id == creador_id) if creador_id else False
+            return {
+                "id": getattr(data, "id", None),
+                "usuario_id": data.usuario_id,
+                "nombre": nom or getattr(data, "nombre", "") or "",
+                "es_creador": getattr(data, "es_creador", es_cread),
+            }
+        return data
+
+
 class CruceResponse(BaseModel):
     """Esquema de respuesta para un cruce eliminatorio en un torneo."""
 
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(..., description="Identificador único del cruce")
-    torneo_id: int = Field(..., description="Identificador del torneo")
+    torneo_id: int = Field(default=0, description="Identificador del torneo")
     ronda: int = Field(..., description="Número de ronda eliminatoria")
-    jugador_a_id: int = Field(..., description="Identificador del participante jugador A")
-    jugador_b_id: int = Field(..., description="Identificador del participante jugador B")
+    jugador_a_id: int | None = Field(default=None, description="Identificador del participante jugador A")
+    jugador_b_id: int | None = Field(default=None, description="Identificador del participante jugador B")
     ganador_id: int | None = Field(default=None, description="Identificador del participante ganador")
     estado: EstadoCruce = Field(..., description="Estado del cruce")
+    jugador_a: ParticipanteDetalleResponse | None = Field(default=None, description="Detalle del jugador A")
+    jugador_b: ParticipanteDetalleResponse | None = Field(default=None, description="Detalle del jugador B")
+    ganador: ParticipanteDetalleResponse | None = Field(default=None, description="Detalle del participante ganador")
+
+
+class TorneoDetalleResponse(BaseModel):
+    """Esquema de respuesta detallado para la sala del torneo y cuadro de llaves."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int = Field(..., description="Identificador único del torneo")
+    nombre: str = Field(..., description="Nombre del torneo")
+    estado: EstadoTorneo = Field(..., description="Estado actual del torneo")
+    cantidad_participantes: int = Field(..., description="Cupo máximo de participantes")
+    cantidad_participantes_actual: int = Field(..., description="Cantidad actual de participantes inscriptos")
+    creador_id: int = Field(..., description="Identificador del usuario creador")
+    creador_nombre: str = Field(..., description="Nombre del usuario creador u organizador")
+    codigo_acceso: str = Field(..., description="Código de acceso del torneo")
+    fecha_creacion: datetime = Field(..., description="Fecha y hora de creación")
+    participantes: list[ParticipanteDetalleResponse] = Field(default_factory=list, description="Lista de participantes del torneo")
+    cuadro: list[CruceResponse] = Field(default_factory=list, description="Cuadro de cruces eliminatorios ordenado por ronda")
 
 
 class TorneoUnirseRequest(BaseModel):

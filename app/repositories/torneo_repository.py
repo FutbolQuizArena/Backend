@@ -1,8 +1,9 @@
 """Repositorio de acceso a datos para la entidad Torneo y sus participantes."""
 
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
+from app.models.cruce import Cruce
 from app.models.enumeraciones import EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
@@ -19,8 +20,16 @@ def _subquery_conteo_participantes(db: Session):
 
 
 def obtener_por_id(db: Session, id: int) -> Torneo | None:
-    """Obtiene un torneo por su ID. Retorna None si no existe."""
-    return db.query(Torneo).filter(Torneo.id == id).first()
+    """Obtiene un torneo por su ID con relaciones cargadas eficientemente. Retorna None si no existe."""
+    return (
+        db.query(Torneo)
+        .options(
+            joinedload(Torneo.creador),
+            joinedload(Torneo.participantes).joinedload(ParticipanteTorneo.usuario),
+        )
+        .filter(Torneo.id == id)
+        .first()
+    )
 
 
 def obtener_por_codigo_acceso(db: Session, codigo: str) -> Torneo | None:
@@ -91,6 +100,69 @@ def actualizar_estado(db: Session, torneo: Torneo, nuevo_estado: EstadoTorneo) -
     db.commit()
     db.refresh(torneo)
     return torneo
+
+
+def crear_cruces(
+    db: Session | list[Cruce],
+    cruces: list[Cruce] | None = None,
+) -> list[Cruce]:
+    """Persiste una lista de entidades Cruce en la base de datos y confirma la transacción.
+
+    Soporta invocación directa:
+      - crear_cruces(db, cruces)
+      - crear_cruces(cruces) (infiriendo la sesión del modelo asociado)
+    """
+    if isinstance(db, list):
+        lista_cruces = db
+        sesion = None
+        for c in lista_cruces:
+            from sqlalchemy.orm import object_session
+            s = object_session(c) or (object_session(c.torneo) if hasattr(c, "torneo") and c.torneo else None)
+            if s is not None:
+                sesion = s
+                break
+        if sesion is None:
+            raise ValueError("No se pudo inferir la sesión de base de datos para persistir los cruces")
+    else:
+        sesion = db
+        lista_cruces = cruces or []
+
+    sesion.add_all(lista_cruces)
+    sesion.commit()
+    for cruce in lista_cruces:
+        sesion.refresh(cruce)
+    return lista_cruces
+
+
+def obtener_cruces_por_torneo(
+    db: Session | int,
+    torneo_id: int | None = None,
+) -> list[Cruce]:
+    """Obtiene todos los cruces de un torneo ordenados por ronda.
+
+    Carga eficientemente las relaciones de participantes y usuarios asociados.
+    """
+    if isinstance(db, int):
+        id_torneo = db
+        sesion = None
+    else:
+        sesion = db
+        id_torneo = torneo_id
+
+    if sesion is None:
+        raise ValueError("Se requiere una sesión de base de datos para consultar los cruces")
+
+    return (
+        sesion.query(Cruce)
+        .options(
+            joinedload(Cruce.jugador_a).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.jugador_b).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.ganador).joinedload(ParticipanteTorneo.usuario),
+        )
+        .filter(Cruce.torneo_id == id_torneo)
+        .order_by(Cruce.ronda.asc(), Cruce.id.asc())
+        .all()
+    )
 
 
 def listar_por_participante(db: Session, usuario_id: int) -> list[tuple[Torneo, int]]:
