@@ -2,7 +2,11 @@
 
 from sqlalchemy.orm import Session
 
-from app.core.excepciones import ExcepcionValidacion, TorneoNoDisponibleError
+from app.core.excepciones import (
+    ExcepcionRecursoNoEncontrado,
+    ExcepcionValidacion,
+    TorneoNoDisponibleError,
+)
 from app.models.enumeraciones import EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
@@ -166,3 +170,59 @@ def listar_torneos(
         items.append(item)
 
     return items
+
+
+def salir_de_torneo(
+    db: Session,
+    torneo_id: int,
+    usuario_actual: Usuario,
+) -> str:
+    """Permite a un usuario abandonar un torneo antes de su inicio.
+
+    Flujo y reglas de negocio:
+      1. Busca el torneo por su ID. Si no existe -> ExcepcionRecursoNoEncontrado (HTTP 404).
+      2. Verifica que el usuario sea participante activo del torneo. Si no lo es -> TorneoNoDisponibleError (HTTP 400).
+      3. Invoca la lógica de dominio en torneo.salir(usuario_actual).
+      4. Si el torneo ya no permite salidas (EN_CURSO o FINALIZADO) -> TorneoNoDisponibleError (HTTP 400).
+      5. Si quien sale es el creador del torneo:
+         - Elimina el torneo completo mediante torneo_repository.eliminar_torneo(db, torneo).
+         - Las entidades hijas (participantes y cruces) se eliminan por cascada (delete-orphan).
+         - Retorna mensaje informativo de cancelación del torneo.
+      6. Si quien sale es un participante regular:
+         - Elimina únicamente la inscripción del participante mediante torneo_repository.eliminar_participante(db, participante).
+         - Retorna mensaje de confirmación de salida.
+    """
+    torneo = torneo_repository.obtener_por_id(db, id=torneo_id)
+    if torneo is None:
+        raise ExcepcionRecursoNoEncontrado(
+            mensaje=f"No se encontró ningún torneo con el ID {torneo_id}",
+            detalle=None,
+        )
+
+    participante = torneo_repository.obtener_participante(
+        db,
+        torneo_id=torneo.id,
+        usuario_id=usuario_actual.id,
+    )
+    if participante is None:
+        raise TorneoNoDisponibleError(
+            mensaje="No eres participante de este torneo",
+            detalle=None,
+        )
+
+    accion = torneo.salir(usuario=usuario_actual)
+
+    if accion == "no_permitido":
+        raise TorneoNoDisponibleError(
+            mensaje="No es posible salir de un torneo que ya ha comenzado o finalizado",
+            detalle=None,
+        )
+
+    if accion == "torneo_cancelado":
+        torneo_repository.eliminar_torneo(db, torneo=torneo)
+        return "Torneo cancelado exitosamente al salir el creador"
+
+    # accion == "participante_eliminado"
+    torneo_repository.eliminar_participante(db, participante=participante)
+    return "Has salido del torneo exitosamente"
+

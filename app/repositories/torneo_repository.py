@@ -45,6 +45,18 @@ def es_participante(db: Session, torneo_id: int, usuario_id: int) -> bool:
     )
 
 
+def obtener_participante(db: Session, torneo_id: int, usuario_id: int) -> ParticipanteTorneo | None:
+    """Obtiene el registro de ParticipanteTorneo para un torneo y usuario específicos."""
+    return (
+        db.query(ParticipanteTorneo)
+        .filter(
+            ParticipanteTorneo.torneo_id == torneo_id,
+            ParticipanteTorneo.usuario_id == usuario_id,
+        )
+        .first()
+    )
+
+
 def crear(db: Session, torneo: Torneo) -> Torneo:
     """Persiste una nueva entidad Torneo en la base de datos."""
     db.add(torneo)
@@ -53,12 +65,24 @@ def crear(db: Session, torneo: Torneo) -> Torneo:
     return torneo
 
 
+def eliminar_torneo(db: Session, torneo: Torneo) -> None:
+    """Elimina un torneo y sus entidades hijas asociadas en cascada (participantes y cruces)."""
+    db.delete(torneo)
+    db.commit()
+
+
 def agregar_participante(db: Session, participante: ParticipanteTorneo) -> ParticipanteTorneo:
     """Persiste la inscripción de un participante en un torneo."""
     db.add(participante)
     db.commit()
     db.refresh(participante)
     return participante
+
+
+def eliminar_participante(db: Session, participante: ParticipanteTorneo) -> None:
+    """Elimina la inscripción de un participante y confirma la transacción."""
+    db.delete(participante)
+    db.commit()
 
 
 def actualizar_estado(db: Session, torneo: Torneo, nuevo_estado: EstadoTorneo) -> Torneo:

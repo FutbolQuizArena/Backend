@@ -101,6 +101,27 @@ class Torneo(Base):
 
         return True
 
+    def salir(self, usuario: "Usuario") -> str:
+        """Determina la acción a tomar ante la salida de un participante del torneo.
+
+        Reglas de negocio:
+          - Si el estado no es ESPERANDO_JUGADORES, no se permite la salida ('no_permitido').
+          - Si el usuario que sale es el creador del torneo, el torneo se cancela ('torneo_cancelado').
+          - Si el usuario es un participante regular, se retira del torneo ('participante_eliminado').
+
+        Retorna:
+            - 'no_permitido': El torneo ya comenzó o finalizó.
+            - 'torneo_cancelado': El usuario que sale es el creador del torneo.
+            - 'participante_eliminado': El usuario es un participante regular.
+        """
+        if self.estado != EstadoTorneo.ESPERANDO_JUGADORES:
+            return "no_permitido"
+
+        if usuario.id == self.creador_id:
+            return "torneo_cancelado"
+
+        return "participante_eliminado"
+
     def generar_cruces(self) -> None:
         """Genera el fixture inicial de cruces eliminatorios del torneo.
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 23/9 [3.1.5] Endpoint salir de torneo
+
+- **Modelo de dominio:** Incorporación del método de instancia `Torneo.salir(usuario)` en `app/models/torneo.py`, evaluando el estado del torneo (`ESPERANDO_JUGADORES`) y determinando la acción de dominio (`no_permitido`, `torneo_cancelado` para el creador o `participante_eliminado` para participantes regulares) sin acoplarse a la persistencia.
+- **Capa de lógica de negocio:** Creación de `salir_de_torneo` en `app/services/torneo_service.py` resolviendo el flujo de salida: validación de existencia del torneo (HTTP 404), comprobación de participación activa (HTTP 400), rechazo si el torneo ya inició o finalizó (HTTP 400), cancelación y eliminación en cascada si quien sale es el creador, o desvinculación individual si es un participante regular.
+- **Capa de persistencia:** Implementación de `obtener_participante`, `eliminar_participante` y `eliminar_torneo` en `app/repositories/torneo_repository.py`.
+- **Capa de presentación (API REST):** Incorporación del endpoint `DELETE /api/torneos/{torneo_id}/salir` en `app/routes/torneo_router.py` (código `200 OK` con `MensajeResponse`), protegido mediante `obtener_usuario_actual` y con documentación exhaustiva en OpenAPI (códigos 200, 400, 401 y 404).
+- **Testing automatizado:** Suite de pruebas en `tests/test_salir_torneo.py` (15 tests unitarios y de integración) cubriendo salida de participante regular (200), cancelación por salida del creador (200), torneos en curso o finalizados (400), no participante intentando salir (400), torneo inexistente (404), y peticiones sin token o con token inválido (401).
+
 ## 23/9 [3.1.4] Endpoint listar torneos
 
 - **Capa de presentación (API REST):** Implementación del endpoint `GET /api/torneos` en `app/routes/torneo_router.py` (código `200 OK`), protegido con `obtener_usuario_actual`. Soporta el parámetro de consulta `filtro` (`mios`, `disponibles`, `finalizados`), con valor por defecto `mios` y validación estricta con HTTP 422 ante valores no reconocidos. Documentación OpenAPI exhaustiva con esquema de seguridad `BearerAuth`.

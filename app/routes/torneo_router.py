@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
+from app.schemas.comun_schema import MensajeResponse
 from app.schemas.torneo_schema import (
     FiltroTorneoEnum,
     TorneoCreadoResponse,
@@ -201,3 +202,73 @@ def listar_torneos(
         filtro=filtro,
         usuario_actual=usuario_actual,
     )
+
+
+@torneo_router.delete(
+    "/{torneo_id}/salir",
+    response_model=MensajeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Salir de un torneo",
+    description=(
+        "Permite a un usuario autenticado abandonar un torneo antes de que este comience (estado ESPERANDO_JUGADORES).\n\n"
+        "- Si el usuario es un participante regular: se remueve su inscripción y el torneo continúa abierto.\n"
+        "- Si el usuario es el creador del torneo: el torneo completo se cancela y se eliminan sus participantes asociados.\n"
+        "- No está permitido salir de torneos que ya hayan iniciado (EN_CURSO) o finalizado (FINALIZADO).\n\n"
+        "Requiere token JWT Bearer en el encabezado Authorization."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Salida exitosa o cancelación del torneo.",
+            "model": MensajeResponse,
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "El usuario no es participante del torneo o el torneo ya ha comenzado/finalizado.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TORNEO_NO_DISPONIBLE",
+                        "message": "No es posible salir de un torneo que ya ha comenzado o finalizado",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "TOKEN_INVALIDO",
+                        "message": "Token de autenticación inválido o expirado",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "El torneo especificado no fue encontrado.",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "code": "RECURSO_NO_ENCONTRADO",
+                        "message": "No se encontró ningún torneo con el ID 1",
+                        "detail": None,
+                    }
+                }
+            },
+        },
+    },
+)
+def salir_de_torneo(
+    torneo_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> MensajeResponse:
+    """Endpoint para salir de un torneo delegando la lógica al servicio."""
+    mensaje = torneo_service.salir_de_torneo(
+        db=db,
+        torneo_id=torneo_id,
+        usuario_actual=usuario_actual,
+    )
+    return MensajeResponse(mensaje=mensaje)
+
