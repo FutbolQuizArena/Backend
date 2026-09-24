@@ -1,5 +1,14 @@
 # Changelog
 
+## 24/9 [3.2.3] Endpoints de estado, participantes y cuadro del torneo
+
+- **Capa de presentación (API REST):** Incorporación del endpoint `GET /api/torneos/{torneo_id}` en `app/routes/torneo_router.py` (código `200 OK` con `TorneoDetalleResponse`), protegido con `obtener_usuario_actual`. Devuelve la información de la sala del torneo (`id`, `nombre`, `estado`, `cantidad_participantes`, `cantidad_participantes_actual`, `creador_id`, `creador_nombre`, `codigo_acceso`, `fecha_creacion`), lista de participantes detallada con flag `es_creador` y cuadro de cruces eliminatorios ordenados por ronda. Control de acceso restringido a creador y participantes inscriptos (HTTP 403) y manejo de recurso no encontrado (HTTP 404). Documentación completa en OpenAPI con esquema `BearerAuth`.
+- **Esquemas Pydantic:** Creación de `ParticipanteDetalleResponse` (`usuario_id`, `nombre`, `es_creador`), expansión de `CruceResponse` (incluyendo `jugador_a`, `jugador_b` y `ganador` opcional) y creación de `TorneoDetalleResponse` en `app/schemas/torneo_schema.py`.
+- **Capa de persistencia:** Optimización de `obtener_por_id` en `app/repositories/torneo_repository.py` con `joinedload` para cargar creador, participantes y usuarios en una sola consulta evitando N+1. Incorporación de `obtener_cruces_por_torneo` con carga ansiosa de jugadores y ordenamiento por ronda.
+- **Capa de lógica de negocio:** Creación de `obtener_detalle_torneo` en `app/services/torneo_service.py` resolviendo validación de existencia (HTTP 404), autorización por rol de participante/creador (`TorneoAccesoDenegadoError`, HTTP 403), mapeo de participantes y cruces.
+- **Manejo de excepciones:** Creación de `TorneoAccesoDenegadoError` (código `ACCESO_DENEGADO`, HTTP 403) en `app/core/excepciones.py`.
+- **Testing automatizado:** Creación de `tests/test_detalle_torneo.py` (9 tests unitarios y de integración) cubriendo consulta del creador en espera (200), consulta de participante con cuadro generado en torneo en curso (200), rechazo a usuarios ajenos (403), torneo inexistente (404), conteo exacto progresivo de participantes, ausencia/invalidez de token (401) y validación de OpenAPI/Swagger.
+
 ## 24/9 [3.2.1] Generación automática de cruces
 
 - **Modelo de dominio:** Implementación del método de instancia `Torneo.generar_cruces(self) -> list[tuple[ParticipanteTorneo, ParticipanteTorneo]]` en `app/models/torneo.py`, que mezcla aleatoriamente los participantes inscriptos (`random.shuffle`) y arma pares consecutivos para los emparejamientos de la Ronda 1 sin acoplarse a la persistencia.
