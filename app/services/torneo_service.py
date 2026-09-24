@@ -7,7 +7,8 @@ from app.core.excepciones import (
     ExcepcionValidacion,
     TorneoNoDisponibleError,
 )
-from app.models.enumeraciones import EstadoTorneo
+from app.models.cruce import Cruce
+from app.models.enumeraciones import EstadoCruce, EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
 from app.models.usuario import Usuario
@@ -116,14 +117,58 @@ def unirse_a_torneo(
     db.refresh(torneo)
 
     # Pasos 22 y 23 del diagrama de secuencia: si se completa el cupo, pasa a EN_CURSO
+    # y dispara la generación automática de cruces para la Ronda 1 (Diagrama de Secuencia Nº4)
     if torneo.esta_completo():
         torneo = torneo_repository.actualizar_estado(
             db=db,
             torneo=torneo,
             nuevo_estado=EstadoTorneo.EN_CURSO,
         )
+        generar_cruces_para_torneo(torneo=torneo, db=db)
 
     return torneo
+
+
+def generar_cruces_para_torneo(
+    torneo: Torneo | Session,
+    db: Session | Torneo | None = None,
+) -> list[Cruce]:
+    """Genera y persiste los cruces iniciales (Ronda 1) de un torneo al completarse el cupo.
+
+    Flujo según Diagrama de Secuencia Nº4 (pasos 1 a 6):
+      1. Obtiene los pares de emparejamiento aleatorio invocando torneo.generar_cruces().
+      2. Instancia una entidad Cruce por cada par (ronda=1, estado=PENDIENTE, ganador_id=None).
+      3. Persiste la lista de cruces en la base de datos vía torneo_repository.crear_cruces().
+      4. Retorna la lista de cruces creados.
+    """
+    if isinstance(torneo, Session):
+        sesion = torneo
+        torneo_instancia = db
+    else:
+        torneo_instancia = torneo
+        sesion = db
+
+    if sesion is None:
+        from sqlalchemy.orm import object_session
+        sesion = object_session(torneo_instancia)
+
+    pares = torneo_instancia.generar_cruces()
+    cruces: list[Cruce] = []
+    for jugador_a, jugador_b in pares:
+        cruce = Cruce(
+            torneo_id=torneo_instancia.id,
+            torneo=torneo_instancia,
+            ronda=1,
+            jugador_a_id=jugador_a.id,
+            jugador_b_id=jugador_b.id,
+            estado=EstadoCruce.PENDIENTE,
+            ganador_id=None,
+        )
+        cruces.append(cruce)
+
+    if sesion is not None:
+        return torneo_repository.crear_cruces(db=sesion, cruces=cruces)
+    return torneo_repository.crear_cruces(cruces)
 
 
 def listar_torneos(

@@ -349,8 +349,8 @@ def test_metodos_diferidos_no_lanzan_error(sesion_db: Session, usuario_creador: 
     torneo.estado = EstadoTorneo.ESPERANDO_JUGADORES
     assert isinstance(torneo.unirse(usuario=usuario_creador), bool)
     assert torneo.unirse(usuario=usuario_creador) is True
-    # generar_cruces() diferido a 3.2
-    assert torneo.generar_cruces() is None
+    # generar_cruces() implementado en 3.2.1: retorna lista de tuplas de participantes
+    assert isinstance(torneo.generar_cruces(), list)
     # determinar_ganador() diferido a 3.2
     assert cruce.determinar_ganador() is None
 

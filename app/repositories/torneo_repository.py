@@ -3,6 +3,7 @@
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.models.cruce import Cruce
 from app.models.enumeraciones import EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
@@ -91,6 +92,38 @@ def actualizar_estado(db: Session, torneo: Torneo, nuevo_estado: EstadoTorneo) -
     db.commit()
     db.refresh(torneo)
     return torneo
+
+
+def crear_cruces(
+    db: Session | list[Cruce],
+    cruces: list[Cruce] | None = None,
+) -> list[Cruce]:
+    """Persiste una lista de entidades Cruce en la base de datos y confirma la transacción.
+
+    Soporta invocación directa:
+      - crear_cruces(db, cruces)
+      - crear_cruces(cruces) (infiriendo la sesión del modelo asociado)
+    """
+    if isinstance(db, list):
+        lista_cruces = db
+        sesion = None
+        for c in lista_cruces:
+            from sqlalchemy.orm import object_session
+            s = object_session(c) or (object_session(c.torneo) if hasattr(c, "torneo") and c.torneo else None)
+            if s is not None:
+                sesion = s
+                break
+        if sesion is None:
+            raise ValueError("No se pudo inferir la sesión de base de datos para persistir los cruces")
+    else:
+        sesion = db
+        lista_cruces = cruces or []
+
+    sesion.add_all(lista_cruces)
+    sesion.commit()
+    for cruce in lista_cruces:
+        sesion.refresh(cruce)
+    return lista_cruces
 
 
 def listar_por_participante(db: Session, usuario_id: int) -> list[tuple[Torneo, int]]:

@@ -1,6 +1,13 @@
 # Changelog
 
-## 24/9 [1.1] Endpoint consultar usuario autenticado (GET /api/usuarios/me)
+## 24/9 [3.2.1] Generación automática de cruces
+
+- **Modelo de dominio:** Implementación del método de instancia `Torneo.generar_cruces(self) -> list[tuple[ParticipanteTorneo, ParticipanteTorneo]]` en `app/models/torneo.py`, que mezcla aleatoriamente los participantes inscriptos (`random.shuffle`) y arma pares consecutivos para los emparejamientos de la Ronda 1 sin acoplarse a la persistencia.
+- **Capa de persistencia:** Incorporación de la función `crear_cruces` en `app/repositories/torneo_repository.py` para persistir listas de entidades `Cruce` (`db.add_all`, `db.commit`).
+- **Capa de lógica de negocio:** Creación de `generar_cruces_para_torneo(torneo)` en `app/services/torneo_service.py` (instanciando los cruces de Ronda 1 con estado `PENDIENTE` y `ganador_id=None`), e integración del disparo automático en `unirse_a_torneo()` inmediatamente después de que el torneo completa su cupo y pasa a estado `EN_CURSO` (siguiendo los pasos 1 a 6 del Diagrama de Secuencia Nº4).
+- **Testing automatizado:** Creación de `tests/test_generar_cruces.py` (11 tests unitarios y de integración) cubriendo generación automática de cruces al completar cupo en torneos de 4, 8 y 16 participantes, unicidad de cada participante por cruce, validación de atributos (`ronda=1`, `estado=PENDIENTE`, `ganador_id=None`, `torneo_id`), aleatoriedad del sorteo, prevención de generación en torneos incompletos y disparo end-to-end a través de la API REST.
+
+## 24/9 [1.1.7] Endpoint consultar usuario autenticado (GET /api/usuarios/me)
 
 - **Capa de presentación (API REST):** Implementación del endpoint `GET /api/usuarios/me` en `app/routes/usuario_router.py` (código `200 OK` con `UsuarioResponse`), protegido mediante la dependencia `obtener_usuario_actual`. Permite consultar los datos del usuario autenticado (`id`, `nombre`, `email`, `rol`, `puntaje_total`, `esta_habilitado`, `fecha_alta`) para precargar el formulario de edición de perfil en el frontend sin exponer contraseñas ni datos sensibles. Documentación exhaustiva en OpenAPI y Swagger UI (códigos 200, 401 y esquema de seguridad `BearerAuth`).
 - **Esquemas Pydantic:** Reutilización del esquema `UsuarioResponse` en `app/schemas/usuario_schema.py` para la serialización segura de los datos del perfil público.
