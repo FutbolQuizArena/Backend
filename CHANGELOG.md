@@ -1,5 +1,30 @@
 # Changelog
 
+## 25/9 [3.2.2] Determinar ganador / avance de ronda (Módulo 3 - Torneos)
+
+- **Modelo de dominio:**
+  - `Usuario` (`app/models/usuario.py`): Implementación del método de dominio `sumar_puntaje(self, puntos: int) -> None` para incrementar el puntaje total del jugador (`puntaje_total += puntos`).
+  - `Cruce` (`app/models/cruce.py`): Implementación del método de dominio `determinar_ganador(self, ganador: ParticipanteTorneo) -> None` con validación de pertenencia al cruce (`jugador_a` o `jugador_b`), asignación de `ganador_id` y cambio de estado a `EstadoCruce.JUGADO`.
+  - `Torneo` (`app/models/torneo.py`):
+    - Implementación de `armar_cruces_siguiente_ronda(self, ganadores_ordenados: list[ParticipanteTorneo], ronda_siguiente: int) -> list[Cruce]` emparejando secuencialmente ganadores de llaves consecutivas `(ganadores[i], ganadores[i+1])` en nuevos cruces con estado `PENDIENTE`.
+    - Implementación de `finalizar_torneo(self) -> None` para mutar el estado a `EstadoTorneo.FINALIZADO`.
+- **Capa de persistencia:** Extensión de `app/repositories/torneo_repository.py` con las funciones:
+  - `obtener_cruce_por_id(db, cruce_id)`: consulta cruce por ID con carga de relaciones.
+  - `obtener_cruces_por_ronda(db, torneo_id, ronda)`: lista cruces de un torneo para una ronda específica.
+  - `actualizar_cruce(db, cruce)`: sincroniza y persiste cambios en el cruce.
+  - `obtener_ronda_actual(db, torneo_id)`: determina la ronda activa según cruces con estado `PENDIENTE`.
+- **Esquemas Pydantic:** Creación en `app/schemas/torneo_schema.py` (y exportación en `app/schemas/__init__.py`) de:
+  - `CruceIniciarDueloResponse`: respuesta con `cruce_id`, `duelo_id`, `torneo_id` y `ronda`.
+  - `CruceResolverRequest`: solicitud de resolución mediante `duelo_id` (opcional) o `ganador_participante_id` (opcional).
+  - `CruceResolucionResponse`: información detallada del resultado de la resolución, incluyendo `cruce_id`, `ganador_id`, `estado_cruce`, flags booleanos (`ronda_completada`, `siguiente_ronda_generada`, `nueva_ronda`, `torneo_finalizado`), datos del `campeon` (`ParticipanteTorneoResponse`) y `puntos_otorgados_campeon` (+1.500).
+- **Capa de lógica de negocio:** Creación en `app/services/torneo_service.py` de:
+  - `iniciar_duelo_cruce(db, torneo_id, cruce_id, usuario_actual)`: valida membresía del jugador al cruce, busca duelos existentes para deduplicar (permitiendo que ambos jugadores se unan a la misma partida `PartidaDuelo`) o crea un nuevo duelo en línea (`ModalidadDuelo.ONLINE`) con selección aleatoria de categoría activa y 10 preguntas.
+  - `resolver_cruce(db, torneo_id, cruce_id, usuario_actual, datos)`: valida autorización (creador del torneo o jugadores del cruce), resuelve el ganador desde el duelo en línea (`duelo.numero_ganador`) o desde el ID proporcionado, invoca `determinar_ganador()`, evalúa si la ronda concluyó: si hay más de 1 ganador genera la siguiente ronda (`armar_cruces_siguiente_ronda()`), y si resta un único ganador finaliza el torneo (`finalizar_torneo()`) y premia al campeón con +1.500 puntos vía `campeon_usuario.sumar_puntaje(1500)` según Figma (pantalla 07B).
+- **Capa de presentación (API REST):** Incorporación de endpoints en `app/routes/torneo_router.py`:
+  - `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/iniciar-duelo` (200 OK): inicia u obtiene el duelo en línea correspondiente a la llave. Protegido con `obtener_usuario_actual` y documentado con respuestas 200, 400, 401, 403 y 404.
+  - `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/resolver` (200 OK): dictamina el resultado del cruce, avanza de ronda o concluye el torneo. Documentado con respuestas 200, 400, 401, 403 y 404.
+- **Testing automatizado:** Creación de `tests/test_avance_ronda_torneo.py` con 12 pruebas completas unitarias y de integración: test de métodos de dominio, flujo completo de torneo de 4 jugadores (Semis -> Final -> Consagración con +1500 pts), flujo completo de torneo de 8 jugadores (Cuartos -> Semis -> Final), deduplicación y resolución con duelo en línea real, casos de borde y validaciones de seguridad, y pruebas HTTP con TestClient. Suite completa de 258 tests pasando al 100% en verde sin regresiones.
+
 ## 25/9 [5.1.5] Seed inicial de categorías y banco de preguntas (Módulo 5 - Administración)
 
 - **Capa de datos y estructura semilla:** Creación del archivo `scripts/preguntas_seed.json` conteniendo el banco de preguntas inicial con categorías ("Mundiales", "Champions League", "Copa Libertadores", "Liga Argentina"), dificultad ("Fácil", "Media", "Difícil"), 4 opciones mapeadas ('A', 'B', 'C', 'D') y opción correcta validada.

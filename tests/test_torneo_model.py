@@ -351,6 +351,10 @@ def test_metodos_diferidos_no_lanzan_error(sesion_db: Session, usuario_creador: 
     assert torneo.unirse(usuario=usuario_creador) is True
     # generar_cruces() implementado en 3.2.1: retorna lista de tuplas de participantes
     assert isinstance(torneo.generar_cruces(), list)
-    # determinar_ganador() diferido a 3.2
-    assert cruce.determinar_ganador() is None
+    # determinar_ganador() implementado en 3.2.2: asigna ganador y pasa a JUGADO
+    p1 = ParticipanteTorneo(torneo_id=1, usuario_id=1)
+    p1.id = 1
+    cruce.determinar_ganador(p1)
+    assert cruce.ganador_id == 1
+    assert cruce.estado == EstadoCruce.JUGADO
 

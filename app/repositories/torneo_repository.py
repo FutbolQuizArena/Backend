@@ -210,3 +210,50 @@ def listar_finalizados_por_participante(db: Session, usuario_id: int) -> list[tu
         .order_by(Torneo.fecha_creacion.desc())
         .all()
     )
+
+
+def obtener_cruce_por_id(db: Session, cruce_id: int) -> Cruce | None:
+    """Obtiene un cruce por su ID con relaciones cargadas eficientemente (Tarea 3.2.2)."""
+    return (
+        db.query(Cruce)
+        .options(
+            joinedload(Cruce.jugador_a).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.jugador_b).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.ganador).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.torneo).joinedload(Torneo.participantes),
+        )
+        .filter(Cruce.id == cruce_id)
+        .first()
+    )
+
+
+def obtener_cruces_por_ronda(db: Session, torneo_id: int, ronda: int) -> list[Cruce]:
+    """Retorna los cruces de una ronda específica ordenados por ID ascendente (Tarea 3.2.2)."""
+    return (
+        db.query(Cruce)
+        .options(
+            joinedload(Cruce.jugador_a).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.jugador_b).joinedload(ParticipanteTorneo.usuario),
+            joinedload(Cruce.ganador).joinedload(ParticipanteTorneo.usuario),
+        )
+        .filter(Cruce.torneo_id == torneo_id, Cruce.ronda == ronda)
+        .order_by(Cruce.id.asc())
+        .all()
+    )
+
+
+def actualizar_cruce(db: Session, cruce: Cruce) -> Cruce:
+    """Actualiza y confirma los cambios de un cruce en la base de datos (Tarea 3.2.2)."""
+    db.commit()
+    db.refresh(cruce)
+    return cruce
+
+
+def obtener_ronda_actual(db: Session, torneo_id: int) -> int:
+    """Calcula la ronda máxima registrada para un torneo (Tarea 3.2.2)."""
+    ronda_max = (
+        db.query(func.max(Cruce.ronda))
+        .filter(Cruce.torneo_id == torneo_id)
+        .scalar()
+    )
+    return ronda_max or 1

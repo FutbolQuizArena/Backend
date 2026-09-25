@@ -138,3 +138,33 @@ class Torneo(Base):
                 pares.append((participantes_mezclados[i], participantes_mezclados[i + 1]))
         return pares
 
+    def armar_cruces_siguiente_ronda(
+        self, ganadores_ordenados: list["ParticipanteTorneo"], ronda_siguiente: int
+    ) -> list["Cruce"]:
+        """Arma los cruces de la siguiente ronda a partir de los ganadores de la ronda previa (Tarea 3.2.2).
+
+        Empareja consecutivamente a los ganadores (0 con 1, 2 con 3, etc.) manteniendo el orden
+        del cuadro eliminatorio según el Diagrama de secuencia Nº 4.
+        """
+        from app.models.cruce import Cruce
+        from app.models.enumeraciones import EstadoCruce
+
+        nuevos_cruces: list[Cruce] = []
+        for i in range(0, len(ganadores_ordenados), 2):
+            if i + 1 < len(ganadores_ordenados):
+                cruce = Cruce(
+                    torneo_id=self.id,
+                    torneo=self,
+                    ronda=ronda_siguiente,
+                    jugador_a_id=ganadores_ordenados[i].id,
+                    jugador_b_id=ganadores_ordenados[i + 1].id,
+                    estado=EstadoCruce.PENDIENTE,
+                    ganador_id=None,
+                )
+                nuevos_cruces.append(cruce)
+        return nuevos_cruces
+
+    def finalizar_torneo(self) -> None:
+        """Marca el torneo como finalizado tras disputarse la final del certamen."""
+        self.estado = EstadoTorneo.FINALIZADO
+

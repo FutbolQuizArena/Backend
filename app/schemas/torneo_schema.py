@@ -180,3 +180,65 @@ class TorneoListItemResponse(BaseModel):
         description="Código de acceso del torneo (visible únicamente para el creador)",
     )
 
+
+class CruceIniciarDueloResponse(BaseModel):
+    """Esquema de respuesta para la inicialización o recuperación del duelo de un cruce (Tarea 3.2.2)."""
+
+    cruce_id: int = Field(..., description="Identificador único del cruce")
+    duelo_id: int = Field(..., description="Identificador de la PartidaDuelo asignada")
+    torneo_id: int = Field(..., description="Identificador del torneo")
+    ronda: int = Field(..., description="Ronda eliminatoria del cruce")
+    mensaje: str = Field(..., description="Mensaje explicativo del estado del duelo")
+
+
+class CruceResolverRequest(BaseModel):
+    """Esquema de solicitud para resolver un cruce eliminatorio (Tarea 3.2.2)."""
+
+    duelo_id: int | None = Field(
+        default=None,
+        description="ID del duelo finalizado para determinar automáticamente el ganador",
+    )
+    ganador_participante_id: int | None = Field(
+        default=None,
+        description="ID explícito del participante ganador (útil para tests o resolución directa)",
+    )
+
+    @model_validator(mode="after")
+    def validar_criterio_resolucion(self) -> "CruceResolverRequest":
+        if self.duelo_id is None and self.ganador_participante_id is None:
+            raise ValueError("Se debe proporcionar al menos 'duelo_id' o 'ganador_participante_id'")
+        return self
+
+
+class CruceResolucionResponse(BaseModel):
+    """Esquema de respuesta detallado tras resolver un cruce y evaluar avance de ronda (Tarea 3.2.2)."""
+
+    cruce_id: int = Field(..., description="Identificador único del cruce resuelto")
+    estado_cruce: EstadoCruce = Field(..., description="Nuevo estado del cruce (JUGADO)")
+    ganador_id: int = Field(..., description="ID del participante ganador")
+    ganador_nombre: str = Field(..., description="Nombre del participante ganador")
+    ronda_completada: bool = Field(
+        ...,
+        description="Indica si todos los cruces de la ronda actual ya fueron disputados",
+    )
+    siguiente_ronda_generada: bool = Field(
+        ...,
+        description="Indica si se generaron automáticamente los emparejamientos de la siguiente ronda",
+    )
+    nueva_ronda: int | None = Field(
+        default=None,
+        description="Número de la nueva ronda generada si corresponde",
+    )
+    torneo_finalizado: bool = Field(
+        ...,
+        description="Indica si el torneo concluyó al resolverse la Final",
+    )
+    campeon: ParticipanteDetalleResponse | None = Field(
+        default=None,
+        description="Detalle del participante consagrado campeón si el torneo finalizó",
+    )
+    puntos_otorgados_campeon: int = Field(
+        default=0,
+        description="Puntos de bonificación otorgados al campeón (+1.500)",
+    )
+

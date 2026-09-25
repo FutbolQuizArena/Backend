@@ -8,6 +8,9 @@ from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
 from app.schemas.comun_schema import MensajeResponse
 from app.schemas.torneo_schema import (
+    CruceIniciarDueloResponse,
+    CruceResolucionResponse,
+    CruceResolverRequest,
     FiltroTorneoEnum,
     TorneoCreadoResponse,
     TorneoCreate,
@@ -342,4 +345,95 @@ def salir_de_torneo(
         usuario_actual=usuario_actual,
     )
     return MensajeResponse(mensaje=mensaje)
+
+
+@torneo_router.post(
+    "/{torneo_id}/cruces/{cruce_id}/iniciar-duelo",
+    response_model=CruceIniciarDueloResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Iniciar o recuperar el duelo para un cruce eliminatorio",
+    description=(
+        "Crea o recupera la PartidaDuelo online entre los dos participantes del cruce eliminatorio, "
+        "asignando la categoría y las 10 preguntas compartidas para ambos. "
+        "Solo los participantes que integran el cruce pueden iniciar o acceder al duelo."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Duelo iniciado o recuperado exitosamente.",
+            "model": CruceIniciarDueloResponse,
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "El torneo no está en curso o el cruce ya ha sido disputado.",
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+        },
+        status.HTTP_403_FORBIDDEN: {
+            "description": "El usuario no forma parte de este cruce eliminatorio.",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "El torneo o el cruce especificado no existe.",
+        },
+    },
+)
+def iniciar_duelo_cruce(
+    torneo_id: int,
+    cruce_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> CruceIniciarDueloResponse:
+    """Inicia o recupera el duelo para disputar un cruce de torneo."""
+    return torneo_service.iniciar_duelo_cruce(
+        db=db,
+        torneo_id=torneo_id,
+        cruce_id=cruce_id,
+        usuario_actual=usuario_actual,
+    )
+
+
+@torneo_router.post(
+    "/{torneo_id}/cruces/{cruce_id}/resolver",
+    response_model=CruceResolucionResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Resolver cruce eliminatorio y avanzar ronda",
+    description=(
+        "Determina el participante ganador del cruce a partir de un duelo disputado (duelo_id) "
+        "o especificando directamente el ID del participante ganador (ganador_participante_id). "
+        "Evalúa si la ronda actual concluyó: si aún hay cruces pendientes espera; si todos finalizaron, "
+        "genera automáticamente la siguiente ronda o consagra y premia al campeón si era la Final."
+    ),
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Cruce resuelto exitosamente y estado del torneo actualizado.",
+            "model": CruceResolucionResponse,
+        },
+        status.HTTP_400_BAD_REQUEST: {
+            "description": "Error en los datos de resolución, duelo no finalizado o cruce ya resuelto.",
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+        },
+        status.HTTP_403_FORBIDDEN: {
+            "description": "El usuario no tiene permisos para resolver este cruce.",
+        },
+        status.HTTP_404_NOT_FOUND: {
+            "description": "El torneo, cruce o duelo no existe.",
+        },
+    },
+)
+def resolver_cruce(
+    torneo_id: int,
+    cruce_id: int,
+    datos: CruceResolverRequest,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> CruceResolucionResponse:
+    """Resuelve un cruce eliminatorio y evalúa el avance de ronda o coronación del campeón."""
+    return torneo_service.resolver_cruce(
+        db=db,
+        torneo_id=torneo_id,
+        cruce_id=cruce_id,
+        usuario_actual=usuario_actual,
+        datos=datos,
+    )
 
