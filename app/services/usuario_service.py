@@ -3,7 +3,12 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from app.core.excepciones import CredencialesInvalidasError, EmailYaRegistradoError
+from app.core.excepciones import (
+    AutoDeshabilitacionError,
+    CredencialesInvalidasError,
+    EmailYaRegistradoError,
+    ExcepcionRecursoNoEncontrado,
+)
 from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
@@ -109,4 +114,64 @@ def cambiar_password_usuario(
     nuevo_hash = hashear_password(nueva_password)
     usuario_actual.cambiar_password(nuevo_hash)
     return usuario_repository.actualizar(db, usuario_actual)
+
+
+def listar_usuarios_admin(
+    db: Session,
+    buscar: str | None = None,
+    rol: RolUsuario | None = None,
+    esta_habilitado: bool | None = None,
+) -> list[Usuario]:
+    """Obtiene el listado de usuarios para el panel de administración aplicando filtros."""
+    return usuario_repository.listar_usuarios_admin(
+        db,
+        buscar=buscar,
+        rol=rol,
+        esta_habilitado=esta_habilitado,
+    )
+
+
+def obtener_usuario_admin(db: Session, usuario_id: int) -> Usuario:
+    """Busca a un usuario por su ID para administración.
+
+    Lanza ExcepcionRecursoNoEncontrado si el usuario no existe.
+    """
+    usuario = usuario_repository.obtener_por_id(db, id=usuario_id)
+    if usuario is None:
+        raise ExcepcionRecursoNoEncontrado(
+            mensaje=f"Usuario con id {usuario_id} no encontrado"
+        )
+    return usuario
+
+
+def cambiar_estado_usuario(
+    db: Session,
+    admin_actual: Usuario,
+    usuario_id: int,
+    nuevo_estado: bool,
+) -> Usuario:
+    """Modifica el estado de habilitación de un usuario.
+
+    Reglas de negocio:
+      a. Buscar al usuario objetivo por usuario_id. Si no existe, lanzar ExcepcionRecursoNoEncontrado (404).
+      b. Si admin_actual.id == usuario_id y nuevo_estado is False: lanzar AutoDeshabilitacionError (400) para prevenir auto-bloqueo.
+      c. Si nuevo_estado is False, llamar a usuario_objetivo.deshabilitar(); si es True, llamar a usuario_objetivo.habilitar().
+      d. Persistir mediante usuario_repository.actualizar(db, usuario_objetivo).
+      e. Retornar el usuario modificado.
+    """
+    usuario_objetivo = usuario_repository.obtener_por_id(db, id=usuario_id)
+    if usuario_objetivo is None:
+        raise ExcepcionRecursoNoEncontrado(
+            mensaje=f"Usuario con id {usuario_id} no encontrado"
+        )
+
+    if admin_actual.id == usuario_id and nuevo_estado is False:
+        raise AutoDeshabilitacionError()
+
+    if nuevo_estado is False:
+        usuario_objetivo.deshabilitar()
+    else:
+        usuario_objetivo.habilitar()
+
+    return usuario_repository.actualizar(db, usuario_objetivo)
 

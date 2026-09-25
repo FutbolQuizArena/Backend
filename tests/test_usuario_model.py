@@ -132,3 +132,54 @@ def test_usuario_metodo_autenticar_directo() -> None:
     # Contraseña vacía -> False
     assert usuario.autenticar("") is False
 
+
+def test_usuario_metodos_deshabilitar_y_habilitar() -> None:
+    """Verifica que los métodos de dominio modifiquen adecuadamente la propiedad esta_habilitado."""
+    usuario = Usuario(
+        nombre="Enzo Perez",
+        email="enzo.perez@futbolquiz.com",
+        password_hash="hash_enzo",
+        esta_habilitado=True,
+    )
+    assert usuario.esta_habilitado is True
+
+    usuario.deshabilitar()
+    assert usuario.esta_habilitado is False
+
+    usuario.habilitar()
+    assert usuario.esta_habilitado is True
+
+
+def test_esquema_usuario_admin_response_desde_modelo(sesion_db: Session) -> None:
+    """Verifica que UsuarioAdminResponse serialice correctamente los campos de administración."""
+    from app.schemas.usuario_schema import UsuarioAdminResponse, UsuarioCambiarEstadoRequest
+
+    usuario = Usuario(
+        nombre="Franco Armani",
+        email="armani@futbolquiz.com",
+        password_hash="hash_armani_secreto",
+        rol=RolUsuario.ADMINISTRADOR,
+        puntaje_total=500,
+        esta_habilitado=True,
+    )
+    sesion_db.add(usuario)
+    sesion_db.commit()
+    sesion_db.refresh(usuario)
+
+    resp = UsuarioAdminResponse.model_validate(usuario)
+    assert resp.id == usuario.id
+    assert resp.nombre == "Franco Armani"
+    assert resp.email == "armani@futbolquiz.com"
+    assert resp.rol == RolUsuario.ADMINISTRADOR
+    assert resp.puntaje_total == 500
+    assert resp.esta_habilitado is True
+    assert resp.fecha_alta is not None
+
+    dump = resp.model_dump()
+    assert "password_hash" not in dump
+    assert "password" not in dump
+
+    # Prueba de UsuarioCambiarEstadoRequest
+    req = UsuarioCambiarEstadoRequest(esta_habilitado=False)
+    assert req.esta_habilitado is False
+

@@ -55,3 +55,22 @@ class UsuarioResponse(BaseModel):
     esta_habilitado: bool = Field(default=True, description="Indica si el usuario está habilitado")
     fecha_alta: datetime | None = Field(default=None, description="Fecha de alta del usuario")
 
+
+class UsuarioCambiarEstadoRequest(BaseModel):
+    """Esquema de solicitud para habilitar o deshabilitar una cuenta de usuario."""
+
+    esta_habilitado: bool = Field(
+        ...,
+        description="Nuevo estado de habilitación (True para habilitar, False para deshabilitar)",
+    )
+
+
+class UsuarioAdminResponse(UsuarioResponse):
+    """Esquema de respuesta para vistas de administración de usuarios.
+
+    Serializa id, nombre, email, rol, puntaje_total, esta_habilitado y fecha_alta,
+    asegurando nunca exponer password_hash ni contraseñas.
+    """
+
+    pass
+

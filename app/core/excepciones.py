@@ -252,6 +252,22 @@ class CategoriaConPreguntasError(ExcepcionBase):
         )
 
 
+class AutoDeshabilitacionError(ExcepcionBase):
+    """Excepción lanzada cuando un administrador intenta deshabilitar su propia cuenta."""
+
+    def __init__(
+        self,
+        mensaje: str = "Un administrador no puede deshabilitar su propia cuenta",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="AUTO_DESHABILITACION_NO_PERMITIDA",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 def _construir_respuesta_error(
     codigo: str,
     mensaje: str,
