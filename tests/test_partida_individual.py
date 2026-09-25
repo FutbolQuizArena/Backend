@@ -3,9 +3,9 @@
 import pytest
 from sqlalchemy.orm import Session
 
-from app.core.excepciones_partida import PartidaYaFinalizadaError, PreguntaYaRespondidaError
+from app.core.excepciones import PartidaYaFinalizadaError, PreguntaYaRespondidaError
 from app.models.categoria import Categoria
-from app.models.enumeraciones_partida import EstadoPartida
+from app.models.enumeraciones import EstadoPartida
 from app.models.pregunta import Pregunta
 from app.models.usuario import Usuario
 from app.services import partida_service

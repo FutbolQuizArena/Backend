@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from app.models.enumeraciones_partida import EstadoPartida, TipoPartida
+from app.models.enumeraciones import EstadoPartida, TipoPartida
 from app.models.partida import PartidaIndividual, PreguntaPartida
 from app.models.usuario import Usuario
 

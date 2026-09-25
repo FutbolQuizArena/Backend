@@ -3,10 +3,10 @@
 from sqlalchemy.orm import Session
 
 from app.models.categoria import Categoria
-from app.models.enumeraciones_partida import EstadoPartida, ModalidadDuelo
+from app.models.enumeraciones import EstadoPartida, ModalidadDuelo
 from app.models.pregunta import Pregunta
 from app.models.usuario import Usuario
-from app.services import duelo_juego_service, duelo_service
+from app.services import duelo_service
 
 
 def _crear_categoria_con_preguntas(db: Session, cantidad: int = 10) -> Categoria:
@@ -81,7 +81,7 @@ def test_duelo_local_se_finaliza_cuando_ambos_responden_todo(sesion_db: Session)
     )
 
     for pregunta_partida in duelo.preguntas_de_jugador(1):
-        duelo_juego_service.responder_pregunta_duelo(
+        duelo_service.responder_pregunta_duelo(
             sesion_db,
             pregunta_partida_id=pregunta_partida.id,
             opcion_seleccionada="A",
@@ -89,7 +89,7 @@ def test_duelo_local_se_finaliza_cuando_ambos_responden_todo(sesion_db: Session)
             usuario_actual=usuario,
         )
 
-    duelo = duelo_juego_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
+    duelo = duelo_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
     assert duelo.estado == EstadoPartida.EN_CURSO  # falta responder el lado del invitado (jugador 2)
 
     for pregunta_partida in duelo.preguntas_de_jugador(2):
@@ -99,7 +99,7 @@ def test_duelo_local_se_finaliza_cuando_ambos_responden_todo(sesion_db: Session)
         sesion_db.add(pregunta_partida)
     sesion_db.commit()
 
-    duelo = duelo_juego_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
+    duelo = duelo_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
     assert duelo.estado == EstadoPartida.FINALIZADA
     assert duelo.puntaje_jugador1 > 0
     assert duelo.puntaje_jugador2 == 500

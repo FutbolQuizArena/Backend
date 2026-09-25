@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.models.enumeraciones_partida import ModalidadDuelo, TipoPartida
+from app.models.enumeraciones import ModalidadDuelo, TipoPartida
 from app.models.partida import Partida
 
 

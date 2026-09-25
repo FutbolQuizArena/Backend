@@ -12,7 +12,7 @@ from sqlalchemy import Boolean, Column, DateTime, Enum as SQLEnum, ForeignKey, I
 from sqlalchemy.orm import relationship
 
 from app.core.base_datos import Base
-from app.models.enumeraciones_partida import EstadoPartida, TipoPartida
+from app.models.enumeraciones import EstadoPartida, TipoPartida
 
 
 class Partida(Base):

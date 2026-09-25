@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.base_datos import obtener_db
-from app.core.excepciones import ExcepcionNoAutorizado, ExcepcionRecursoNoEncontrado
+from app.core.excepciones import AccesoDenegadoError, ExcepcionRecursoNoEncontrado
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
 from app.repositories import duelo_repository
 from app.schemas.duelo_schema import DueloEstadoResponse, DueloIniciarLocalRequest, DueloJuegoResponse
 from app.schemas.partida_schema import RespuestaPartidaRequest, RespuestaPartidaResponse
-from app.services import duelo_juego_service, duelo_service
+from app.services import duelo_service
 
 duelo_router = APIRouter(prefix="/api/duelos", tags=["Duelos"])
 
@@ -85,14 +85,14 @@ def responder_pregunta_duelo(
     db: Session = Depends(obtener_db),
 ) -> RespuestaPartidaResponse:
     """Endpoint para responder una pregunta del duelo, delegando la lógica al servicio."""
-    pregunta_partida = duelo_juego_service.responder_pregunta_duelo(
+    pregunta_partida = duelo_service.responder_pregunta_duelo(
         db,
         pregunta_partida_id=pregunta_partida_id,
         opcion_seleccionada=datos.opcion_seleccionada,
         tiempo_respuesta_segundos=datos.tiempo_respuesta_segundos,
         usuario_actual=usuario_actual,
     )
-    duelo_juego_service.finalizar_duelo_si_corresponde(db, pregunta_partida.partida_id)
+    duelo_service.finalizar_duelo_si_corresponde(db, pregunta_partida.partida_id)
     return RespuestaPartidaResponse(
         es_correcta=pregunta_partida.es_correcta,
         puntaje_obtenido=pregunta_partida.puntaje_obtenido,
@@ -128,7 +128,7 @@ def responder_pregunta_duelo(
             "content": {
                 "application/json": {
                     "example": {
-                        "code": "NO_AUTORIZADO",
+                        "code": "ACCESO_DENEGADO",
                         "message": "No formás parte de este duelo",
                         "detail": None,
                     }
@@ -160,7 +160,7 @@ def consultar_estado_duelo(
         raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
 
     if usuario_actual.id not in (duelo.jugador1_id, duelo.jugador2_id):
-        raise ExcepcionNoAutorizado(mensaje="No formás parte de este duelo")
+        raise AccesoDenegadoError(mensaje="No formás parte de este duelo")
 
-    duelo = duelo_juego_service.finalizar_duelo_si_corresponde(db, duelo_id)
+    duelo = duelo_service.finalizar_duelo_si_corresponde(db, duelo_id)
     return DueloEstadoResponse.model_validate(duelo)

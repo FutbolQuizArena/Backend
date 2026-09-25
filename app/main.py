@@ -5,12 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import registrar_manejadores_excepcion
-from app.routes.autenticacion_router import autenticacion_router
-from app.routes.salud_router import salud_router
-from app.routes.torneo_router import torneo_router
-from app.routes.usuario_router import usuario_router
-from app.routes.duelo_router import duelo_router
-from app.routes.partida_router import partida_router
+from app.routes import (
+    autenticacion_router,
+    duelo_router,
+    partida_router,
+    salud_router,
+    torneo_router,
+    usuario_router,
+)
 
 def crear_aplicacion() -> FastAPI:
     """Crea y configura la instancia de FastAPI."""

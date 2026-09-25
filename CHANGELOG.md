@@ -1,5 +1,14 @@
 # Changelog
 
+## 25/9 [Refactorización] Limpieza y estandarización del Módulo 2 y arquitectura general
+
+- **Modelo de dominio y enumeraciones:** Unificación de todas las enumeraciones del sistema en `app/models/enumeraciones.py`, incorporando `EstadoPartida`, `TipoPartida` y `ModalidadDuelo` junto a `RolUsuario`, `EstadoTorneo` y `EstadoCruce`. Eliminación del archivo redundante `app/models/enumeraciones_partida.py` y actualización de importaciones en todos los módulos dependientes.
+- **Manejo de excepciones:** Centralización de las excepciones del dominio de partidas y duelos (`PartidaYaFinalizadaError` y `PreguntaYaRespondidaError`) en `app/core/excepciones.py`, eliminando `app/core/excepciones_partida.py` y manteniendo la estructura de error homogénea en toda la aplicación.
+- **Capa de servicios:** Fusión y consolidación de la lógica de duelos en un único servicio cohesivo `app/services/duelo_service.py` (incorporando las funciones de `duelo_juego_service.py`), eliminando la fragmentación innecesaria de archivos y alineándolo con el diseño de `partida_service.py` y `torneo_service.py`.
+- **Capa de presentación (API REST):** Corrección semántica del código de respuesta en `GET /api/duelos/{duelo_id}` ante accesos no autorizados de terceros (emitiendo `AccesoDenegadoError` con HTTP 403 en lugar de HTTP 401, coincidiendo con la especificación de OpenAPI/Swagger). Exportación integral de todos los routers en `app/routes/__init__.py` y simplificación de importaciones en `app/main.py`.
+- **Limpieza de estructura del repositorio:** Eliminación de carpetas huérfanas sin código ni uso (`app/routers/` y `app/utils/`).
+- **Testing automatizado:** Actualización de las suites de pruebas (`test_duelo.py`, `test_duelo_local.py`, `test_partida_individual.py`) y verificación de la suite completa de 172 tests pasando al 100% en verde.
+
 ## 24/9 [3.2.3] Endpoints de estado, participantes y cuadro del torneo
 
 - **Capa de presentación (API REST):** Incorporación del endpoint `GET /api/torneos/{torneo_id}` en `app/routes/torneo_router.py` (código `200 OK` con `TorneoDetalleResponse`), protegido con `obtener_usuario_actual`. Devuelve la información de la sala del torneo (`id`, `nombre`, `estado`, `cantidad_participantes`, `cantidad_participantes_actual`, `creador_id`, `creador_nombre`, `codigo_acceso`, `fecha_creacion`), lista de participantes detallada con flag `es_creador` y cuadro de cruces eliminatorios ordenados por ronda. Control de acceso restringido a creador y participantes inscriptos (HTTP 403) y manejo de recurso no encontrado (HTTP 404). Documentación completa en OpenAPI con esquema `BearerAuth`.

@@ -2,8 +2,14 @@
 
 from app.models.categoria import Categoria
 from app.models.cruce import Cruce
-from app.models.enumeraciones import EstadoCruce, EstadoTorneo, RolUsuario
-from app.models.enumeraciones_partida import EstadoPartida, ModalidadDuelo, TipoPartida
+from app.models.enumeraciones import (
+    EstadoCruce,
+    EstadoPartida,
+    EstadoTorneo,
+    ModalidadDuelo,
+    RolUsuario,
+    TipoPartida,
+)
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.partida import Partida, PartidaIndividual, PreguntaPartida
 from app.models.partida_duelo import PartidaDuelo

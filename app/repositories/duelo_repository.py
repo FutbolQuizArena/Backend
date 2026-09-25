@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.enumeraciones_partida import EstadoPartida, ModalidadDuelo, TipoPartida
+from app.models.enumeraciones import EstadoPartida, ModalidadDuelo, TipoPartida
 from app.models.partida_duelo import PartidaDuelo
 
 

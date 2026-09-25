@@ -3,10 +3,10 @@
 from sqlalchemy.orm import Session
 
 from app.models.categoria import Categoria
-from app.models.enumeraciones_partida import EstadoPartida
+from app.models.enumeraciones import EstadoPartida
 from app.models.pregunta import Pregunta
 from app.models.usuario import Usuario
-from app.services import duelo_juego_service, duelo_service
+from app.services import duelo_service
 
 
 def _crear_categoria_con_preguntas(db: Session, cantidad: int = 10) -> Categoria:
@@ -46,7 +46,7 @@ def _responder_todas_las_preguntas(
     """Responde todas las preguntas de un jugador dentro de un duelo."""
     numero_jugador = 1 if duelo.jugador1_id == usuario.id else 2
     for pregunta_partida in duelo.preguntas_de_jugador(numero_jugador):
-        duelo_juego_service.responder_pregunta_duelo(
+        duelo_service.responder_pregunta_duelo(
             db,
             pregunta_partida_id=pregunta_partida.id,
             opcion_seleccionada=opcion,
@@ -94,11 +94,11 @@ def test_duelo_se_finaliza_cuando_ambos_responden_y_gana_el_de_mas_puntaje(sesio
 
     # Jugador 1 responde rápido (más puntaje), jugador 2 responde lento (menos puntaje)
     _responder_todas_las_preguntas(sesion_db, duelo, jugador1, opcion="A", tiempo_segundos=1)
-    duelo = duelo_juego_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
+    duelo = duelo_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
     assert duelo.estado == EstadoPartida.EN_CURSO  # todavía falta el jugador 2
 
     _responder_todas_las_preguntas(sesion_db, duelo, jugador2, opcion="A", tiempo_segundos=14)
-    duelo = duelo_juego_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
+    duelo = duelo_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
 
     assert duelo.estado == EstadoPartida.FINALIZADA
     assert duelo.puntaje_jugador1 > duelo.puntaje_jugador2
