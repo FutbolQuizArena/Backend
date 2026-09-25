@@ -2,6 +2,9 @@
 
 from app.schemas.comun_schema import MensajeResponse, SemillaResumenResponse
 from app.schemas.torneo_schema import (
+    CruceIniciarDueloResponse,
+    CruceResolucionResponse,
+    CruceResolverRequest,
     CruceResponse,
     FiltroTorneoEnum,
     ParticipanteTorneoResponse,
@@ -19,6 +22,9 @@ from app.schemas.usuario_schema import (
 )
 
 __all__ = [
+    "CruceIniciarDueloResponse",
+    "CruceResolucionResponse",
+    "CruceResolverRequest",
     "CruceResponse",
     "FiltroTorneoEnum",
     "MensajeResponse",

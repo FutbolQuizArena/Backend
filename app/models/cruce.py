@@ -63,11 +63,19 @@ class Cruce(Base):
             f"ganador_id={self.ganador_id}, estado='{self.estado}')>"
         )
 
-    def determinar_ganador(self) -> None:
-        """Determina el participante ganador del cruce a partir del resultado del duelo.
+    def determinar_ganador(self, ganador: "ParticipanteTorneo") -> None:
+        """Determina y asigna el participante ganador del cruce (Tarea 3.2.2).
 
-        Se implementa en la sub-tarea 3.2 (motor de eliminación directa), ya que
-        depende del resultado de PartidaDuelo (Módulo 2).
+        Valida que el participante ganador pertenezca al cruce (jugador_a o jugador_b).
+        Actualiza ganador_id y marca el cruce como JUGADO.
         """
-        pass
+        if ganador is None or ganador.id not in (self.jugador_a_id, self.jugador_b_id):
+            id_ganador = getattr(ganador, "id", None)
+            raise ValueError(
+                f"El participante ID {id_ganador} no pertenece al cruce ID {self.id} "
+                f"(jugadores: {self.jugador_a_id}, {self.jugador_b_id})"
+            )
+
+        self.ganador_id = ganador.id
+        self.estado = EstadoCruce.JUGADO
 

@@ -78,3 +78,7 @@ class Usuario(Base):
     def habilitar(self) -> None:
         """Habilita al usuario permitiendo su acceso al sistema."""
         self.esta_habilitado = True
+
+    def sumar_puntaje(self, puntos: int) -> None:
+        """Incrementa el puntaje acumulado del usuario según el Diagrama de clases E4."""
+        self.puntaje_total += puntos
