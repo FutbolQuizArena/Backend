@@ -4,6 +4,7 @@ import random
 
 from sqlalchemy.orm import Session
 
+from app.core.excepciones import ExcepcionValidacion
 from app.models.pregunta import Pregunta
 
 
@@ -17,9 +18,12 @@ def obtener_preguntas_aleatorias_sin_repeticion(
 ) -> list[Pregunta]:
     """
     Selecciona `cantidad` preguntas al azar de una categoría, sin repetir ninguna
-    (Tarea 2.1.3). Si la categoría tiene menos preguntas que `cantidad`, devuelve
-    todas las que haya.
+    (Tarea 2.1.3). Si la categoría no tiene al menos `cantidad` preguntas cargadas,
+    lanza una excepción en vez de iniciar una partida incompleta.
     """
     preguntas = listar_preguntas_por_categoria(db, categoria_id)
-    cantidad_final = min(cantidad, len(preguntas))
-    return random.sample(preguntas, cantidad_final)
+    if len(preguntas) < cantidad:
+        raise ExcepcionValidacion(
+            mensaje="La categoría seleccionada no cuenta con suficientes preguntas para iniciar una partida"
+        )
+    return random.sample(preguntas, cantidad)
