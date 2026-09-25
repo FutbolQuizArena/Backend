@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.models.enumeraciones import ModalidadDuelo, TipoPartida
+from app.models.enumeraciones import EstadoPartida, ModalidadDuelo, TipoPartida
 from app.models.partida import Partida
 
 
@@ -46,8 +46,26 @@ class PartidaDuelo(Partida):
         return self.es_duelo_online and self.jugador2_id is None
 
     @property
+    def jugador1_nombre(self) -> str | None:
+        return self.jugador1.nombre if self.jugador1 else None
+
+    @property
+    def jugador2_nombre(self) -> str | None:
+        if self.jugador2:
+            return self.jugador2.nombre
+        return self.nombre_invitado
+
+    @property
+    def aciertos_jugador1(self) -> int:
+        return sum(1 for p in self.preguntas_de_jugador(1) if p.es_correcta)
+
+    @property
+    def aciertos_jugador2(self) -> int:
+        return sum(1 for p in self.preguntas_de_jugador(2) if p.es_correcta)
+
+    @property
     def es_empate(self) -> bool:
-        return self.puntaje_jugador1 == self.puntaje_jugador2
+        return self.estado == EstadoPartida.FINALIZADA and self.puntaje_jugador1 == self.puntaje_jugador2
 
     def unirse_como_rival(self, jugador2_id: int) -> None:
         """Asigna al segundo jugador de un duelo online y marca el momento del emparejamiento."""

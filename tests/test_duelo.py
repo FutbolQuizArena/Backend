@@ -106,3 +106,29 @@ def test_duelo_se_finaliza_cuando_ambos_responden_y_gana_el_de_mas_puntaje(sesio
     assert duelo.es_empate is False
     assert jugador1.puntaje_total == duelo.puntaje_jugador1
     assert jugador2.puntaje_total == duelo.puntaje_jugador2
+
+
+def test_duelo_propiedades_nombres_y_aciertos(sesion_db: Session) -> None:
+    """Verifica que el modelo y esquema expongan correctamente los nombres y aciertos de ambos jugadores."""
+    _crear_categoria_con_preguntas(sesion_db)
+    jugador1 = _crear_usuario(sesion_db, "maradona@futbolquiz.com")
+    jugador2 = _crear_usuario(sesion_db, "messi@futbolquiz.com")
+
+    duelo = duelo_service.buscar_o_crear_duelo_online(sesion_db, usuario_actual=jugador1)
+    duelo = duelo_service.buscar_o_crear_duelo_online(sesion_db, usuario_actual=jugador2)
+
+    assert duelo.jugador1_nombre == "maradona"
+    assert duelo.jugador2_nombre == "messi"
+
+    # Jugador 1 responde 10 preguntas bien
+    _responder_todas_las_preguntas(sesion_db, duelo, jugador1, opcion="A", tiempo_segundos=2)
+    # Jugador 2 responde 5 preguntas bien (opcion A) y 5 mal (opcion B)
+    preguntas_j2 = duelo.preguntas_de_jugador(2)
+    for p in preguntas_j2[:5]:
+        duelo_service.responder_pregunta_duelo(sesion_db, p.id, opcion_seleccionada="A", tiempo_respuesta_segundos=3, usuario_actual=jugador2)
+    for p in preguntas_j2[5:]:
+        duelo_service.responder_pregunta_duelo(sesion_db, p.id, opcion_seleccionada="B", tiempo_respuesta_segundos=3, usuario_actual=jugador2)
+
+    duelo = duelo_service.finalizar_duelo_si_corresponde(sesion_db, duelo.id)
+    assert duelo.aciertos_jugador1 == 10
+    assert duelo.aciertos_jugador2 == 5
