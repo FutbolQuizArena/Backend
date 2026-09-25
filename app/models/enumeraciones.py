@@ -45,3 +45,11 @@ class ModalidadDuelo(str, enum.Enum):
 
     ONLINE = "ONLINE"
     LOCAL = "LOCAL"
+
+
+class EstadoPregunta(str, enum.Enum):
+    """Estados posibles de una pregunta en el banco de contenido."""
+
+    ACTIVA = "ACTIVA"
+    BORRADOR = "BORRADOR"
+

@@ -1,6 +1,17 @@
 # Changelog
 
+## 25/9 [5.1.1] CRUD de preguntas (Módulo 5 - Administración)
+
+- **Modelo de dominio y enumeraciones:** Incorporación del enum `EstadoPregunta` (`ACTIVA`, `BORRADOR`) en `app/models/enumeraciones.py`. Extensión de la entidad `Pregunta` en `app/models/pregunta.py` agregando los atributos `dificultad` (String, default "Media"), `estado` (`EstadoPregunta`, default "ACTIVA") y `eliminada_en` (DateTime, soft-delete).
+- **Migración de base de datos:** Creación de la migración de Alembic `2026_09_25_1000-c4e815b3e21a_agregar_campos_dificultad_estado_y_eliminada_en_a_preguntas.py` con creación del tipo ENUM en PostgreSQL y valores por defecto consistentes para preservar datos existentes.
+- **Capa de persistencia:** Modificación en `app/repositories/pregunta_repository.py` incorporando métodos CRUD (`crear`, `obtener_por_id`, `actualizar`, `marcar_eliminada`, `duplicar` con estado `BORRADOR` y `listar_paginado` de 6 por página con filtros de texto, categoría y estado). Ajuste de compatibilidad en `listar_preguntas_por_categoria` para filtrar exclusivamente `estado == EstadoPregunta.ACTIVA` y `eliminada_en IS NULL`, protegiendo la selección de preguntas en partidas de Módulo 2.
+- **Esquemas Pydantic:** Creación de `app/schemas/pregunta_schema.py` con esquemas `PreguntaCreate`, `PreguntaUpdate`, `PreguntaCambiarEstadoRequest`, `PreguntaAdminResponse` (con resolución automática de `categoria_nombre`) y `PreguntaListadoResponse` (paginado con `total` y `total_paginas`).
+- **Capa de lógica de negocio:** Creación de `app/services/pregunta_service.py` con validaciones de existencia de categoría, manejo de 404 ante preguntas inexistentes o eliminadas, clonación segura y cálculo de páginas.
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/admin/pregunta_router.py` implementando los endpoints `POST /api/admin/preguntas` (201), `GET /api/admin/preguntas` (200), `GET /api/admin/preguntas/{id}` (200), `PATCH /api/admin/preguntas/{id}` (200), `DELETE /api/admin/preguntas/{id}` (200 soft-delete con `MensajeResponse`), `POST /api/admin/preguntas/{id}/duplicar` (201) y `PATCH /api/admin/preguntas/{id}/estado` (200). Protección estricta con `requiere_rol(RolUsuario.ADMINISTRADOR)`, documentación OpenAPI bajo tag `"Administración"` y registro en `app/main.py`.
+- **Testing automatizado:** Creación de `tests/test_admin_preguntas.py` (15 tests unitarios y de integración) cubriendo CRUD completo, control de roles (403 para jugadores, 401 sin token), paginación fija de a 6, filtros combinados, validaciones de opciones y respuestas (422), duplicación en borrador, toggle de estado, soft-delete y regresión de Módulo 2. Suite completa de 187 tests pasando al 100% en verde.
+
 ## 25/9 [Refactorización] Limpieza y estandarización del Módulo 2 y arquitectura general
+
 
 - **Modelo de dominio y enumeraciones:** Unificación de todas las enumeraciones del sistema en `app/models/enumeraciones.py`, incorporando `EstadoPartida`, `TipoPartida` y `ModalidadDuelo` junto a `RolUsuario`, `EstadoTorneo` y `EstadoCruce`. Eliminación del archivo redundante `app/models/enumeraciones_partida.py` y actualización de importaciones en todos los módulos dependientes.
 - **Manejo de excepciones:** Centralización de las excepciones del dominio de partidas y duelos (`PartidaYaFinalizadaError` y `PreguntaYaRespondidaError`) en `app/core/excepciones.py`, eliminando `app/core/excepciones_partida.py` y manteniendo la estructura de error homogénea en toda la aplicación.
