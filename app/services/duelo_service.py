@@ -3,7 +3,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.excepciones import ExcepcionValidacion
-from app.models.enumeraciones_partida import ModalidadDuelo
+from app.models.enumeraciones_partida import EstadoPartida, ModalidadDuelo
 from app.models.partida_duelo import PartidaDuelo
 from app.models.usuario import Usuario
 from app.repositories import categoria_repository, duelo_repository, partida_repository, pregunta_repository
@@ -24,7 +24,7 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
 
     if duelo_pendiente is not None:
         duelo_pendiente.unirse_como_rival(jugador2_id=usuario_actual.id)
-        duelo_pendiente.estado = duelo_pendiente.estado.EN_CURSO
+        duelo_pendiente.estado = EstadoPartida.EN_CURSO
         db.add(duelo_pendiente)
         db.commit()
         db.refresh(duelo_pendiente)
@@ -61,10 +61,6 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
         pregunta_ids=[pregunta.id for pregunta in preguntas],
         numero_jugador=1,
     )
-    db.refresh(duelo_nuevo)
-    return duelo_nuevo
-
-    ...
     db.refresh(duelo_nuevo)
     return duelo_nuevo
 
