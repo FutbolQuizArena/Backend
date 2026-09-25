@@ -67,3 +67,13 @@ class CategoriaAdminResponse(BaseModel):
     preguntas_count: int = Field(default=0, description="Cantidad de preguntas vinculadas a la categoría")
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class CategoriaResponse(BaseModel):
+    """Esquema de respuesta de categoría para el juego y la ruleta."""
+
+    id: int
+    nombre: str
+    estado: Optional[EstadoCategoria] = EstadoCategoria.ACTIVA
+
+    model_config = ConfigDict(from_attributes=True)

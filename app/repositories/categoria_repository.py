@@ -16,6 +16,16 @@ def listar_categorias(db: Session) -> list[Categoria]:
     return db.query(Categoria).all()
 
 
+def listar_categorias_activas(db: Session) -> list[Categoria]:
+    """Devuelve las categorías disponibles en estado ACTIVA ordenadas por ID."""
+    return (
+        db.query(Categoria)
+        .filter(Categoria.estado == EstadoCategoria.ACTIVA)
+        .order_by(Categoria.id.asc())
+        .all()
+    )
+
+
 def obtener_categoria_por_id(db: Session, categoria_id: int) -> Categoria | None:
     """Busca una categoría por su ID."""
     return db.query(Categoria).filter(Categoria.id == categoria_id).first()

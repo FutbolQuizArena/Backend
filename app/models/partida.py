@@ -47,6 +47,11 @@ class Partida(Base):
     def preguntas_de_jugador(self, numero_jugador: int) -> list["PreguntaPartida"]:
         return [p for p in self.preguntas if p.numero_jugador == numero_jugador]
 
+    @property
+    def categoria_nombre(self) -> Optional[str]:
+        """Nombre de la categoría asociada a la partida o duelo."""
+        return self.categoria.nombre if self.categoria else None
+
 
 class PartidaIndividual(Partida):
     """Partida jugada por un único jugador (RF-04)."""

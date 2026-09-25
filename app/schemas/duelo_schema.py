@@ -14,6 +14,7 @@ class DueloEstadoResponse(BaseModel):
     estado: str
     modalidad: str
     categoria_id: int | None
+    categoria_nombre: str | None = None
     jugador1_id: int
     jugador2_id: int | None
     puntaje_jugador1: int
@@ -37,6 +38,7 @@ class DueloJuegoResponse(BaseModel):
     estado: str
     modalidad: str
     categoria_id: int | None
+    categoria_nombre: str | None = None
     preguntas: list[PreguntaJuegoResponse]
 
     @classmethod
@@ -55,10 +57,16 @@ class DueloJuegoResponse(BaseModel):
                     opcion_d=pregunta_partida.pregunta.opcion_d,
                 )
             )
+        categoria_nombre = (
+            duelo.categoria_nombre
+            if hasattr(duelo, "categoria_nombre")
+            else (duelo.categoria.nombre if getattr(duelo, "categoria", None) else None)
+        )
         return cls(
             id=duelo.id,
             estado=duelo.estado,
             modalidad=duelo.modalidad,
             categoria_id=duelo.categoria_id,
+            categoria_nombre=categoria_nombre,
             preguntas=preguntas_juego,
         )

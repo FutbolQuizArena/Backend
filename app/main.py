@@ -8,6 +8,7 @@ from app.core.excepciones import registrar_manejadores_excepcion
 from app.routes import (
     admin_router,
     autenticacion_router,
+    categoria_router,
     duelo_router,
     partida_router,
     salud_router,
@@ -50,6 +51,7 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(salud_router)
     aplicacion.include_router(autenticacion_router)
     aplicacion.include_router(usuario_router)
+    aplicacion.include_router(categoria_router)
     aplicacion.include_router(torneo_router)
     aplicacion.include_router(duelo_router)
     aplicacion.include_router(partida_router)

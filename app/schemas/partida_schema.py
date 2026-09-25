@@ -26,6 +26,7 @@ class PartidaIndividualResponse(BaseModel):
 
     id: int
     categoria_id: int | None
+    categoria_nombre: str | None = None
     estado: str
     preguntas: list[PreguntaJuegoResponse]
 
@@ -45,9 +46,15 @@ class PartidaIndividualResponse(BaseModel):
                     opcion_d=pregunta_partida.pregunta.opcion_d,
                 )
             )
+        categoria_nombre = (
+            partida.categoria_nombre
+            if hasattr(partida, "categoria_nombre")
+            else (partida.categoria.nombre if getattr(partida, "categoria", None) else None)
+        )
         return cls(
             id=partida.id,
             categoria_id=partida.categoria_id,
+            categoria_nombre=categoria_nombre,
             estado=partida.estado,
             preguntas=preguntas_juego,
         )

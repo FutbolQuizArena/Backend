@@ -7,6 +7,7 @@ from app.routes.admin import (
     admin_usuario_router,
 )
 from app.routes.autenticacion_router import autenticacion_router
+from app.routes.categoria_router import categoria_router
 from app.routes.duelo_router import duelo_router
 from app.routes.partida_router import partida_router
 from app.routes.salud_router import salud_router
@@ -19,6 +20,7 @@ __all__ = [
     "admin_router",
     "admin_usuario_router",
     "autenticacion_router",
+    "categoria_router",
     "duelo_router",
     "partida_router",
     "salud_router",

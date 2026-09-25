@@ -6,15 +6,30 @@ from sqlalchemy.orm import Session
 from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
+from app.schemas.categoria_schema import CategoriaResponse
 from app.schemas.partida_schema import (
     PartidaIndividualResponse,
     ResultadoPartidaResponse,
     RespuestaPartidaRequest,
     RespuestaPartidaResponse,
 )
-from app.services import partida_service
+from app.services import categoria_service, partida_service
 
 partida_router = APIRouter(prefix="/api/partidas", tags=["Partidas"])
+
+
+@partida_router.get(
+    "/categorias",
+    response_model=list[CategoriaResponse],
+    status_code=status.HTTP_200_OK,
+    summary="Listar categorías disponibles para partidas",
+    description="Devuelve las categorías activas para la ruleta y las partidas.",
+)
+def listar_categorias_partidas(
+    db: Session = Depends(obtener_db),
+) -> list[CategoriaResponse]:
+    """Endpoint alias para la ruleta y selección de categorías en partidas."""
+    return categoria_service.listar_categorias_activas(db)
 
 
 @partida_router.post(

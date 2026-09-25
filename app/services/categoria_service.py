@@ -13,8 +13,22 @@ from app.repositories import categoria_repository
 from app.schemas.categoria_schema import (
     CategoriaAdminResponse,
     CategoriaCreate,
+    CategoriaResponse,
     CategoriaUpdate,
 )
+
+
+def listar_categorias_activas(db: Session) -> list[CategoriaResponse]:
+    """Devuelve la lista de categorías activas para el juego y la ruleta."""
+    categorias = categoria_repository.listar_categorias_activas(db)
+    return [
+        CategoriaResponse(
+            id=cat.id,
+            nombre=cat.nombre,
+            estado=cat.estado,
+        )
+        for cat in categorias
+    ]
 
 
 def crear_categoria(db: Session, datos: CategoriaCreate) -> CategoriaAdminResponse:
