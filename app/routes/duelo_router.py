@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.base_datos import obtener_db
 from app.core.excepciones import AccesoDenegadoError, ExcepcionRecursoNoEncontrado
 from app.core.seguridad import obtener_usuario_actual
+from app.models.enumeraciones import EstadoPartida
 from app.models.usuario import Usuario
 from app.repositories import duelo_repository
 from app.schemas.duelo_schema import DueloEstadoResponse, DueloIniciarLocalRequest, DueloJuegoResponse
@@ -163,4 +164,31 @@ def consultar_estado_duelo(
         raise AccesoDenegadoError(mensaje="No formás parte de este duelo")
 
     duelo = duelo_service.finalizar_duelo_si_corresponde(db, duelo_id)
-    return DueloEstadoResponse.model_validate(duelo)
+    puntaje1 = (
+        duelo.puntaje_jugador1
+        if duelo.estado == EstadoPartida.FINALIZADA
+        else sum(p.puntaje_obtenido for p in duelo.preguntas_de_jugador(1))
+    )
+    puntaje2 = (
+        duelo.puntaje_jugador2
+        if duelo.estado == EstadoPartida.FINALIZADA
+        else sum(p.puntaje_obtenido for p in duelo.preguntas_de_jugador(2))
+    )
+    estado_str = duelo.estado.value if hasattr(duelo.estado, "value") else str(duelo.estado)
+    return DueloEstadoResponse(
+        id=duelo.id,
+        estado=estado_str,
+        modalidad=duelo.modalidad,
+        categoria_id=duelo.categoria_id,
+        categoria_nombre=duelo.categoria_nombre,
+        jugador1_id=duelo.jugador1_id,
+        jugador2_id=duelo.jugador2_id,
+        jugador1_nombre=duelo.jugador1_nombre,
+        jugador2_nombre=duelo.jugador2_nombre,
+        puntaje_jugador1=puntaje1,
+        puntaje_jugador2=puntaje2,
+        aciertos_jugador1=duelo.aciertos_jugador1,
+        aciertos_jugador2=duelo.aciertos_jugador2,
+        numero_ganador=duelo.numero_ganador,
+        es_empate=duelo.es_empate,
+    )

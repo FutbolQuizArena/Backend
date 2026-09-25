@@ -1,5 +1,7 @@
 """Lógica de negocio y emparejamiento para Duelos (online y local)."""
 
+from datetime import datetime, timezone
+
 from sqlalchemy.orm import Session
 
 from app.core.excepciones import (
@@ -29,6 +31,25 @@ def _numero_de_jugador(duelo: PartidaDuelo, usuario_id: int) -> int:
     if duelo.jugador2_id == usuario_id:
         return 2
     raise ExcepcionNoAutorizado(mensaje="No formás parte de este duelo")
+
+
+def _buscar_duelos_pendientes_del_jugador(db: Session, jugador_id: int) -> list[PartidaDuelo]:
+    """Busca todas las partidas de duelo ONLINE pendientes creadas por el jugador indicado,
+    ordenadas de la más reciente a la más antigua.
+    """
+    fn = getattr(duelo_repository, "buscar_duelos_pendientes_del_jugador", None)
+    if fn is not None:
+        return fn(db, jugador_id)
+    return (
+        db.query(PartidaDuelo)
+        .filter(
+            PartidaDuelo.estado == EstadoPartida.PENDIENTE_RIVAL,
+            PartidaDuelo.modalidad == ModalidadDuelo.ONLINE.value,
+            PartidaDuelo.jugador1_id == jugador_id,
+        )
+        .order_by(PartidaDuelo.fecha_inicio.desc())
+        .all()
+    )
 
 
 def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> PartidaDuelo:
@@ -64,8 +85,35 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
             pregunta_ids=[pp.pregunta_id for pp in preguntas_jugador1],
             numero_jugador=2,
         )
+
+        # Si el jugador que se une tenía algún duelo propio previo en PENDIENTE_RIVAL, lo finalizamos
+        duelos_propios_rival = _buscar_duelos_pendientes_del_jugador(
+            db=db, jugador_id=usuario_actual.id
+        )
+        for d in duelos_propios_rival:
+            d.estado = EstadoPartida.FINALIZADA
+            d.fecha_fin = datetime.now(timezone.utc)
+            db.add(d)
+
+        db.commit()
         db.refresh(duelo_pendiente)
         return duelo_pendiente
+
+    # Si no hay rival esperando, verificar si el usuario actual ya posee un duelo pendiente esperando rival
+    # para evitar duplicaciones por StrictMode de React o recargas del navegador
+    duelos_propios = _buscar_duelos_pendientes_del_jugador(
+        db=db, jugador_id=usuario_actual.id
+    )
+    if duelos_propios:
+        duelo_activo = duelos_propios[0]
+        if len(duelos_propios) > 1:
+            for sobrante in duelos_propios[1:]:
+                sobrante.estado = EstadoPartida.FINALIZADA
+                sobrante.fecha_fin = datetime.now(timezone.utc)
+                db.add(sobrante)
+            db.commit()
+            db.refresh(duelo_activo)
+        return duelo_activo
 
     categoria = categoria_repository.obtener_categoria_aleatoria(db)
     if categoria is None:

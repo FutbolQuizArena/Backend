@@ -17,8 +17,12 @@ class DueloEstadoResponse(BaseModel):
     categoria_nombre: str | None = None
     jugador1_id: int
     jugador2_id: int | None
+    jugador1_nombre: str | None = None
+    jugador2_nombre: str | None = None
     puntaje_jugador1: int
     puntaje_jugador2: int
+    aciertos_jugador1: int = 0
+    aciertos_jugador2: int = 0
     numero_ganador: int | None
     es_empate: bool
 
@@ -39,6 +43,10 @@ class DueloJuegoResponse(BaseModel):
     modalidad: str
     categoria_id: int | None
     categoria_nombre: str | None = None
+    jugador1_id: int | None = None
+    jugador2_id: int | None = None
+    jugador1_nombre: str | None = None
+    jugador2_nombre: str | None = None
     preguntas: list[PreguntaJuegoResponse]
 
     @classmethod
@@ -62,11 +70,16 @@ class DueloJuegoResponse(BaseModel):
             if hasattr(duelo, "categoria_nombre")
             else (duelo.categoria.nombre if getattr(duelo, "categoria", None) else None)
         )
+        estado_str = duelo.estado.value if hasattr(duelo.estado, "value") else str(duelo.estado)
         return cls(
             id=duelo.id,
-            estado=duelo.estado,
+            estado=estado_str,
             modalidad=duelo.modalidad,
             categoria_id=duelo.categoria_id,
             categoria_nombre=categoria_nombre,
+            jugador1_id=duelo.jugador1_id,
+            jugador2_id=duelo.jugador2_id,
+            jugador1_nombre=duelo.jugador1_nombre,
+            jugador2_nombre=duelo.jugador2_nombre,
             preguntas=preguntas_juego,
         )
