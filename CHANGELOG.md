@@ -1,5 +1,15 @@
 # Changelog
 
+## 25/9 [5.1.3] Gestión de usuarios (Módulo 5 - Administración)
+
+- **Modelo de dominio:** Incorporación de los métodos de instancia encapsulados `deshabilitar(self)` y `habilitar(self)` en la entidad `Usuario` (`app/models/usuario.py`), mutando el atributo `esta_habilitado` según el principio de encapsulamiento del Diagrama de clases E4.
+- **Capa de persistencia:** Implementación de `listar_usuarios_admin` en `app/repositories/usuario_repository.py` con filtros opcionales de búsqueda insensible a mayúsculas/minúsculas (`ilike` sobre `nombre` y `email`), filtro exacto por `rol` (`RolUsuario`), filtro por `esta_habilitado` y ordenamiento ascendente por `id`.
+- **Esquemas Pydantic:** Creación de `UsuarioCambiarEstadoRequest` (con validación de `esta_habilitado: bool`) y `UsuarioAdminResponse` (serializando `id`, `nombre`, `email`, `rol`, `puntaje_total`, `esta_habilitado` y `fecha_alta`, protegiendo contraseñas y hashes) en `app/schemas/usuario_schema.py`.
+- **Manejo de excepciones:** Incorporación de `AutoDeshabilitacionError` (código `AUTO_DESHABILITACION_NO_PERMITIDA`, HTTP 400 Bad Request) en `app/core/excepciones.py` para prevenir que un administrador desactive su propia cuenta. Reutilización de `ExcepcionRecursoNoEncontrado` (HTTP 404).
+- **Capa de lógica de negocio:** Creación en `app/services/usuario_service.py` de `listar_usuarios_admin`, `obtener_usuario_admin` (con 404 ante inexistencia) y `cambiar_estado_usuario` (resolviendo la validación anti-auto-bloqueo 400, invocación a métodos de dominio y persistencia).
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/admin/usuario_router.py` con los endpoints `GET /api/admin/usuarios` (200), `GET /api/admin/usuarios/{id}` (200) y `PATCH /api/admin/usuarios/{id}/estado` (200). Protección estricta con `requiere_rol(RolUsuario.ADMINISTRADOR)`, documentación completa en OpenAPI bajo tag `"Administración"`, exportación en `app/routes/admin/__init__.py` y `app/routes/__init__.py`, y registro en `app/main.py`.
+- **Testing automatizado:** Creación de `tests/test_admin_usuarios.py` con 15 pruebas unitarias y de integración cubriendo seguridad y RBAC (401 sin token, 403 para jugadores), listados con filtros combinados, consulta puntual por ID (200/404), cambio de estado (deshabilitar/habilitar), rechazo de auto-deshabilitación (400), modificación entre administradores y regresión de seguridad (revocación inmediata de acceso al quedar deshabilitado y restitución al habilitar). Adición de pruebas de modelo en `tests/test_usuario_model.py`. Suite completa de 226 tests pasando al 100% en verde.
+
 ## 25/9 [5.1.2] CRUD de categorías (Módulo 5 - Administración)
 
 - **Modelo de dominio y enumeraciones:** Incorporación de la enumeración `EstadoCategoria` (`ACTIVA`, `BORRADOR`) en `app/models/enumeraciones.py`. Extensión de la entidad `Categoria` en `app/models/categoria.py` con el atributo `estado` (`EstadoCategoria`, con valor por defecto `ACTIVA`).
