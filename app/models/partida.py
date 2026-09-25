@@ -8,7 +8,7 @@ así ambas comparten la misma tabla de preguntas (PreguntaPartida).
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import Column, DateTime, Enum as SQLEnum, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import Boolean, Column, DateTime, Enum as SQLEnum, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from app.core.base_datos import Base
@@ -80,8 +80,8 @@ class PreguntaPartida(Base):
     orden = Column(Integer, nullable=False)  # 1..10
     numero_jugador = Column(Integer, nullable=False, default=1, server_default="1")  # 1 o 2
     opcion_seleccionada = Column(String(1), nullable=True)
-    es_correcta = Column(Integer, nullable=False, default=0, server_default="0")  # 0/1 como booleano simple
-    esta_respondida = Column(Integer, nullable=False, default=0, server_default="0")
+    es_correcta = Column(Boolean, nullable=False, default=False, server_default="false")
+    esta_respondida = Column(Boolean, nullable=False, default=False, server_default="false")
     tiempo_respuesta_segundos = Column(Integer, nullable=True)
     puntaje_obtenido = Column(Integer, nullable=False, default=0, server_default="0")
     fecha_mostrada = Column(DateTime(timezone=True), nullable=True)
@@ -94,6 +94,6 @@ class PreguntaPartida(Base):
     ) -> None:
         self.opcion_seleccionada = opcion
         self.tiempo_respuesta_segundos = tiempo_segundos
-        self.es_correcta = 1 if es_correcta else 0
+        self.es_correcta = es_correcta
         self.puntaje_obtenido = puntaje
-        self.esta_respondida = 1
+        self.esta_respondida = True
