@@ -53,3 +53,11 @@ class EstadoPregunta(str, enum.Enum):
     ACTIVA = "ACTIVA"
     BORRADOR = "BORRADOR"
 
+
+class EstadoCategoria(str, enum.Enum):
+    """Estados posibles de una categoría de preguntas."""
+
+    ACTIVA = "ACTIVA"
+    BORRADOR = "BORRADOR"
+
+

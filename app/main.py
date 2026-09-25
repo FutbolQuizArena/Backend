@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import registrar_manejadores_excepcion
 from app.routes import (
+    admin_categoria_router,
     admin_pregunta_router,
     autenticacion_router,
     duelo_router,
@@ -46,6 +47,7 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(duelo_router)
     aplicacion.include_router(partida_router)
     aplicacion.include_router(admin_pregunta_router)
+    aplicacion.include_router(admin_categoria_router)
 
     # Configuración de OpenAPI para habilitar el botón "Authorize" (Bearer JWT) en Swagger UI
     from fastapi.openapi.utils import get_openapi

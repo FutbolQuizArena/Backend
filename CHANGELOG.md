@@ -1,5 +1,16 @@
 # Changelog
 
+## 25/9 [5.1.2] CRUD de categorías (Módulo 5 - Administración)
+
+- **Modelo de dominio y enumeraciones:** Incorporación de la enumeración `EstadoCategoria` (`ACTIVA`, `BORRADOR`) en `app/models/enumeraciones.py`. Extensión de la entidad `Categoria` en `app/models/categoria.py` con el atributo `estado` (`EstadoCategoria`, con valor por defecto `ACTIVA`).
+- **Migración de base de datos:** Creación de la migración de Alembic `2026_09_25_1200-d8f92144b20a_agregar_campo_estado_a_categorias.py` para la creación del tipo ENUM en PostgreSQL y adición de la columna `estado` con `server_default='ACTIVA'`.
+- **Capa de persistencia:** Modificación en `app/repositories/categoria_repository.py` con funciones CRUD (`crear_categoria`, `obtener_categoria_por_id`, `obtener_categoria_por_nombre`, `actualizar_categoria`, `eliminar_categoria`) y `listar_categorias_admin` con cómputo optimizado de `preguntas_count` mediante subconsulta correlacionada excluyendo preguntas eliminadas. Ajuste de compatibilidad en `obtener_categoria_aleatoria` para filtrar exclusivamente categorías con `estado == EstadoCategoria.ACTIVA`, protegiendo la selección aleatoria de categorías en partidas y duelos del Módulo 2.
+- **Esquemas Pydantic:** Creación de `app/schemas/categoria_schema.py` con `CategoriaCreate`, `CategoriaUpdate`, `CategoriaCambiarEstadoRequest` y `CategoriaAdminResponse` (con `id`, `nombre`, `estado` y `preguntas_count`).
+- **Manejo de excepciones:** Incorporación de `CategoriaYaExisteError` (código `CATEGORIA_YA_EXISTE`, HTTP 409 Conflict) y `CategoriaConPreguntasError` (código `CATEGORIA_CON_PREGUNTAS`, HTTP 400 Bad Request) en `app/core/excepciones.py`.
+- **Capa de lógica de negocio:** Creación de `app/services/categoria_service.py` resolviendo validaciones de nombres únicos case-insensitive (409 Conflict), manejo de no encontrados (404), toggle rápido de estado y prevención de borrado físico si la categoría posee preguntas asociadas (400 Bad Request).
+- **Capa de presentación (API REST):** Creación del controlador `app/routes/admin/categoria_router.py` con los endpoints `POST /api/admin/categorias` (201), `GET /api/admin/categorias` (200), `GET /api/admin/categorias/{id}` (200), `PATCH /api/admin/categorias/{id}` (200), `PATCH /api/admin/categorias/{id}/estado` (200) y `DELETE /api/admin/categorias/{id}` (200 con `MensajeResponse`). Protección con `requiere_rol(RolUsuario.ADMINISTRADOR)`, documentación OpenAPI bajo tag `"Administración"` y registro en `app/main.py`.
+- **Testing automatizado:** Creación de `tests/test_admin_categorias.py` con 22 pruebas unitarias y de integración cubriendo CRUD completo, control de accesos (403 para jugadores, 401 sin token), unicidad case-insensitive, filtros por búsqueda y estado, conteo exacto de preguntas, eliminación controlada por integridad referencial y regresión estricta de Módulo 2. Suite completa de 209 tests pasando al 100% en verde.
+
 ## 25/9 [5.1.1] CRUD de preguntas (Módulo 5 - Administración)
 
 - **Modelo de dominio y enumeraciones:** Incorporación del enum `EstadoPregunta` (`ACTIVA`, `BORRADOR`) en `app/models/enumeraciones.py`. Extensión de la entidad `Pregunta` en `app/models/pregunta.py` agregando los atributos `dificultad` (String, default "Media"), `estado` (`EstadoPregunta`, default "ACTIVA") y `eliminada_en` (DateTime, soft-delete).

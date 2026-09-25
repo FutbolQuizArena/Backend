@@ -220,6 +220,38 @@ class PreguntaYaRespondidaError(ExcepcionBase):
         )
 
 
+class CategoriaYaExisteError(ExcepcionBase):
+    """Excepción lanzada cuando se intenta crear o renombrar una categoría con un nombre ya existente."""
+
+    def __init__(
+        self,
+        mensaje: str = "Ya existe una categoría con ese nombre",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="CATEGORIA_YA_EXISTE",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_409_CONFLICT,
+        )
+
+
+class CategoriaConPreguntasError(ExcepcionBase):
+    """Excepción lanzada cuando se intenta eliminar una categoría que posee preguntas vinculadas."""
+
+    def __init__(
+        self,
+        mensaje: str = "No se puede eliminar la categoría porque contiene preguntas asociadas",
+        detalle: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            codigo="CATEGORIA_CON_PREGUNTAS",
+            mensaje=mensaje,
+            detalle=detalle,
+            codigo_estado=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 def _construir_respuesta_error(
     codigo: str,
     mensaje: str,
