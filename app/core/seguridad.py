@@ -13,11 +13,11 @@ from app.repositories import usuario_repository
 from app.services import autenticacion_service
 
 # Configuración del esquema Bearer para Swagger UI con endpoint de login
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login", auto_error=False)
 
 
 def obtener_usuario_actual(
-    token: str = Depends(oauth2_scheme),
+    token: str | None = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ) -> Usuario:
     """Extrae y valida el token JWT del encabezado Authorization, retornando el usuario autenticado.

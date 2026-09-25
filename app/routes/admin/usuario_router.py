@@ -15,7 +15,7 @@ from app.schemas.usuario_schema import (
 from app.services import usuario_service
 
 admin_usuario_router = APIRouter(
-    prefix="/api/admin/usuarios",
+    prefix="/usuarios",
     tags=["Administración"],
     dependencies=[
         Depends(obtener_usuario_actual),

@@ -18,7 +18,7 @@ from app.schemas.comun_schema import MensajeResponse
 from app.services import categoria_service
 
 admin_categoria_router = APIRouter(
-    prefix="/api/admin/categorias",
+    prefix="/categorias",
     tags=["Administración"],
     dependencies=[
         Depends(obtener_usuario_actual),

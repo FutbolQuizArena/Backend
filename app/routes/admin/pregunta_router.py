@@ -19,7 +19,7 @@ from app.schemas.pregunta_schema import (
 from app.services import pregunta_service
 
 admin_pregunta_router = APIRouter(
-    prefix="/api/admin/preguntas",
+    prefix="/preguntas",
     tags=["Administración"],
     dependencies=[
         Depends(obtener_usuario_actual),
