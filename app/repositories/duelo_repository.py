@@ -38,6 +38,11 @@ def buscar_duelo_pendiente_de_rival(db: Session, jugador_id: int) -> PartidaDuel
     Busca un duelo ONLINE que esté esperando rival (Tarea 2.1.9), excluyendo los
     duelos creados por el propio jugador que busca (no puede emparejarse consigo mismo).
     Devuelve el más antiguo esperando, para emparejar en orden de llegada.
+
+    Usa with_for_update() para bloquear la fila encontrada: así, si dos jugadores
+    piden emparejarse casi al mismo tiempo, el segundo pedido espera a que el primero
+    termine (commit o rollback) antes de leer el estado real del duelo, evitando que
+    ambos se unan al mismo duelo pendiente a la vez (Tarea de corrección: race condition).
     """
     return (
         db.query(PartidaDuelo)
@@ -47,5 +52,6 @@ def buscar_duelo_pendiente_de_rival(db: Session, jugador_id: int) -> PartidaDuel
             PartidaDuelo.jugador1_id != jugador_id,
         )
         .order_by(PartidaDuelo.fecha_inicio.asc())
+        .with_for_update()
         .first()
     )

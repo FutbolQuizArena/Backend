@@ -38,6 +38,14 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
       queda EN_CURSO y comparte las mismas 10 preguntas que el jugador 1.
     - Si no hay ninguno esperando, crea un duelo nuevo con categoría y preguntas
       al azar, y queda PENDIENTE_RIVAL hasta que otro jugador se sume.
+
+    Nota sobre la corrección de la race condition: antes, el cambio de estado a
+    EN_CURSO se guardaba (commit) ANTES de insertar las preguntas del jugador 2.
+    Si esa inserción fallaba (por ejemplo, por un pedido duplicado), el duelo
+    quedaba en un estado roto: EN_CURSO, con jugador 2 asignado, pero sin sus
+    preguntas. Ahora todo se guarda junto en un solo commit al final: si algo
+    falla, no se guarda nada, y el duelo queda tal cual estaba (PENDIENTE_RIVAL),
+    disponible para que alguien más lo intente de nuevo.
     """
     duelo_pendiente = duelo_repository.buscar_duelo_pendiente_de_rival(
         db=db, jugador_id=usuario_actual.id
@@ -47,8 +55,7 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
         duelo_pendiente.unirse_como_rival(jugador2_id=usuario_actual.id)
         duelo_pendiente.estado = EstadoPartida.EN_CURSO
         db.add(duelo_pendiente)
-        db.commit()
-        db.refresh(duelo_pendiente)
+        db.flush()  # aplica los cambios dentro de la transacción, sin cerrarla todavía
 
         preguntas_jugador1 = duelo_pendiente.preguntas_de_jugador(1)
         partida_repository.agregar_preguntas_a_partida(
