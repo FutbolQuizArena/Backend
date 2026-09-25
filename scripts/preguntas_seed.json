@@ -1,0 +1,5762 @@
+[
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2022?",
+    "options": {
+      "A": "Argentina",
+      "B": "Francia",
+      "C": "Brasil",
+      "D": "Croacia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección tiene más títulos de la Copa Mundial de la FIFA?",
+    "options": {
+      "A": "Alemania",
+      "B": "Brasil",
+      "C": "Italia",
+      "D": "Argentina"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿En qué país se disputó el Mundial de 2022?",
+    "options": {
+      "A": "Rusia",
+      "B": "Emiratos Árabes Unidos",
+      "C": "Qatar",
+      "D": "Arabia Saudita"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1986?",
+    "options": {
+      "A": "Alemania Federal",
+      "B": "Argentina",
+      "C": "Brasil",
+      "D": "Francia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Quién fue el capitán de Argentina durante el Mundial de 1986?",
+    "options": {
+      "A": "Jorge Valdano",
+      "B": "Jorge Burruchaga",
+      "C": "Diego Maradona",
+      "D": "Daniel Passarella"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2014?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Alemania",
+      "D": "España"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Quién marcó el gol de Alemania en la final del Mundial 2014?",
+    "options": {
+      "A": "Thomas Müller",
+      "B": "Mario Götze",
+      "C": "Miroslav Klose",
+      "D": "Mesut Özil"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2018?",
+    "options": {
+      "A": "Francia",
+      "B": "Croacia",
+      "C": "Alemania",
+      "D": "España"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección fue subcampeona del Mundial 2022?",
+    "options": {
+      "A": "Brasil",
+      "B": "Francia",
+      "C": "Croacia",
+      "D": "Marruecos"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿En qué país se disputó el Mundial de 2014?",
+    "options": {
+      "A": "Sudáfrica",
+      "B": "Brasil",
+      "C": "Rusia",
+      "D": "Alemania"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2010?",
+    "options": {
+      "A": "España",
+      "B": "Países Bajos",
+      "C": "Alemania",
+      "D": "Brasil"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Quién marcó el gol de España en la final del Mundial 2010?",
+    "options": {
+      "A": "David Villa",
+      "B": "Xavi Hernández",
+      "C": "Andrés Iniesta",
+      "D": "Fernando Torres"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2006?",
+    "options": {
+      "A": "Italia",
+      "B": "Francia",
+      "C": "Alemania",
+      "D": "Brasil"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2002?",
+    "options": {
+      "A": "Alemania",
+      "B": "Brasil",
+      "C": "Argentina",
+      "D": "Francia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Quién fue el máximo goleador de Argentina en el Mundial 2022?",
+    "options": {
+      "A": "Julián Álvarez",
+      "B": "Ángel Di María",
+      "C": "Lionel Messi",
+      "D": "Lautaro Martínez"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el primer Mundial de la historia?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Uruguay",
+      "D": "Italia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿En qué año se disputó el primer Mundial?",
+    "options": {
+      "A": "1928",
+      "B": "1930",
+      "C": "1934",
+      "D": "1938"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1998?",
+    "options": {
+      "A": "Brasil",
+      "B": "Francia",
+      "C": "Italia",
+      "D": "Alemania"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1994?",
+    "options": {
+      "A": "Brasil",
+      "B": "Italia",
+      "C": "Argentina",
+      "D": "Alemania"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino fue conocido como 'El Diez' y fue campeón mundial en 1986?",
+    "options": {
+      "A": "Gabriel Batistuta",
+      "B": "Mario Kempes",
+      "C": "Diego Maradona",
+      "D": "Claudio Caniggia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Contra qué selección jugó Argentina la final del Mundial de 1978?",
+    "options": {
+      "A": "Brasil",
+      "B": "Países Bajos",
+      "C": "Italia",
+      "D": "Alemania Federal"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué jugador fue el máximo goleador del Mundial de 1978?",
+    "options": {
+      "A": "Mario Kempes",
+      "B": "Rob Rensenbrink",
+      "C": "Paolo Rossi",
+      "D": "Teófilo Cubillas"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Cuál fue el resultado de la final del Mundial de 1986 entre Argentina y Alemania Federal?",
+    "options": {
+      "A": "2-1",
+      "B": "3-2",
+      "C": "3-1",
+      "D": "2-0"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección eliminó a Argentina en los cuartos de final del Mundial 1998?",
+    "options": {
+      "A": "Brasil",
+      "B": "Italia",
+      "C": "Países Bajos",
+      "D": "Francia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección eliminó a Argentina en los cuartos de final del Mundial 2006?",
+    "options": {
+      "A": "Alemania",
+      "B": "Italia",
+      "C": "Francia",
+      "D": "Portugal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección derrotó a Argentina en la final del Mundial 2014?",
+    "options": {
+      "A": "Países Bajos",
+      "B": "Alemania",
+      "C": "Brasil",
+      "D": "España"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final del Mundial 2014?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Mineirão",
+      "C": "Arena Corinthians",
+      "D": "Estadio Nacional de Brasilia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección derrotó a Brasil por 7-1 en las semifinales del Mundial 2014?",
+    "options": {
+      "A": "Argentina",
+      "B": "España",
+      "C": "Alemania",
+      "D": "Países Bajos"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Quién marcó el gol de Argentina en la final del Mundial 1978?",
+    "options": {
+      "A": "Daniel Bertoni",
+      "B": "Mario Kempes",
+      "C": "Leopoldo Luque",
+      "D": "Osvaldo Ardiles"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Quién fue el entrenador de Argentina campeona del Mundial 1986?",
+    "options": {
+      "A": "César Luis Menotti",
+      "B": "Carlos Bilardo",
+      "C": "Alfio Basile",
+      "D": "Carlos Griguol"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección fue campeona del Mundial de 1974?",
+    "options": {
+      "A": "Alemania Federal",
+      "B": "Países Bajos",
+      "C": "Brasil",
+      "D": "Italia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección ganó los Mundiales de 1934 y 1938 de manera consecutiva?",
+    "options": {
+      "A": "Brasil",
+      "B": "Italia",
+      "C": "Uruguay",
+      "D": "Alemania"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección ganó el Mundial de 1954?",
+    "options": {
+      "A": "Hungría",
+      "B": "Brasil",
+      "C": "Alemania Federal",
+      "D": "Uruguay"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección perdió la final del Mundial de 1954 frente a Alemania Federal?",
+    "options": {
+      "A": "Hungría",
+      "B": "Austria",
+      "C": "Uruguay",
+      "D": "Checoslovaquia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Quién fue el máximo goleador del Mundial de 2014?",
+    "options": {
+      "A": "Thomas Müller",
+      "B": "James Rodríguez",
+      "C": "Neymar",
+      "D": "Lionel Messi"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección ganó el Mundial de 1966?",
+    "options": {
+      "A": "Inglaterra",
+      "B": "Alemania Federal",
+      "C": "Brasil",
+      "D": "Portugal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿En qué Mundial consiguió Brasil su tercer título?",
+    "options": {
+      "A": "Chile 1962",
+      "B": "México 1970",
+      "C": "Suecia 1958",
+      "D": "Argentina 1978"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué jugador brasileño fue campeón mundial en 1958, 1962 y 1970?",
+    "options": {
+      "A": "Garrincha",
+      "B": "Pelé",
+      "C": "Jairzinho",
+      "D": "Rivelino"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Qué selección fue subcampeona del Mundial de 2018?",
+    "options": {
+      "A": "Bélgica",
+      "B": "Inglaterra",
+      "C": "Croacia",
+      "D": "España"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Media",
+    "question": "¿Contra qué selección perdió Argentina la final del Mundial de 1990?",
+    "options": {
+      "A": "Italia",
+      "B": "Brasil",
+      "C": "Alemania Federal",
+      "D": "Inglaterra"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador es el máximo goleador histórico de la Copa Mundial tras el Mundial 2026?",
+    "options": {
+      "A": "Lionel Messi",
+      "B": "Miroslav Klose",
+      "C": "Kylian Mbappé",
+      "D": "Ronaldo Nazário"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Cuántos goles marcó Kylian Mbappé en Mundiales hasta finalizar el Mundial 2026?",
+    "options": {
+      "A": "20",
+      "B": "21",
+      "C": "22",
+      "D": "23"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Cuántos goles marcó Lionel Messi en Mundiales hasta finalizar el Mundial 2026?",
+    "options": {
+      "A": "19",
+      "B": "20",
+      "C": "21",
+      "D": "22"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador era el máximo goleador histórico de los Mundiales antes del torneo de 2026?",
+    "options": {
+      "A": "Ronaldo Nazário",
+      "B": "Miroslav Klose",
+      "C": "Gerd Müller",
+      "D": "Lionel Messi"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Cuántos goles había marcado Miroslav Klose en Mundiales al finalizar su carrera internacional?",
+    "options": {
+      "A": "14",
+      "B": "15",
+      "C": "16",
+      "D": "17"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó cinco goles en un mismo partido del Mundial de 1994?",
+    "options": {
+      "A": "Oleg Salenko",
+      "B": "Romário",
+      "C": "Hristo Stoichkov",
+      "D": "Roberto Baggio"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Contra qué selección marcó Oleg Salenko sus cinco goles en el Mundial de 1994?",
+    "options": {
+      "A": "Camerún",
+      "B": "Colombia",
+      "C": "Bulgaria",
+      "D": "Suecia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección derrotó Argentina en la final del Mundial de 1986?",
+    "options": {
+      "A": "Bélgica",
+      "B": "Alemania Federal",
+      "C": "Francia",
+      "D": "Inglaterra"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó el gol del empate 2-2 de Argentina ante Alemania Federal en la final de 1986?",
+    "options": {
+      "A": "Jorge Valdano",
+      "B": "Jorge Burruchaga",
+      "C": "José Brown",
+      "D": "Claudio Borghi"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Quién marcó el tercer gol de Argentina en la final del Mundial de 1986?",
+    "options": {
+      "A": "Jorge Valdano",
+      "B": "Jorge Burruchaga",
+      "C": "Diego Maradona",
+      "D": "Claudio Caniggia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó el segundo gol de Argentina contra Inglaterra en los cuartos de final de México 1986?",
+    "options": {
+      "A": "Jorge Valdano",
+      "B": "Jorge Burruchaga",
+      "C": "Diego Maradona",
+      "D": "Claudio Caniggia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección derrotó a Brasil en la final del Mundial de 1950?",
+    "options": {
+      "A": "Argentina",
+      "B": "Uruguay",
+      "C": "Italia",
+      "D": "España"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿En qué estadio se disputó el partido decisivo del Mundial de 1950 entre Uruguay y Brasil?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Estadio Centenario",
+      "C": "Pacaembú",
+      "D": "Morumbi"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección ganó el Mundial de 1938?",
+    "options": {
+      "A": "Italia",
+      "B": "Hungría",
+      "C": "Brasil",
+      "D": "Francia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección fue subcampeona del Mundial de 1938?",
+    "options": {
+      "A": "Brasil",
+      "B": "Hungría",
+      "C": "Suecia",
+      "D": "Checoslovaquia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador italiano fue el máximo goleador del Mundial de 1938?",
+    "options": {
+      "A": "Silvio Piola",
+      "B": "Giuseppe Meazza",
+      "C": "Gino Colaussi",
+      "D": "Raimundo Orsi"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección fue la primera en ganar dos Mundiales consecutivos?",
+    "options": {
+      "A": "Brasil",
+      "B": "Uruguay",
+      "C": "Italia",
+      "D": "Alemania"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador fue el máximo goleador del Mundial de 1954 con 11 goles?",
+    "options": {
+      "A": "Just Fontaine",
+      "B": "Sándor Kocsis",
+      "C": "Ferenc Puskás",
+      "D": "Helmut Rahn"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador francés marcó 13 goles en el Mundial de 1958?",
+    "options": {
+      "A": "Raymond Kopa",
+      "B": "Michel Platini",
+      "C": "Just Fontaine",
+      "D": "Jean Vincent"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Mundiales",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección fue la primera campeona mundial fuera de Europa y Sudamérica?",
+    "options": {
+      "A": "México",
+      "B": "Estados Unidos",
+      "C": "Ninguna",
+      "D": "Corea del Sur"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino es conocido como 'El Millonario'?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Racing Club",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino es conocido como 'El Xeneize'?",
+    "options": {
+      "A": "River Plate",
+      "B": "San Lorenzo",
+      "C": "Boca Juniors",
+      "D": "Rosario Central"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club es conocido como 'El Rojo'?",
+    "options": {
+      "A": "Independiente",
+      "B": "Racing Club",
+      "C": "Lanús",
+      "D": "Estudiantes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Cuál es el clásico rival histórico de River Plate?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Boca Juniors",
+      "C": "San Lorenzo",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Cuál es el clásico rival histórico de Boca Juniors?",
+    "options": {
+      "A": "River Plate",
+      "B": "San Lorenzo",
+      "C": "Huracán",
+      "D": "Racing Club"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿De qué ciudad es Racing Club?",
+    "options": {
+      "A": "La Plata",
+      "B": "Avellaneda",
+      "C": "Rosario",
+      "D": "Córdoba"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino juega como local en el estadio Monumental?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "San Lorenzo",
+      "D": "Huracán"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino juega como local en La Bombonera?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Racing Club",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club español tiene como estadio al Santiago Bernabéu?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Atlético de Madrid",
+      "C": "Real Madrid",
+      "D": "Sevilla"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club español juega en el Camp Nou?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Barcelona",
+      "C": "Valencia",
+      "D": "Athletic Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club italiano es conocido como 'La Vecchia Signora'?",
+    "options": {
+      "A": "AC Milan",
+      "B": "Inter",
+      "C": "Juventus",
+      "D": "Roma"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club inglés juega en Anfield?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Liverpool",
+      "C": "Arsenal",
+      "D": "Chelsea"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club alemán juega en el Allianz Arena?",
+    "options": {
+      "A": "Borussia Dortmund",
+      "B": "Bayern Múnich",
+      "C": "Bayer Leverkusen",
+      "D": "RB Leipzig"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club inglés es conocido como 'The Red Devils'?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Manchester City",
+      "C": "Manchester United",
+      "D": "Arsenal"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club brasileño es conocido como Santos FC?",
+    "options": {
+      "A": "Santos",
+      "B": "Flamengo",
+      "C": "Palmeiras",
+      "D": "Corinthians"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿En qué país juega el club Flamengo?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Uruguay",
+      "D": "Colombia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino es conocido como 'El Ciclón'?",
+    "options": {
+      "A": "San Lorenzo",
+      "B": "Huracán",
+      "C": "Vélez",
+      "D": "Lanús"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino tiene como apodo 'La Academia'?",
+    "options": {
+      "A": "Independiente",
+      "B": "Racing Club",
+      "C": "River Plate",
+      "D": "Estudiantes"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club italiano tiene como uno de sus principales rivales al Inter de Milán?",
+    "options": {
+      "A": "Juventus",
+      "B": "AC Milan",
+      "C": "Napoli",
+      "D": "Roma"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Fácil",
+    "question": "¿Qué club español tiene como principal rival histórico al Real Madrid en El Clásico?",
+    "options": {
+      "A": "Valencia",
+      "B": "Sevilla",
+      "C": "Barcelona",
+      "D": "Atlético de Madrid"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino fue campeón de la Copa Intercontinental en 1967?",
+    "options": {
+      "A": "Racing Club",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Libertadores de 1967?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Racing Club",
+      "C": "Independiente",
+      "D": "River Plate"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó cuatro Copas Libertadores consecutivas entre 1972 y 1975?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Independiente",
+      "D": "Estudiantes"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino fue campeón de la Copa Libertadores de 1968, 1969 y 1970?",
+    "options": {
+      "A": "Estudiantes de La Plata",
+      "B": "Independiente",
+      "C": "Racing Club",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Libertadores de 1986?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Argentinos Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Libertadores de 1985?",
+    "options": {
+      "A": "Argentinos Juniors",
+      "B": "River Plate",
+      "C": "Vélez Sarsfield",
+      "D": "Estudiantes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Libertadores de 1994?",
+    "options": {
+      "A": "River Plate",
+      "B": "Vélez Sarsfield",
+      "C": "Boca Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Libertadores de 2018?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Lanús",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la segunda final de la Copa Libertadores 2018 entre River Plate y Boca Juniors?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Camp Nou",
+      "C": "Wembley",
+      "D": "San Siro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club inglés ganó la Champions League de 2012?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Chelsea",
+      "C": "Liverpool",
+      "D": "Manchester City"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club italiano ganó la Champions League de 2010?",
+    "options": {
+      "A": "AC Milan",
+      "B": "Juventus",
+      "C": "Inter de Milán",
+      "D": "Roma"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club alemán ganó la Champions League de 2013?",
+    "options": {
+      "A": "Bayern Múnich",
+      "B": "Borussia Dortmund",
+      "C": "Bayer Leverkusen",
+      "D": "Hamburgo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2012-13 y derrotó al Borussia Dortmund en la final?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Bayern Múnich",
+      "C": "Chelsea",
+      "D": "Barcelona"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2004?",
+    "options": {
+      "A": "Porto",
+      "B": "Monaco",
+      "C": "Milan",
+      "D": "Real Madrid"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2005 después de remontar una desventaja de 3-0 en la final?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Milan",
+      "C": "Manchester United",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 1999 con un gol en tiempo de descuento para ponerse 2-1?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Manchester United",
+      "C": "Bayern Múnich",
+      "D": "Juventus"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2009 derrotando al Manchester United en la final?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Real Madrid",
+      "C": "Chelsea",
+      "D": "Inter"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino consiguió la Copa Intercontinental de 2003?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 1984?",
+    "options": {
+      "A": "Independiente",
+      "B": "Boca Juniors",
+      "C": "River Plate",
+      "D": "Estudiantes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Media",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 1986?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Racing Club",
+      "D": "Vélez Sarsfield"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club es el máximo ganador histórico de la Copa de Europa/Champions League?",
+    "options": {
+      "A": "AC Milan",
+      "B": "Real Madrid",
+      "C": "Bayern Múnich",
+      "D": "Liverpool"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Cuántas Copas de Europa/Champions League había ganado Real Madrid hasta 2026?",
+    "options": {
+      "A": "13",
+      "B": "14",
+      "C": "15",
+      "D": "16"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó las primeras cinco ediciones de la Copa de Europa?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "AC Milan",
+      "C": "Benfica",
+      "D": "Ajax"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la primera edición de la Copa de Europa en 1956?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Reims",
+      "C": "Barcelona",
+      "D": "Milan"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club fue subcampeón de la primera Copa de Europa?",
+    "options": {
+      "A": "Stade de Reims",
+      "B": "Benfica",
+      "C": "Fiorentina",
+      "D": "Eintracht Frankfurt"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club fue campeón de la Copa de Europa en 1961 y 1962?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Benfica",
+      "C": "Milan",
+      "D": "Inter"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club neerlandés ganó tres Copas de Europa consecutivas entre 1971 y 1973?",
+    "options": {
+      "A": "PSV Eindhoven",
+      "B": "Feyenoord",
+      "C": "Ajax",
+      "D": "Twente"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1970, siendo el primer campeón neerlandés?",
+    "options": {
+      "A": "Ajax",
+      "B": "PSV Eindhoven",
+      "C": "Feyenoord",
+      "D": "Twente"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club inglés ganó dos Copas de Europa consecutivas en 1979 y 1980?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Nottingham Forest",
+      "C": "Aston Villa",
+      "D": "Manchester United"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club francés ganó por primera vez la Champions League en 1993?",
+    "options": {
+      "A": "Paris Saint-Germain",
+      "B": "Monaco",
+      "C": "Olympique de Marseille",
+      "D": "Lyon"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club portugués ganó la Copa de Europa en 1961 y 1962?",
+    "options": {
+      "A": "Porto",
+      "B": "Sporting CP",
+      "C": "Benfica",
+      "D": "Boavista"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club italiano ganó dos Copas de Europa consecutivas en 1964 y 1965?",
+    "options": {
+      "A": "Juventus",
+      "B": "Inter de Milán",
+      "C": "AC Milan",
+      "D": "Roma"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1985 y 1996?",
+    "options": {
+      "A": "Juventus",
+      "B": "Ajax",
+      "C": "Borussia Dortmund",
+      "D": "Porto"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 1968 derrotando al Manchester United?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Estudiantes de La Plata",
+      "C": "Independiente",
+      "D": "River Plate"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino fue campeón mundial de clubes en 1984 tras derrotar a Liverpool?",
+    "options": {
+      "A": "Independiente",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Argentinos Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 1985 frente a Juventus?",
+    "options": {
+      "A": "River Plate",
+      "B": "Argentinos Juniors",
+      "C": "Vélez Sarsfield",
+      "D": "Estudiantes"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 1994?",
+    "options": {
+      "A": "Vélez Sarsfield",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo derrotó Vélez Sarsfield en la final de la Copa Intercontinental de 1994?",
+    "options": {
+      "A": "AC Milan",
+      "B": "Barcelona",
+      "C": "Juventus",
+      "D": "Manchester United"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 2000 derrotando al Real Madrid?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Clubes",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Copa Intercontinental de 2003 frente al Milan?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Estudiantes"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿En qué país se originó el fútbol moderno?",
+    "options": {
+      "A": "Argentina",
+      "B": "Inglaterra",
+      "C": "Brasil",
+      "D": "Italia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿En qué año se disputó el primer Mundial de fútbol?",
+    "options": {
+      "A": "1926",
+      "B": "1928",
+      "C": "1930",
+      "D": "1932"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el primer Mundial?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Italia",
+      "D": "Uruguay"
+    },
+    "correct_option": "D"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿En qué país se disputó el primer Mundial?",
+    "options": {
+      "A": "Brasil",
+      "B": "Uruguay",
+      "C": "Argentina",
+      "D": "Italia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Quién es considerado uno de los principales impulsores del fútbol argentino organizado?",
+    "options": {
+      "A": "Alejandro Watson Hutton",
+      "B": "Julio Grondona",
+      "C": "César Luis Menotti",
+      "D": "Carlos Bilardo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿En qué año se fundó la asociación que posteriormente se convertiría en la AFA?",
+    "options": {
+      "A": "1889",
+      "B": "1893",
+      "C": "1901",
+      "D": "1910"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿En qué año comenzó el profesionalismo del fútbol argentino?",
+    "options": {
+      "A": "1921",
+      "B": "1926",
+      "C": "1931",
+      "D": "1935"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1958?",
+    "options": {
+      "A": "Brasil",
+      "B": "Suecia",
+      "C": "Francia",
+      "D": "Alemania Federal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador brasileño fue campeón mundial en 1958 siendo todavía adolescente?",
+    "options": {
+      "A": "Garrincha",
+      "B": "Pelé",
+      "C": "Didi",
+      "D": "Vavá"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1970?",
+    "options": {
+      "A": "Italia",
+      "B": "Brasil",
+      "C": "Alemania Federal",
+      "D": "Uruguay"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1986?",
+    "options": {
+      "A": "Argentina",
+      "B": "Alemania Federal",
+      "C": "Brasil",
+      "D": "Francia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Quién fue la gran figura argentina del Mundial de 1986?",
+    "options": {
+      "A": "Mario Kempes",
+      "B": "Diego Maradona",
+      "C": "Gabriel Batistuta",
+      "D": "Jorge Valdano"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1998?",
+    "options": {
+      "A": "Brasil",
+      "B": "Francia",
+      "C": "Italia",
+      "D": "Alemania"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2010?",
+    "options": {
+      "A": "España",
+      "B": "Países Bajos",
+      "C": "Alemania",
+      "D": "Brasil"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 2022?",
+    "options": {
+      "A": "Francia",
+      "B": "Argentina",
+      "C": "Brasil",
+      "D": "Croacia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué torneo continental sudamericano es conocido como Copa América?",
+    "options": {
+      "A": "Campeonato Sudamericano",
+      "B": "Copa de Naciones Sudamericana",
+      "C": "Copa América",
+      "D": "Copa del Sur"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué organismo gobierna el fútbol mundial?",
+    "options": {
+      "A": "UEFA",
+      "B": "CONMEBOL",
+      "C": "FIFA",
+      "D": "AFA"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué organismo gobierna el fútbol sudamericano?",
+    "options": {
+      "A": "FIFA",
+      "B": "CONMEBOL",
+      "C": "UEFA",
+      "D": "AFA"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1966?",
+    "options": {
+      "A": "Inglaterra",
+      "B": "Alemania Federal",
+      "C": "Brasil",
+      "D": "Portugal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1994?",
+    "options": {
+      "A": "Italia",
+      "B": "Brasil",
+      "C": "Argentina",
+      "D": "Alemania"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿En qué lugar de Argentina se disputó el primer partido de fútbol registrado en el país en 1867?",
+    "options": {
+      "A": "La Boca",
+      "B": "Palermo",
+      "C": "Avellaneda",
+      "D": "Belgrano"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué dos equipos protagonizaron el primer partido de fútbol registrado en Argentina en 1867?",
+    "options": {
+      "A": "Rojos y Blancos",
+      "B": "Ingleses y Argentinos",
+      "C": "Colorados y Blancos",
+      "D": "Azules y Blancos"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Cuál fue el resultado del primer partido de fútbol registrado en Argentina en 1867?",
+    "options": {
+      "A": "2-0",
+      "B": "3-1",
+      "C": "4-0",
+      "D": "4-1"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué institución ganó el primer campeonato organizado por la asociación fundada en 1893?",
+    "options": {
+      "A": "Lomas Athletic",
+      "B": "Alumni",
+      "C": "Belgrano Athletic",
+      "D": "Quilmes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó seis campeonatos argentinos consecutivos entre 1893 y 1898?",
+    "options": {
+      "A": "Lomas Athletic",
+      "B": "Belgrano Athletic",
+      "C": "Alumni",
+      "D": "Quilmes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué club cortó la racha de Lomas Athletic al ganar el campeonato de 1899?",
+    "options": {
+      "A": "Alumni",
+      "B": "Belgrano",
+      "C": "Quilmes",
+      "D": "Lobos"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué dirigente es conocido como el 'padre del fútbol argentino'?",
+    "options": {
+      "A": "Alejandro Watson Hutton",
+      "B": "Francisco Maturana",
+      "C": "Julio Grondona",
+      "D": "Carlos Menem"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué año marcó el inicio del campeonato profesional argentino?",
+    "options": {
+      "A": "1926",
+      "B": "1930",
+      "C": "1931",
+      "D": "1934"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Cuántos equipos participaron en el primer campeonato profesional argentino de 1931?",
+    "options": {
+      "A": "16",
+      "B": "18",
+      "C": "20",
+      "D": "22"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué club fue campeón del primer torneo profesional argentino de 1931?",
+    "options": {
+      "A": "River Plate",
+      "B": "Racing Club",
+      "C": "Boca Juniors",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Contra qué selección disputó Argentina la final del primer Mundial?",
+    "options": {
+      "A": "Brasil",
+      "B": "Italia",
+      "C": "Uruguay",
+      "D": "Chile"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Cuál fue el resultado de la final del Mundial de 1930?",
+    "options": {
+      "A": "3-2 para Uruguay",
+      "B": "4-2 para Uruguay",
+      "C": "2-1 para Argentina",
+      "D": "3-1 para Argentina"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué selección fue la primera en defender con éxito un título mundial?",
+    "options": {
+      "A": "Brasil",
+      "B": "Uruguay",
+      "C": "Italia",
+      "D": "Alemania"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué selección no participó en el Mundial de 1934 pese a ser la campeona vigente?",
+    "options": {
+      "A": "Uruguay",
+      "B": "Argentina",
+      "C": "Brasil",
+      "D": "Italia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Por qué Uruguay no participó del Mundial de 1934?",
+    "options": {
+      "A": "Por una sanción de FIFA",
+      "B": "Por problemas económicos",
+      "C": "Por negarse a viajar en respuesta a la ausencia europea en 1930",
+      "D": "Porque no se clasificó"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué acontecimiento provocó que no se disputaran Mundiales entre 1938 y 1950?",
+    "options": {
+      "A": "La Guerra Fría",
+      "B": "La Segunda Guerra Mundial",
+      "C": "La Primera Guerra Mundial",
+      "D": "Una crisis económica mundial"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué selección ganó el llamado 'Maracanazo' en 1950?",
+    "options": {
+      "A": "Brasil",
+      "B": "Argentina",
+      "C": "Uruguay",
+      "D": "Italia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué jugador uruguayo marcó el gol decisivo del Maracanazo?",
+    "options": {
+      "A": "Juan Schiaffino",
+      "B": "Alcides Ghiggia",
+      "C": "Obdulio Varela",
+      "D": "Óscar Míguez"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿Qué partido es conocido como el 'Partido del Siglo' en la historia de los Mundiales?",
+    "options": {
+      "A": "Brasil 4-2 Italia, 1970",
+      "B": "Italia 4-3 Alemania Federal, 1970",
+      "C": "Argentina 3-2 Alemania, 1986",
+      "D": "Brasil 5-2 Suecia, 1958"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Media",
+    "question": "¿En qué Mundial ocurrió el famoso 'Partido del Siglo' entre Italia y Alemania Federal?",
+    "options": {
+      "A": "1966",
+      "B": "1970",
+      "C": "1974",
+      "D": "1978"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Quién fundó The Argentine Association Football League en 1893?",
+    "options": {
+      "A": "Thomas Hogg",
+      "B": "Alejandro Watson Hutton",
+      "C": "Charles Miller",
+      "D": "James Hogg"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿En qué fecha se fundó The Argentine Association Football League en 1893?",
+    "options": {
+      "A": "20 de junio",
+      "B": "21 de febrero",
+      "C": "18 de mayo",
+      "D": "31 de mayo"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué nombre recibió la organización del fútbol argentino a partir de noviembre de 1926?",
+    "options": {
+      "A": "Asociación Argentina de Football",
+      "B": "Asociación Amateurs Argentina de Football",
+      "C": "Asociación de Football Amateurs y Profesionales",
+      "D": "Asociación del Fútbol Argentino"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿En qué año se fundó la Liga Argentina de Football que dio origen al profesionalismo?",
+    "options": {
+      "A": "1926",
+      "B": "1929",
+      "C": "1931",
+      "D": "1934"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué día se disputó el primer partido Boca-River de la era profesional?",
+    "options": {
+      "A": "18 de mayo de 1931",
+      "B": "31 de mayo de 1931",
+      "C": "20 de septiembre de 1931",
+      "D": "13 de noviembre de 1934"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Cuál fue el resultado del primer Boca-River del profesionalismo?",
+    "options": {
+      "A": "1-0 para Boca",
+      "B": "1-0 para River",
+      "C": "2-1 para Boca",
+      "D": "2-2"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué 18 clubes participaron en la reunión que impulsó el profesionalismo argentino en mayo de 1931?",
+    "options": {
+      "A": "Los cinco grandes únicamente",
+      "B": "Los clubes que posteriormente formaron la Liga Argentina de Football",
+      "C": "Todos los clubes de Primera y Segunda División",
+      "D": "Solamente clubes de Buenos Aires"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿En qué fecha quedó constituida la Asociación del Fútbol Argentino como resultado de la reestructuración de 1934?",
+    "options": {
+      "A": "18 de mayo de 1931",
+      "B": "31 de mayo de 1931",
+      "C": "3 de noviembre de 1934",
+      "D": "21 de febrero de 1893"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué institución organizó el primer campeonato de fútbol disputado en Buenos Aires en 1891?",
+    "options": {
+      "A": "Argentine Association Football League",
+      "B": "Argentine Association Football League de 1891",
+      "C": "AFA",
+      "D": "Liga Argentina de Football"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo ganó el campeonato organizado en Buenos Aires en 1891?",
+    "options": {
+      "A": "Lomas Athletic",
+      "B": "Saint Andrews School",
+      "C": "Quilmes Rowers",
+      "D": "Belgrano Football Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué hermanos estuvieron vinculados a la organización del primer partido de fútbol registrado en Argentina en 1867?",
+    "options": {
+      "A": "Alejandro y Carlos Watson",
+      "B": "Thomas y James Hogg",
+      "C": "John y William Smith",
+      "D": "James y Robert Miller"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué club fue considerado la base del posterior Alumni según la historia de la AFA?",
+    "options": {
+      "A": "English High School",
+      "B": "Lomas Athletic",
+      "C": "Saint Andrews",
+      "D": "Buenos Aires Football Club"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección ganó la final del Mundial 1930 luego de comenzar perdiendo?",
+    "options": {
+      "A": "Argentina",
+      "B": "Italia",
+      "C": "Uruguay",
+      "D": "Brasil"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección necesitaba solamente empatar con Brasil para ser campeona del Mundial de 1950?",
+    "options": {
+      "A": "Argentina",
+      "B": "Uruguay",
+      "C": "España",
+      "D": "Italia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección fue campeona del Mundial de 1954 tras remontar en la final ante Hungría?",
+    "options": {
+      "A": "Austria",
+      "B": "Alemania Federal",
+      "C": "Italia",
+      "D": "Suiza"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección era considerada favorita en la final del Mundial de 1954 antes de perder ante Alemania Federal?",
+    "options": {
+      "A": "Hungría",
+      "B": "Brasil",
+      "C": "Uruguay",
+      "D": "Austria"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué selección protagonizó la remontada conocida como 'Milagro de Berna'?",
+    "options": {
+      "A": "Alemania Federal",
+      "B": "Italia",
+      "C": "Brasil",
+      "D": "Uruguay"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué dos selecciones disputaron el 'Partido del Siglo' del Mundial de 1970?",
+    "options": {
+      "A": "Brasil y Uruguay",
+      "B": "Italia y Alemania Federal",
+      "C": "Brasil y Alemania Federal",
+      "D": "Italia y Brasil"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Cuál fue el resultado final del 'Partido del Siglo' de 1970?",
+    "options": {
+      "A": "3-2",
+      "B": "4-3",
+      "C": "4-2",
+      "D": "5-3"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Historia",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó el gol decisivo para Italia en el tiempo suplementario del Partido del Siglo de 1970?",
+    "options": {
+      "A": "Roberto Boninsegna",
+      "B": "Gigi Riva",
+      "C": "Gianni Rivera",
+      "D": "Sandro Mazzola"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino es conocido mundialmente como Lionel Messi?",
+    "options": {
+      "A": "Lionel Messi",
+      "B": "Ángel Di María",
+      "C": "Sergio Agüero",
+      "D": "Javier Mascherano"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué número de camiseta utilizó históricamente Diego Maradona con Argentina?",
+    "options": {
+      "A": "7",
+      "B": "9",
+      "C": "10",
+      "D": "11"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿De qué país es Pelé?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Uruguay",
+      "D": "Colombia"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿De qué país es Cristiano Ronaldo?",
+    "options": {
+      "A": "España",
+      "B": "Brasil",
+      "C": "Portugal",
+      "D": "Italia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino fue apodado 'Batigol'?",
+    "options": {
+      "A": "Gabriel Batistuta",
+      "B": "Claudio Caniggia",
+      "C": "Hernán Crespo",
+      "D": "Mario Kempes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador francés fue campeón mundial en 1998 y  conocido por marcar dos goles en la final?",
+    "options": {
+      "A": "Thierry Henry",
+      "B": "Zinedine Zidane",
+      "C": "Michel Platini",
+      "D": "Kylian Mbappé"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador brasileño fue conocido como 'El Fenómeno'?",
+    "options": {
+      "A": "Ronaldinho",
+      "B": "Rivaldo",
+      "C": "Ronaldo Nazário",
+      "D": "Romário"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador brasileño ganó el Mundial de 2002 y fue famoso por su habilidad y regates?",
+    "options": {
+      "A": "Ronaldinho",
+      "B": "Cafu",
+      "C": "Kaká",
+      "D": "Rivaldo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué arquero italiano es considerado una de las grandes leyendas de su posición?",
+    "options": {
+      "A": "Gianluigi Buffon",
+      "B": "Iker Casillas",
+      "C": "Manuel Neuer",
+      "D": "Oliver Kahn"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador español marcó el gol de la final del Mundial 2010?",
+    "options": {
+      "A": "Xavi",
+      "B": "David Villa",
+      "C": "Andrés Iniesta",
+      "D": "Fernando Torres"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador croata ganó el Balón de Oro en 2018?",
+    "options": {
+      "A": "Ivan Rakitić",
+      "B": "Luka Modrić",
+      "C": "Mario Mandžukić",
+      "D": "Davor Šuker"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador inglés fue famoso por sus centros y tiros libres?",
+    "options": {
+      "A": "Wayne Rooney",
+      "B": "David Beckham",
+      "C": "Steven Gerrard",
+      "D": "Frank Lampard"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino fue conocido como 'El Kun'?",
+    "options": {
+      "A": "Sergio Agüero",
+      "B": "Carlos Tévez",
+      "C": "Gonzalo Higuaín",
+      "D": "Javier Saviola"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino es conocido como 'Fideo'?",
+    "options": {
+      "A": "Ángel Di María",
+      "B": "Lautaro Martínez",
+      "C": "Julián Álvarez",
+      "D": "Nicolás Otamendi"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador francés es conocido por el apodo 'Kylian'?",
+    "options": {
+      "A": "Kylian Mbappé",
+      "B": "Karim Benzema",
+      "C": "Antoine Griezmann",
+      "D": "Olivier Giroud"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué delantero noruego es conocido por su capacidad goleadora y por jugar para el Manchester City?",
+    "options": {
+      "A": "Martin Ødegaard",
+      "B": "Erling Haaland",
+      "C": "Alexander Sørloth",
+      "D": "Joshua King"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador brasileño es conocido por el apodo 'O Rei'?",
+    "options": {
+      "A": "Ronaldo",
+      "B": "Pelé",
+      "C": "Romário",
+      "D": "Neymar"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino fue famoso por usar la camiseta número 10 y jugar en Boca Juniors?",
+    "options": {
+      "A": "Juan Román Riquelme",
+      "B": "Javier Zanetti",
+      "C": "Gabriel Batistuta",
+      "D": "Roberto Ayala"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador español fue una figura histórica del Barcelona y de la selección española?",
+    "options": {
+      "A": "Xavi Hernández",
+      "B": "Iker Casillas",
+      "C": "Sergio Ramos",
+      "D": "Raúl González"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino fue capitán de la selección campeona del Mundial 1986?",
+    "options": {
+      "A": "Jorge Valdano",
+      "B": "Jorge Burruchaga",
+      "C": "Diego Maradona",
+      "D": "Oscar Ruggeri"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Quién ganó el primer Balón de Oro de la historia, en 1956?",
+    "options": {
+      "A": "Alfredo Di Stéfano",
+      "B": "Stanley Matthews",
+      "C": "Raymond Kopa",
+      "D": "Ferenc Puskás"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué arquero ganó el Balón de Oro en 1963?",
+    "options": {
+      "A": "Dino Zoff",
+      "B": "Gordon Banks",
+      "C": "Lev Yashin",
+      "D": "Sepp Maier"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador africano ganó el Balón de Oro en 1995?",
+    "options": {
+      "A": "Didier Drogba",
+      "B": "Samuel Eto'o",
+      "C": "George Weah",
+      "D": "Roger Milla"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2007?",
+    "options": {
+      "A": "Kaká",
+      "B": "Ronaldinho",
+      "C": "Cristiano Ronaldo",
+      "D": "Ronaldo Nazário"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2006?",
+    "options": {
+      "A": "Zinedine Zidane",
+      "B": "Fabio Cannavaro",
+      "C": "Andrea Pirlo",
+      "D": "Gianluigi Buffon"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1998?",
+    "options": {
+      "A": "Ronaldo Nazário",
+      "B": "Zinedine Zidane",
+      "C": "Davor Šuker",
+      "D": "Roberto Baggio"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2005?",
+    "options": {
+      "A": "Ronaldinho",
+      "B": "Samuel Eto'o",
+      "C": "Kaká",
+      "D": "Rivaldo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1999?",
+    "options": {
+      "A": "Rivaldo",
+      "B": "Luís Figo",
+      "C": "Ronaldo Nazário",
+      "D": "Gabriel Batistuta"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2001?",
+    "options": {
+      "A": "Michael Owen",
+      "B": "David Beckham",
+      "C": "Raúl",
+      "D": "Thierry Henry"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2004?",
+    "options": {
+      "A": "Andriy Shevchenko",
+      "B": "Pavel Nedvěd",
+      "C": "Thierry Henry",
+      "D": "Deco"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2022?",
+    "options": {
+      "A": "Robert Lewandowski",
+      "B": "Karim Benzema",
+      "C": "Kylian Mbappé",
+      "D": "Sadio Mané"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2024?",
+    "options": {
+      "A": "Rodri",
+      "B": "Vinícius Júnior",
+      "C": "Jude Bellingham",
+      "D": "Toni Kroos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó el Balón de Oro en 2025?",
+    "options": {
+      "A": "Ousmane Dembélé",
+      "B": "Kylian Mbappé",
+      "C": "Lamine Yamal",
+      "D": "Vitinha"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Cuántos Balones de Oro masculinos había ganado Lionel Messi hasta la edición 2025?",
+    "options": {
+      "A": "6",
+      "B": "7",
+      "C": "8",
+      "D": "9"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Cuántos Balones de Oro ganó Cristiano Ronaldo hasta la edición 2025?",
+    "options": {
+      "A": "3",
+      "B": "4",
+      "C": "5",
+      "D": "6"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó tres Balones de Oro consecutivos entre 1983 y 1985?",
+    "options": {
+      "A": "Michel Platini",
+      "B": "Johan Cruyff",
+      "C": "Marco van Basten",
+      "D": "Franz Beckenbauer"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador ganó tres Balones de Oro en 1971, 1973 y 1974?",
+    "options": {
+      "A": "Franz Beckenbauer",
+      "B": "Johan Cruyff",
+      "C": "Gerd Müller",
+      "D": "George Best"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué delantero brasileño ganó el Balón de Oro en 1997 y 2002?",
+    "options": {
+      "A": "Romário",
+      "B": "Rivaldo",
+      "C": "Ronaldo Nazário",
+      "D": "Ronaldinho"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Quién es el máximo goleador histórico de Argentina en la Copa Mundial según los registros actualizados de 2026?",
+    "options": {
+      "A": "Gabriel Batistuta",
+      "B": "Diego Maradona",
+      "C": "Lionel Messi",
+      "D": "Mario Kempes"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Media",
+    "question": "¿Qué jugador argentino marcó 10 goles en Copas del Mundo antes de ser superado por Lionel Messi?",
+    "options": {
+      "A": "Mario Kempes",
+      "B": "Gabriel Batistuta",
+      "C": "Diego Maradona",
+      "D": "Guillermo Stábile"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador fue el primer arquero en ganar el Balón de Oro?",
+    "options": {
+      "A": "Gianluigi Buffon",
+      "B": "Lev Yashin",
+      "C": "Dino Zoff",
+      "D": "Manuel Neuer"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿En qué año ganó Lev Yashin el Balón de Oro?",
+    "options": {
+      "A": "1961",
+      "B": "1962",
+      "C": "1963",
+      "D": "1964"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador fue el primer ganador del Balón de Oro?",
+    "options": {
+      "A": "Stanley Matthews",
+      "B": "Alfredo Di Stéfano",
+      "C": "Raymond Kopa",
+      "D": "Luis Suárez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1990?",
+    "options": {
+      "A": "Lothar Matthäus",
+      "B": "Diego Maradona",
+      "C": "Roberto Baggio",
+      "D": "Karl-Heinz Rummenigge"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1996?",
+    "options": {
+      "A": "Matthias Sammer",
+      "B": "Jürgen Klinsmann",
+      "C": "Oliver Kahn",
+      "D": "Lothar Matthäus"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1993?",
+    "options": {
+      "A": "Roberto Baggio",
+      "B": "Hristo Stoichkov",
+      "C": "Dennis Bergkamp",
+      "D": "Jean-Pierre Papin"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1986?",
+    "options": {
+      "A": "Gary Lineker",
+      "B": "Igor Belanov",
+      "C": "Diego Maradona",
+      "D": "Michel Platini"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1975?",
+    "options": {
+      "A": "Oleh Blokhin",
+      "B": "Franz Beckenbauer",
+      "C": "Johan Cruyff",
+      "D": "Allan Simonsen"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1970?",
+    "options": {
+      "A": "Pelé",
+      "B": "Gerd Müller",
+      "C": "Bobby Charlton",
+      "D": "Franz Beckenbauer"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1965?",
+    "options": {
+      "A": "Eusébio",
+      "B": "George Best",
+      "C": "Bobby Charlton",
+      "D": "Denis Law"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1960?",
+    "options": {
+      "A": "Luis Suárez",
+      "B": "Omar Sívori",
+      "C": "Alfredo Di Stéfano",
+      "D": "Raymond Kopa"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1959?",
+    "options": {
+      "A": "Raymond Kopa",
+      "B": "Alfredo Di Stéfano",
+      "C": "Stanley Matthews",
+      "D": "Luis Suárez"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador fue Balón de Oro en 1972 y 1976?",
+    "options": {
+      "A": "Johan Cruyff",
+      "B": "Franz Beckenbauer",
+      "C": "Gerd Müller",
+      "D": "Kevin Keegan"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1988, 1989 y 1992?",
+    "options": {
+      "A": "Ruud Gullit",
+      "B": "Marco van Basten",
+      "C": "Frank Rijkaard",
+      "D": "Roberto Baggio"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador ganó el Balón de Oro en 1980 y 1981?",
+    "options": {
+      "A": "Karl-Heinz Rummenigge",
+      "B": "Kevin Keegan",
+      "C": "Franz Beckenbauer",
+      "D": "Michel Platini"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador fue Balón de Oro en 1978 y 1979?",
+    "options": {
+      "A": "Allan Simonsen",
+      "B": "Kevin Keegan",
+      "C": "Kenny Dalglish",
+      "D": "Roberto Bettega"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó 15 goles en Mundiales antes de que Miroslav Klose superara su récord?",
+    "options": {
+      "A": "Gerd Müller",
+      "B": "Ronaldo Nazário",
+      "C": "Just Fontaine",
+      "D": "Pelé"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó 14 goles en Mundiales y mantuvo el récord antes de Ronaldo?",
+    "options": {
+      "A": "Gerd Müller",
+      "B": "Miroslav Klose",
+      "C": "Pelé",
+      "D": "Just Fontaine"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador francés marcó 13 goles en el Mundial de 1958?",
+    "options": {
+      "A": "Raymond Kopa",
+      "B": "Michel Platini",
+      "C": "Just Fontaine",
+      "D": "Jean Vincent"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Jugadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador argentino consiguió superar a Gabriel Batistuta como máximo goleador argentino en la historia de los Mundiales?",
+    "options": {
+      "A": "Diego Maradona",
+      "B": "Mario Kempes",
+      "C": "Lionel Messi",
+      "D": "Guillermo Stábile"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio juega como local River Plate?",
+    "options": {
+      "A": "La Bombonera",
+      "B": "El Monumental",
+      "C": "El Cilindro",
+      "D": "El Libertadores de América"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio juega como local Boca Juniors?",
+    "options": {
+      "A": "La Bombonera",
+      "B": "El Monumental",
+      "C": "El Nuevo Gasómetro",
+      "D": "El José Amalfitani"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué ciudad se encuentra el estadio de River Plate?",
+    "options": {
+      "A": "Rosario",
+      "B": "La Plata",
+      "C": "Buenos Aires",
+      "D": "Córdoba"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué club juega como local en el Cilindro de Avellaneda?",
+    "options": {
+      "A": "Independiente",
+      "B": "Racing Club",
+      "C": "San Lorenzo",
+      "D": "Lanús"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué club juega como local en el Libertadores de América?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Independiente",
+      "C": "River Plate",
+      "D": "Banfield"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Cómo se conoce popularmente al estadio de Boca Juniors?",
+    "options": {
+      "A": "El Monumental",
+      "B": "El Cilindro",
+      "C": "La Bombonera",
+      "D": "El Gasómetro"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué ciudad está ubicado el Estadio Azteca?",
+    "options": {
+      "A": "Guadalajara",
+      "B": "Monterrey",
+      "C": "Ciudad de México",
+      "D": "Puebla"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio se disputó la final del Mundial de 1970?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Wembley",
+      "C": "Azteca",
+      "D": "Santiago Bernabéu"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio se disputó la final del Mundial de 1986?",
+    "options": {
+      "A": "Azteca",
+      "B": "Maracaná",
+      "C": "San Siro",
+      "D": "Wembley"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio juega como local el Real Madrid?",
+    "options": {
+      "A": "Camp Nou",
+      "B": "Santiago Bernabéu",
+      "C": "San Siro",
+      "D": "Wembley"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio juega históricamente el Barcelona?",
+    "options": {
+      "A": "Camp Nou",
+      "B": "Santiago Bernabéu",
+      "C": "Metropolitano",
+      "D": "Mestalla"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio es tradicionalmente asociado con el Liverpool?",
+    "options": {
+      "A": "Old Trafford",
+      "B": "Anfield",
+      "C": "Stamford Bridge",
+      "D": "Emirates"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio es tradicionalmente asociado con el Manchester United?",
+    "options": {
+      "A": "Anfield",
+      "B": "Old Trafford",
+      "C": "Etihad",
+      "D": "Wembley"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué ciudad se encuentra el estadio Maracaná?",
+    "options": {
+      "A": "São Paulo",
+      "B": "Río de Janeiro",
+      "C": "Brasilia",
+      "D": "Salvador"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio fue escenario del famoso Maracanazo de 1950?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Azteca",
+      "C": "Wembley",
+      "D": "Monumental"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio londinense es tradicionalmente utilizado por la selección inglesa?",
+    "options": {
+      "A": "Anfield",
+      "B": "Wembley",
+      "C": "Stamford Bridge",
+      "D": "Emirates"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio de Milán comparten tradicionalmente Milan e Inter?",
+    "options": {
+      "A": "San Siro",
+      "B": "Olimpico",
+      "C": "Allianz Stadium",
+      "D": "Marassi"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿En qué estadio juega Juventus como local?",
+    "options": {
+      "A": "San Siro",
+      "B": "Stadio Olimpico",
+      "C": "Allianz Stadium",
+      "D": "Diego Armando Maradona"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio argentino está ubicado en el barrio de Núñez?",
+    "options": {
+      "A": "La Bombonera",
+      "B": "El Monumental",
+      "C": "El Cilindro",
+      "D": "El Gasómetro"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Fácil",
+    "question": "¿Qué estadio pertenece al club San Lorenzo?",
+    "options": {
+      "A": "Nuevo Gasómetro",
+      "B": "Monumental",
+      "C": "José Amalfitani",
+      "D": "Tomás Adolfo Ducó"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final del Mundial de 2014?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Mineirão",
+      "C": "Arena Corinthians",
+      "D": "Mané Garrincha"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final del Mundial de 2018?",
+    "options": {
+      "A": "Luzhniki",
+      "B": "Krestovsky",
+      "C": "Spartak",
+      "D": "Fisht"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final del Mundial de 2010?",
+    "options": {
+      "A": "Soccer City",
+      "B": "Ellis Park",
+      "C": "Moses Mabhida",
+      "D": "Cape Town Stadium"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final del Mundial de 2006?",
+    "options": {
+      "A": "San Siro",
+      "B": "Olympiastadion",
+      "C": "Allianz Arena",
+      "D": "Signal Iduna Park"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final del Mundial de 2002?",
+    "options": {
+      "A": "Saitama Stadium",
+      "B": "Yokohama International Stadium",
+      "C": "Seoul World Cup Stadium",
+      "D": "Kashima Stadium"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final del Mundial de 1998?",
+    "options": {
+      "A": "Stade Vélodrome",
+      "B": "Parc des Princes",
+      "C": "Stade de France",
+      "D": "Stade Gerland"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final de la Copa Libertadores 2018 entre River y Boca?",
+    "options": {
+      "A": "Monumental",
+      "B": "La Bombonera",
+      "C": "Santiago Bernabéu",
+      "D": "Maracaná"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final del Mundial de 1982?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Camp Nou",
+      "C": "Vicente Calderón",
+      "D": "Mestalla"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final del Mundial de 1966?",
+    "options": {
+      "A": "Highbury",
+      "B": "Wembley",
+      "C": "Old Trafford",
+      "D": "Goodison Park"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final del Mundial de 1954?",
+    "options": {
+      "A": "Wankdorf",
+      "B": "Letzigrund",
+      "C": "Hardturm",
+      "D": "St. Jakob-Park"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio argentino fue sede de la final del Mundial de 1978?",
+    "options": {
+      "A": "El Monumental",
+      "B": "La Bombonera",
+      "C": "El Cilindro",
+      "D": "José Amalfitani"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue conocido históricamente como 'El Templo del Fútbol' de Independiente?",
+    "options": {
+      "A": "Libertadores de América",
+      "B": "Cilindro",
+      "C": "Monumental",
+      "D": "José Amalfitani"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué club juega como local en el estadio José Amalfitani?",
+    "options": {
+      "A": "Huracán",
+      "B": "Vélez Sarsfield",
+      "C": "Argentinos Juniors",
+      "D": "Tigre"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué club juega como local en el Tomás Adolfo Ducó?",
+    "options": {
+      "A": "Huracán",
+      "B": "Lanús",
+      "C": "Banfield",
+      "D": "Tigre"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio de España fue escenario de la final de la Champions League 1982?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Camp Nou",
+      "C": "Mestalla",
+      "D": "San Mamés"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final de la Champions League 2010?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Wembley",
+      "C": "San Siro",
+      "D": "Allianz Arena"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2012?",
+    "options": {
+      "A": "Wembley",
+      "B": "Allianz Arena",
+      "C": "Stamford Bridge",
+      "D": "Old Trafford"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2005?",
+    "options": {
+      "A": "Atatürk Olympic Stadium",
+      "B": "San Siro",
+      "C": "Stade de France",
+      "D": "Camp Nou"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿Qué estadio fue sede de la final de Champions League 1999?",
+    "options": {
+      "A": "Camp Nou",
+      "B": "Old Trafford",
+      "C": "Wembley",
+      "D": "San Siro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Media",
+    "question": "¿En qué estadio se disputó la final de la Libertadores 2018?",
+    "options": {
+      "A": "Monumental",
+      "B": "Santiago Bernabéu",
+      "C": "La Bombonera",
+      "D": "Maracaná"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio se convirtió en 2026 en el primero en albergar partidos de tres Mundiales diferentes?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Wembley",
+      "C": "Estadio Azteca",
+      "D": "Santiago Bernabéu"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué dos finales de Copa Mundial se disputaron en el Estadio Azteca antes de 2026?",
+    "options": {
+      "A": "1966 y 1970",
+      "B": "1970 y 1986",
+      "C": "1978 y 1986",
+      "D": "1982 y 1990"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de las finales de los Mundiales de 1950 y 2014?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Mineirão",
+      "C": "Azteca",
+      "D": "Wembley"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio recibió la final del Mundial de 1950 entre Uruguay y Brasil?",
+    "options": {
+      "A": "Maracaná",
+      "B": "Pacaembu",
+      "C": "São Januário",
+      "D": "Morumbi"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue escenario de la final de la Copa de Europa de 1960 entre Real Madrid y Eintracht Frankfurt?",
+    "options": {
+      "A": "Hampden Park",
+      "B": "Wembley",
+      "C": "Praterstadion",
+      "D": "San Siro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿En qué estadio se disputó la final de la Champions League 1992/93?",
+    "options": {
+      "A": "Wembley",
+      "B": "Olympiastadion",
+      "C": "Olympique de Múnich",
+      "D": "Olympiastadion de Múnich"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2008?",
+    "options": {
+      "A": "Luzhniki",
+      "B": "Wembley",
+      "C": "Stade de France",
+      "D": "San Siro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2013?",
+    "options": {
+      "A": "Signal Iduna Park",
+      "B": "Wembley",
+      "C": "Allianz Arena",
+      "D": "Camp Nou"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2014?",
+    "options": {
+      "A": "Estádio da Luz",
+      "B": "Santiago Bernabéu",
+      "C": "San Siro",
+      "D": "Wembley"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2015?",
+    "options": {
+      "A": "San Siro",
+      "B": "Olympiastadion",
+      "C": "Estadio Olímpico de Berlín",
+      "D": "Allianz Arena"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2016?",
+    "options": {
+      "A": "San Siro",
+      "B": "Vicente Calderón",
+      "C": "Bernabéu",
+      "D": "Olimpico"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2017?",
+    "options": {
+      "A": "Millennium Stadium",
+      "B": "Principality Stadium",
+      "C": "Wembley",
+      "D": "Aviva Stadium"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2018?",
+    "options": {
+      "A": "NSC Olimpiyskiy Stadium",
+      "B": "Luzhniki",
+      "C": "Krestovsky Stadium",
+      "D": "Stade de France"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2020?",
+    "options": {
+      "A": "Estádio da Luz",
+      "B": "Johan Cruyff Arena",
+      "C": "Parque de los Príncipes",
+      "D": "Mestalla"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2022?",
+    "options": {
+      "A": "Stade de France",
+      "B": "Wembley",
+      "C": "San Siro",
+      "D": "Do Dragão"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2023?",
+    "options": {
+      "A": "Atatürk Olympic Stadium",
+      "B": "Wembley",
+      "C": "Allianz Arena",
+      "D": "Estádio da Luz"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2024?",
+    "options": {
+      "A": "Wembley",
+      "B": "Santiago Bernabéu",
+      "C": "Allianz Arena",
+      "D": "Metropolitano"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio fue sede de la final de Champions League 2025?",
+    "options": {
+      "A": "Allianz Arena",
+      "B": "Parc des Princes",
+      "C": "San Siro",
+      "D": "Stade de France"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿Qué estadio albergó la final de la Copa Libertadores 2018?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Wanda Metropolitano",
+      "C": "Camp Nou",
+      "D": "La Bombonera"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Estadios",
+    "difficulty": "Difícil",
+    "question": "¿En qué estadio se disputó la final del Mundial de 1982?",
+    "options": {
+      "A": "Santiago Bernabéu",
+      "B": "Camp Nou",
+      "C": "Vicente Calderón",
+      "D": "San Mamés"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo es conocido como 'El Millonario'?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Racing Club",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo es conocido como 'El Xeneize'?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "San Lorenzo",
+      "D": "Rosario Central"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo es conocido como 'La Academia'?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Independiente",
+      "C": "Estudiantes",
+      "D": "Huracán"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo es conocido como 'El Rojo'?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Independiente",
+      "C": "Lanús",
+      "D": "Vélez"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué clásico enfrenta a Boca Juniors y River Plate?",
+    "options": {
+      "A": "Clásico de Avellaneda",
+      "B": "Superclásico",
+      "C": "Clásico Rosarino",
+      "D": "Clásico del Oeste"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué clásico enfrenta a Racing e Independiente?",
+    "options": {
+      "A": "Clásico Rosarino",
+      "B": "Superclásico",
+      "C": "Clásico de Avellaneda",
+      "D": "Clásico del Sur"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué clásico enfrenta a Rosario Central y Newell's Old Boys?",
+    "options": {
+      "A": "Clásico Rosarino",
+      "B": "Superclásico",
+      "C": "Clásico de Avellaneda",
+      "D": "Clásico Platense"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿En qué ciudad juegan Rosario Central y Newell's Old Boys?",
+    "options": {
+      "A": "Córdoba",
+      "B": "Rosario",
+      "C": "La Plata",
+      "D": "Santa Fe"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿En qué ciudad juegan Racing e Independiente?",
+    "options": {
+      "A": "Avellaneda",
+      "B": "Rosario",
+      "C": "La Plata",
+      "D": "Lanús"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club tiene su estadio conocido como La Bombonera?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "San Lorenzo",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club tiene como estadio el Monumental?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Vélez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club es conocido como 'El Ciclón'?",
+    "options": {
+      "A": "Huracán",
+      "B": "San Lorenzo",
+      "C": "Lanús",
+      "D": "Tigre"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club es conocido como 'El Globo'?",
+    "options": {
+      "A": "Huracán",
+      "B": "San Lorenzo",
+      "C": "Vélez",
+      "D": "Tigre"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino tiene camiseta tradicionalmente granate?",
+    "options": {
+      "A": "Lanús",
+      "B": "Banfield",
+      "C": "Tigre",
+      "D": "Arsenal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó el primer campeonato profesional argentino en 1931?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Racing Club",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿En qué año comenzó oficialmente la era profesional del fútbol argentino?",
+    "options": {
+      "A": "1921",
+      "B": "1928",
+      "C": "1931",
+      "D": "1934"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo ganó el Apertura 2025?",
+    "options": {
+      "A": "Platense",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Racing Club"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo ganó el Apertura 2026?",
+    "options": {
+      "A": "Belgrano",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Estudiantes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué equipo ganó el Torneo Clausura 2025?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Rosario Central",
+      "C": "Platense",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Liga Profesional 2023?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Talleres",
+      "D": "Racing Club"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el primer campeonato argentino registrado, en 1891?",
+    "options": {
+      "A": "Lomas Athletic",
+      "B": "Saint Andrew's",
+      "C": "Alumni",
+      "D": "Belgrano Athletic"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó cinco campeonatos consecutivos entre 1915 y 1919?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Alumni",
+      "C": "River Plate",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó los campeonatos de 1893, 1894 y 1895?",
+    "options": {
+      "A": "Alumni",
+      "B": "Lomas Athletic",
+      "C": "Belgrano Athletic",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato de 1899?",
+    "options": {
+      "A": "Alumni",
+      "B": "Lomas Athletic",
+      "C": "Belgrano Athletic",
+      "D": "Racing Club"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato de 1900?",
+    "options": {
+      "A": "English High School",
+      "B": "Alumni",
+      "C": "Belgrano Athletic",
+      "D": "Lomas Athletic"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato de 1901?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Alumni",
+      "C": "Boca Juniors",
+      "D": "Belgrano Athletic"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato profesional de 1932?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "San Lorenzo",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato profesional de 1933?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "San Lorenzo",
+      "D": "Racing Club"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó los campeonatos de 1938 y 1939?",
+    "options": {
+      "A": "River Plate",
+      "B": "Independiente",
+      "C": "Boca Juniors",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó tres campeonatos consecutivos entre 1949 y 1951?",
+    "options": {
+      "A": "Racing Club",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó tres campeonatos consecutivos entre 1955 y 1957?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Racing Club",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el campeonato de 1968?",
+    "options": {
+      "A": "Vélez Sarsfield",
+      "B": "Estudiantes de La Plata",
+      "C": "Racing Club",
+      "D": "River Plate"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Torneo Apertura 2001?",
+    "options": {
+      "A": "Racing Club",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Clausura 2004?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Newell's Old Boys",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Clausura 2009?",
+    "options": {
+      "A": "Vélez Sarsfield",
+      "B": "Lanús",
+      "C": "Banfield",
+      "D": "Huracán"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Apertura 2009?",
+    "options": {
+      "A": "Banfield",
+      "B": "Newell's Old Boys",
+      "C": "Boca Juniors",
+      "D": "Vélez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Clausura 2010?",
+    "options": {
+      "A": "Argentinos Juniors",
+      "B": "Estudiantes",
+      "C": "Vélez",
+      "D": "Banfield"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Clausura 2012?",
+    "options": {
+      "A": "Arsenal",
+      "B": "Boca Juniors",
+      "C": "Newell's",
+      "D": "Vélez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Torneo Inicial 2012?",
+    "options": {
+      "A": "Newell's Old Boys",
+      "B": "Vélez Sarsfield",
+      "C": "Lanús",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó el Torneo Final 2014?",
+    "options": {
+      "A": "River Plate",
+      "B": "Racing Club",
+      "C": "Boca Juniors",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo ganó el primer campeonato organizado en Argentina en 1891?",
+    "options": {
+      "A": "Saint Andrew's",
+      "B": "Lomas Athletic",
+      "C": "Alumni",
+      "D": "Belgrano Athletic"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué ocurrió con el campeonato argentino en 1892?",
+    "options": {
+      "A": "Lo ganó Saint Andrew's",
+      "B": "Lo ganó Lomas Athletic",
+      "C": "No hubo torneo",
+      "D": "Lo ganó Alumni"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo ganó el campeonato de 1896 bajo el nombre Lomas Academy?",
+    "options": {
+      "A": "Lomas Academy",
+      "B": "Lomas Athletic",
+      "C": "Alumni",
+      "D": "Belgrano Athletic"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó los campeonatos de 1902, 1903, 1905, 1906 y 1907?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Alumni",
+      "C": "Belgrano Athletic",
+      "D": "Lomas Athletic"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de 1908?",
+    "options": {
+      "A": "Alumni",
+      "B": "Belgrano Athletic",
+      "C": "Racing Club",
+      "D": "English High School"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó los campeonatos de 1909, 1910 y 1911?",
+    "options": {
+      "A": "Alumni",
+      "B": "Racing Club",
+      "C": "Belgrano Athletic",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de la Asociación Argentina de Football en 1912?",
+    "options": {
+      "A": "Porteño",
+      "B": "Quilmes",
+      "C": "Racing Club",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de la Federación Argentina de Football en 1912?",
+    "options": {
+      "A": "Quilmes",
+      "B": "Porteño",
+      "C": "Racing Club",
+      "D": "Alumni"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de la Asociación Argentina de Football en 1913?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Racing Club",
+      "C": "Porteño",
+      "D": "Quilmes"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de la Federación Argentina de Football en 1913?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Racing Club",
+      "C": "Porteño",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de 1919 en la Asociación Argentina de Football?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "Racing Club",
+      "C": "River Plate",
+      "D": "San Lorenzo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué nombre adoptó la nueva asociación argentina después de la unificación de 1926?",
+    "options": {
+      "A": "Liga Argentina de Football",
+      "B": "Asociación Amateurs Argentina de Football",
+      "C": "Asociación del Fútbol Argentino",
+      "D": "Federación Argentina de Football"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Cuántos equipos participaron en el comienzo del campeonato profesional en 1931?",
+    "options": {
+      "A": "12",
+      "B": "16",
+      "C": "18",
+      "D": "20"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿En qué fecha comenzó la era profesional del campeonato argentino?",
+    "options": {
+      "A": "21 de febrero de 1893",
+      "B": "18 de mayo de 1931",
+      "C": "31 de mayo de 1931",
+      "D": "3 de noviembre de 1934"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato profesional de 1938?",
+    "options": {
+      "A": "River Plate",
+      "B": "Independiente",
+      "C": "Boca Juniors",
+      "D": "Racing Club"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato profesional de 1948?",
+    "options": {
+      "A": "Independiente",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Racing Club"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de 1959?",
+    "options": {
+      "A": "San Lorenzo",
+      "B": "Racing Club",
+      "C": "River Plate",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el campeonato de 1960?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Independiente",
+      "C": "River Plate",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó el Torneo Inicial 2013?",
+    "options": {
+      "A": "River Plate",
+      "B": "San Lorenzo",
+      "C": "Newell's Old Boys",
+      "D": "Vélez Sarsfield"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Liga Argentina",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Liga Profesional 2021?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Colón",
+      "D": "Talleres"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó más veces la Copa Libertadores?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Independiente",
+      "D": "Estudiantes"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Copa Libertadores de 2018?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Grêmio",
+      "D": "Palmeiras"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club perdió la final de la Libertadores 2018 frente a River?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "Flamengo",
+      "C": "Grêmio",
+      "D": "Palmeiras"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club brasileño ganó la Libertadores 2019?",
+    "options": {
+      "A": "Flamengo",
+      "B": "Palmeiras",
+      "C": "Santos",
+      "D": "Gremio"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club brasileño ganó la Libertadores 2020?",
+    "options": {
+      "A": "Flamengo",
+      "B": "Palmeiras",
+      "C": "Santos",
+      "D": "Atlético Mineiro"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2021?",
+    "options": {
+      "A": "Palmeiras",
+      "B": "Flamengo",
+      "C": "River Plate",
+      "D": "Santos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2022?",
+    "options": {
+      "A": "Flamengo",
+      "B": "Palmeiras",
+      "C": "Atlético Mineiro",
+      "D": "Fluminense"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2023?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "Fluminense",
+      "C": "Flamengo",
+      "D": "Palmeiras"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2024?",
+    "options": {
+      "A": "Botafogo",
+      "B": "Flamengo",
+      "C": "Atlético Mineiro",
+      "D": "Palmeiras"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2025?",
+    "options": {
+      "A": "Palmeiras",
+      "B": "Flamengo",
+      "C": "Botafogo",
+      "D": "River Plate"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó la Libertadores 1986?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Estudiantes"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó la Libertadores 2000?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Independiente",
+      "D": "Vélez"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2003?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Santos",
+      "D": "São Paulo"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2007?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Santos",
+      "D": "Grêmio"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2015?",
+    "options": {
+      "A": "River Plate",
+      "B": "Boca Juniors",
+      "C": "Tigres",
+      "D": "Atlético Nacional"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2016?",
+    "options": {
+      "A": "Atlético Nacional",
+      "B": "Independiente del Valle",
+      "C": "River Plate",
+      "D": "Boca Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Libertadores 2017?",
+    "options": {
+      "A": "Grêmio",
+      "B": "Lanús",
+      "C": "River Plate",
+      "D": "Flamengo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó la Libertadores 1994?",
+    "options": {
+      "A": "Vélez Sarsfield",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó la Libertadores 1968?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Estudiantes de La Plata",
+      "C": "Independiente",
+      "D": "River Plate"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Fácil",
+    "question": "¿Qué club argentino ganó la Libertadores 1967?",
+    "options": {
+      "A": "Racing Club",
+      "B": "Estudiantes",
+      "C": "Independiente",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club tiene el récord histórico de títulos de Copa Libertadores?",
+    "options": {
+      "A": "Boca Juniors",
+      "B": "River Plate",
+      "C": "Independiente",
+      "D": "Peñarol"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Cuántas Copas Libertadores ganó Independiente?",
+    "options": {
+      "A": "5",
+      "B": "6",
+      "C": "7",
+      "D": "8"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿En qué años ganó Independiente cuatro Libertadores consecutivas?",
+    "options": {
+      "A": "1970-1973",
+      "B": "1972-1975",
+      "C": "1973-1976",
+      "D": "1971-1974"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la primera edición de la Copa Libertadores?",
+    "options": {
+      "A": "Peñarol",
+      "B": "Santos",
+      "C": "Olimpia",
+      "D": "Independiente"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó las Libertadores de 1962 y 1963?",
+    "options": {
+      "A": "Peñarol",
+      "B": "Santos",
+      "C": "Flamengo",
+      "D": "Independiente"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó las Libertadores de 1968, 1969 y 1970?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Independiente",
+      "C": "Peñarol",
+      "D": "Racing"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1985?",
+    "options": {
+      "A": "Argentinos Juniors",
+      "B": "América de Cali",
+      "C": "Peñarol",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1987?",
+    "options": {
+      "A": "Peñarol",
+      "B": "Nacional",
+      "C": "América de Cali",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1989?",
+    "options": {
+      "A": "Atlético Nacional",
+      "B": "Olimpia",
+      "C": "Barcelona de Guayaquil",
+      "D": "Nacional"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1991?",
+    "options": {
+      "A": "Colo-Colo",
+      "B": "Boca Juniors",
+      "C": "Olimpia",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1992?",
+    "options": {
+      "A": "São Paulo",
+      "B": "Newell's Old Boys",
+      "C": "América de Cali",
+      "D": "Vasco da Gama"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1993?",
+    "options": {
+      "A": "São Paulo",
+      "B": "Universidad Católica",
+      "C": "Cerro Porteño",
+      "D": "Vélez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1996?",
+    "options": {
+      "A": "River Plate",
+      "B": "América de Cali",
+      "C": "Universidad de Chile",
+      "D": "São Paulo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1997?",
+    "options": {
+      "A": "Cruzeiro",
+      "B": "Sporting Cristal",
+      "C": "Colo-Colo",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1998?",
+    "options": {
+      "A": "Vasco da Gama",
+      "B": "Barcelona",
+      "C": "Palmeiras",
+      "D": "Cruzeiro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 1999?",
+    "options": {
+      "A": "Palmeiras",
+      "B": "Deportivo Cali",
+      "C": "Boca Juniors",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 2004?",
+    "options": {
+      "A": "Once Caldas",
+      "B": "Boca Juniors",
+      "C": "São Paulo",
+      "D": "Santos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 2008?",
+    "options": {
+      "A": "LDU Quito",
+      "B": "Fluminense",
+      "C": "Boca Juniors",
+      "D": "América de México"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 2012?",
+    "options": {
+      "A": "Corinthians",
+      "B": "Boca Juniors",
+      "C": "Santos",
+      "D": "Universidad de Chile"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Libertadores 2013?",
+    "options": {
+      "A": "Atlético Mineiro",
+      "B": "Olimpia",
+      "C": "Fluminense",
+      "D": "Newell's"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó las primeras dos ediciones de la Copa Libertadores?",
+    "options": {
+      "A": "Peñarol",
+      "B": "Santos",
+      "C": "Olimpia",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Libertadores de 1961?",
+    "options": {
+      "A": "Peñarol",
+      "B": "Santos",
+      "C": "Palmeiras",
+      "D": "Nacional"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó tres Libertadores consecutivas entre 1968 y 1970?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Independiente",
+      "C": "Peñarol",
+      "D": "Santos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club fue campeón de la Libertadores y luego de la Intercontinental en 1968?",
+    "options": {
+      "A": "Estudiantes",
+      "B": "Racing",
+      "C": "Independiente",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Libertadores de 1984 derrotando a Grêmio en la final?",
+    "options": {
+      "A": "Independiente",
+      "B": "River Plate",
+      "C": "Boca Juniors",
+      "D": "Argentinos Juniors"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club argentino ganó la Libertadores de 1985?",
+    "options": {
+      "A": "Argentinos Juniors",
+      "B": "River Plate",
+      "C": "Independiente",
+      "D": "Vélez"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Libertadores de 1986?",
+    "options": {
+      "A": "River Plate",
+      "B": "Peñarol",
+      "C": "América de Cali",
+      "D": "Nacional"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Libertadores de 1994?",
+    "options": {
+      "A": "Vélez Sarsfield",
+      "B": "São Paulo",
+      "C": "Boca Juniors",
+      "D": "River Plate"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club derrotó a River Plate en la final de la Libertadores 2019?",
+    "options": {
+      "A": "Flamengo",
+      "B": "Palmeiras",
+      "C": "Grêmio",
+      "D": "Santos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club derrotó a Santos en la final de la Libertadores 2013?",
+    "options": {
+      "A": "Atlético Mineiro",
+      "B": "Flamengo",
+      "C": "Corinthians",
+      "D": "Cruzeiro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ecuatoriano ganó la Libertadores 2008?",
+    "options": {
+      "A": "LDU Quito",
+      "B": "Barcelona",
+      "C": "Emelec",
+      "D": "Independiente del Valle"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club colombiano ganó la Libertadores 2004?",
+    "options": {
+      "A": "Once Caldas",
+      "B": "Atlético Nacional",
+      "C": "América de Cali",
+      "D": "Millonarios"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club colombiano ganó la Libertadores 1989?",
+    "options": {
+      "A": "Atlético Nacional",
+      "B": "América de Cali",
+      "C": "Millonarios",
+      "D": "Deportivo Cali"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club chileno ganó la Libertadores de 1991?",
+    "options": {
+      "A": "Colo-Colo",
+      "B": "Universidad de Chile",
+      "C": "Universidad Católica",
+      "D": "Cobreloa"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club paraguayo ganó la Libertadores de 1979?",
+    "options": {
+      "A": "Olimpia",
+      "B": "Cerro Porteño",
+      "C": "Libertad",
+      "D": "Guaraní"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club uruguayo ganó la Libertadores de 1980?",
+    "options": {
+      "A": "Nacional",
+      "B": "Peñarol",
+      "C": "Defensor Sporting",
+      "D": "Danubio"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club brasileño ganó la Libertadores de 1981?",
+    "options": {
+      "A": "Flamengo",
+      "B": "Grêmio",
+      "C": "Santos",
+      "D": "Cruzeiro"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club brasileño ganó la Libertadores de 1992 y 1993?",
+    "options": {
+      "A": "São Paulo",
+      "B": "Palmeiras",
+      "C": "Cruzeiro",
+      "D": "Vasco da Gama"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué club brasileño ganó la Libertadores de 1997?",
+    "options": {
+      "A": "Cruzeiro",
+      "B": "Vasco da Gama",
+      "C": "Palmeiras",
+      "D": "São Paulo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Copa Libertadores",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo eliminó a River Plate y Boca Juniors en la misma edición de la Libertadores 2016?",
+    "options": {
+      "A": "Independiente del Valle",
+      "B": "Atlético Nacional",
+      "C": "São Paulo",
+      "D": "Pumas UNAM"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó más veces la Champions League/Copa de Europa?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Real Madrid",
+      "C": "Milan",
+      "D": "Bayern Múnich"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club español ganó más veces la Champions League?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Atlético de Madrid",
+      "C": "Real Madrid",
+      "D": "Valencia"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club italiano ganó siete Copas de Europa/Champions League?",
+    "options": {
+      "A": "Inter",
+      "B": "Juventus",
+      "C": "Milan",
+      "D": "Roma"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club inglés ganó seis veces la Champions League/Copa de Europa?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Liverpool",
+      "C": "Chelsea",
+      "D": "Manchester City"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club alemán ganó seis veces la Champions League/Copa de Europa?",
+    "options": {
+      "A": "Borussia Dortmund",
+      "B": "Bayer Leverkusen",
+      "C": "Bayern Múnich",
+      "D": "Hamburgo"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2025?",
+    "options": {
+      "A": "Paris Saint-Germain",
+      "B": "Inter",
+      "C": "Real Madrid",
+      "D": "Manchester City"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2024?",
+    "options": {
+      "A": "Borussia Dortmund",
+      "B": "Real Madrid",
+      "C": "Bayern Múnich",
+      "D": "Manchester City"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2023?",
+    "options": {
+      "A": "Inter",
+      "B": "Manchester City",
+      "C": "Real Madrid",
+      "D": "Bayern"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2022?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Real Madrid",
+      "C": "Manchester City",
+      "D": "Chelsea"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2021?",
+    "options": {
+      "A": "Manchester City",
+      "B": "Chelsea",
+      "C": "Bayern Múnich",
+      "D": "Paris Saint-Germain"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2020?",
+    "options": {
+      "A": "Paris Saint-Germain",
+      "B": "Bayern Múnich",
+      "C": "Liverpool",
+      "D": "RB Leipzig"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2019?",
+    "options": {
+      "A": "Tottenham",
+      "B": "Liverpool",
+      "C": "Manchester City",
+      "D": "Barcelona"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2018?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Real Madrid",
+      "C": "Roma",
+      "D": "Bayern"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2017?",
+    "options": {
+      "A": "Juventus",
+      "B": "Real Madrid",
+      "C": "Barcelona",
+      "D": "Atlético de Madrid"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2016?",
+    "options": {
+      "A": "Atlético de Madrid",
+      "B": "Real Madrid",
+      "C": "Barcelona",
+      "D": "Bayern"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2015?",
+    "options": {
+      "A": "Juventus",
+      "B": "Barcelona",
+      "C": "Real Madrid",
+      "D": "Bayern"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la Champions League 2014?",
+    "options": {
+      "A": "Atlético de Madrid",
+      "B": "Real Madrid",
+      "C": "Chelsea",
+      "D": "Bayern"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador es el máximo goleador histórico de la Champions League?",
+    "options": {
+      "A": "Lionel Messi",
+      "B": "Robert Lewandowski",
+      "C": "Cristiano Ronaldo",
+      "D": "Karim Benzema"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué jugador argentino ganó cuatro Champions League con Barcelona?",
+    "options": {
+      "A": "Lionel Messi",
+      "B": "Javier Mascherano",
+      "C": "Ángel Di María",
+      "D": "Javier Saviola"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Fácil",
+    "question": "¿Qué club ganó la primera edición de la Copa de Europa?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Milan",
+      "C": "Benfica",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿En qué temporada comenzó la Copa de Europa?",
+    "options": {
+      "A": "1954/55",
+      "B": "1955/56",
+      "C": "1956/57",
+      "D": "1957/58"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿En qué temporada pasó a llamarse oficialmente UEFA Champions League?",
+    "options": {
+      "A": "1990/91",
+      "B": "1991/92",
+      "C": "1992/93",
+      "D": "1993/94"
+    },
+    "correct_option": "C"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Contra qué equipo ganó Real Madrid la primera Copa de Europa?",
+    "options": {
+      "A": "Reims",
+      "B": "Milan",
+      "C": "Benfica",
+      "D": "Liverpool"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué equipo ganó tres Copas de Europa consecutivas entre 1971 y 1973?",
+    "options": {
+      "A": "Ajax",
+      "B": "Bayern Múnich",
+      "C": "Liverpool",
+      "D": "Real Madrid"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué equipo ganó tres Copas de Europa consecutivas entre 1974 y 1976?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Bayern Múnich",
+      "C": "Ajax",
+      "D": "Nottingham Forest"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó las Copas de Europa de 1979 y 1980?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Nottingham Forest",
+      "C": "Aston Villa",
+      "D": "Hamburgo"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1983?",
+    "options": {
+      "A": "Hamburgo",
+      "B": "Juventus",
+      "C": "Liverpool",
+      "D": "Aston Villa"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1986?",
+    "options": {
+      "A": "Steaua Bucarest",
+      "B": "Barcelona",
+      "C": "Porto",
+      "D": "Juventus"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1987?",
+    "options": {
+      "A": "Porto",
+      "B": "Bayern",
+      "C": "Milan",
+      "D": "PSV"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1988?",
+    "options": {
+      "A": "PSV Eindhoven",
+      "B": "Milan",
+      "C": "Steaua",
+      "D": "Porto"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1989?",
+    "options": {
+      "A": "Milan",
+      "B": "Steaua Bucarest",
+      "C": "Barcelona",
+      "D": "Benfica"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Copa de Europa de 1990?",
+    "options": {
+      "A": "Milan",
+      "B": "Benfica",
+      "C": "Olympique de Marsella",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 1993?",
+    "options": {
+      "A": "Milan",
+      "B": "Olympique de Marsella",
+      "C": "Barcelona",
+      "D": "Juventus"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 1994?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Milan",
+      "C": "Manchester United",
+      "D": "Ajax"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 1995?",
+    "options": {
+      "A": "Ajax",
+      "B": "Milan",
+      "C": "Juventus",
+      "D": "Borussia Dortmund"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 1997?",
+    "options": {
+      "A": "Borussia Dortmund",
+      "B": "Juventus",
+      "C": "Ajax",
+      "D": "Real Madrid"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2000?",
+    "options": {
+      "A": "Valencia",
+      "B": "Real Madrid",
+      "C": "Bayern",
+      "D": "Manchester United"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2004?",
+    "options": {
+      "A": "Porto",
+      "B": "Monaco",
+      "C": "Milan",
+      "D": "Deportivo La Coruña"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2006?",
+    "options": {
+      "A": "Barcelona",
+      "B": "Arsenal",
+      "C": "Milan",
+      "D": "Chelsea"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Media",
+    "question": "¿Qué club ganó la Champions League de 2008?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Chelsea",
+      "C": "Barcelona",
+      "D": "Arsenal"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó las primeras cinco Copas de Europa?",
+    "options": {
+      "A": "Real Madrid",
+      "B": "Milan",
+      "C": "Benfica",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo perdió la final de la primera Copa de Europa frente al Real Madrid?",
+    "options": {
+      "A": "Reims",
+      "B": "Benfica",
+      "C": "Milan",
+      "D": "Eintracht Frankfurt"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1961 y 1962?",
+    "options": {
+      "A": "Benfica",
+      "B": "Real Madrid",
+      "C": "Milan",
+      "D": "Inter"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1964 y 1965?",
+    "options": {
+      "A": "Inter",
+      "B": "Milan",
+      "C": "Real Madrid",
+      "D": "Benfica"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1970?",
+    "options": {
+      "A": "Feyenoord",
+      "B": "Ajax",
+      "C": "Celtic",
+      "D": "Inter"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Copa de Europa de 1985?",
+    "options": {
+      "A": "Juventus",
+      "B": "Liverpool",
+      "C": "Milan",
+      "D": "Roma"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Champions League de 1996?",
+    "options": {
+      "A": "Juventus",
+      "B": "Ajax",
+      "C": "Borussia Dortmund",
+      "D": "Manchester United"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club ganó la Champions League de 1999?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Bayern Múnich",
+      "C": "Barcelona",
+      "D": "Juventus"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué club protagonizó la remontada ante Milan en la final de 2005?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Chelsea",
+      "C": "Manchester United",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo ganó la final de 2005 por penales después de empatar 3-3?",
+    "options": {
+      "A": "Milan",
+      "B": "Liverpool",
+      "C": "Chelsea",
+      "D": "Manchester United"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo ganó la final de 1999 con dos goles en el tiempo de descuento?",
+    "options": {
+      "A": "Manchester United",
+      "B": "Bayern Múnich",
+      "C": "Real Madrid",
+      "D": "Barcelona"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo perdió la final de Champions de 1999 ante Manchester United?",
+    "options": {
+      "A": "Bayern Múnich",
+      "B": "Juventus",
+      "C": "Barcelona",
+      "D": "Valencia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó el famoso gol de volea en la final de Champions 2002?",
+    "options": {
+      "A": "Zinedine Zidane",
+      "B": "Raúl",
+      "C": "Ronaldo",
+      "D": "Roberto Carlos"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo derrotó Real Madrid en la final de Champions 2002?",
+    "options": {
+      "A": "Bayer Leverkusen",
+      "B": "Borussia Dortmund",
+      "C": "Bayern Múnich",
+      "D": "Valencia"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó el gol del empate para Real Madrid en la final de 2014?",
+    "options": {
+      "A": "Sergio Ramos",
+      "B": "Gareth Bale",
+      "C": "Cristiano Ronaldo",
+      "D": "Marcelo"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Contra qué equipo ganó Real Madrid la final de Champions 2014?",
+    "options": {
+      "A": "Atlético de Madrid",
+      "B": "Barcelona",
+      "C": "Bayern Múnich",
+      "D": "Juventus"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador marcó dos goles en la final de Champions 2018?",
+    "options": {
+      "A": "Gareth Bale",
+      "B": "Cristiano Ronaldo",
+      "C": "Karim Benzema",
+      "D": "Luka Modrić"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué equipo perdió la final de Champions 2018 ante Real Madrid?",
+    "options": {
+      "A": "Liverpool",
+      "B": "Roma",
+      "C": "Bayern Múnich",
+      "D": "Juventus"
+    },
+    "correct_option": "A"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué jugador es el máximo goleador histórico de la Champions League según UEFA?",
+    "options": {
+      "A": "Lionel Messi",
+      "B": "Cristiano Ronaldo",
+      "C": "Robert Lewandowski",
+      "D": "Karim Benzema"
+    },
+    "correct_option": "B"
+  },
+  {
+    "category": "Champions League",
+    "difficulty": "Difícil",
+    "question": "¿Qué dos jugadores comparten actualmente el récord de más títulos de Champions según UEFA, con seis cada uno?",
+    "options": {
+      "A": "Cristiano Ronaldo y Karim Benzema",
+      "B": "Dani Carvajal y Luka Modrić",
+      "C": "Toni Kroos y Cristiano Ronaldo",
+      "D": "Luka Modrić y Toni Kroos"
+    },
+    "correct_option": "B"
+  }
+]

@@ -162,9 +162,9 @@ def resolver_path_admin(path: str) -> str:
 
 
 def test_auditoria_total_operaciones_admin_registradas() -> None:
-    """Verifica que el sistema exponga las 16 operaciones administrativas esperadas."""
+    """Verifica que el sistema exponga las 17 operaciones administrativas esperadas."""
     operaciones = obtener_operaciones_admin()
-    assert len(operaciones) == 16, f"Se esperaban 16 operaciones admin, se encontraron {len(operaciones)}: {operaciones}"
+    assert len(operaciones) == 17, f"Se esperaban 17 operaciones admin, se encontraron {len(operaciones)}: {operaciones}"
 
 
 def test_auditoria_endpoints_admin_sin_token_retorna_401(cliente: TestClient) -> None:
@@ -295,7 +295,7 @@ def test_auditoria_openapi_rutas_admin_poseen_bearer_auth(cliente: TestClient) -
                     assert "401" in responses, f"Falta respuesta 401 en {metodo.upper()} {path}"
                     assert "403" in responses, f"Falta respuesta 403 en {metodo.upper()} {path}"
 
-    assert rutas_admin_encontradas == 16
+    assert rutas_admin_encontradas == 17
 
 
 def test_auditoria_detalles_sensibles_no_expuestos(

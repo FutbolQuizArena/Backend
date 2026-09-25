@@ -1,6 +1,6 @@
 """Esquemas Pydantic de la aplicación."""
 
-from app.schemas.comun_schema import MensajeResponse
+from app.schemas.comun_schema import MensajeResponse, SemillaResumenResponse
 from app.schemas.torneo_schema import (
     CruceResponse,
     FiltroTorneoEnum,
@@ -23,6 +23,7 @@ __all__ = [
     "FiltroTorneoEnum",
     "MensajeResponse",
     "ParticipanteTorneoResponse",
+    "SemillaResumenResponse",
     "TorneoBase",
     "TorneoCreadoResponse",
     "TorneoCreate",

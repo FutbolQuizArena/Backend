@@ -1,5 +1,16 @@
 # Changelog
 
+## 25/9 [5.1.5] Seed inicial de categorías y banco de preguntas (Módulo 5 - Administración)
+
+- **Capa de datos y estructura semilla:** Creación del archivo `scripts/preguntas_seed.json` conteniendo el banco de preguntas inicial con categorías ("Mundiales", "Champions League", "Copa Libertadores", "Liga Argentina"), dificultad ("Fácil", "Media", "Difícil"), 4 opciones mapeadas ('A', 'B', 'C', 'D') y opción correcta validada.
+- **Capa de lógica de negocio (Servicio de siembra):** Creación de `app/services/semilla_service.py` con las funciones:
+  - `cargar_preguntas_desde_json(ruta_archivo)`: lee y valida el archivo JSON con encoding utf-8.
+  - `sembrar_preguntas_y_categorias(db, lista_preguntas)`: procesa e inserta datos de forma modular y 100% idempotente. Resuelve categorías dinámicamente asegurando estado `EstadoCategoria.ACTIVA` sin duplicados por nombre. Persiste preguntas completas vinculadas a su categoría con estado `EstadoPregunta.ACTIVA` y `eliminada_en=None`, omitiendo preguntas ya existentes por enunciado y tolerando datos defectuosos sin romper la transacción. Retorna el resumen de métricas del lote.
+- **Esquemas Pydantic:** Creación de `SemillaResumenResponse` en `app/schemas/comun_schema.py` (y exportación en `app/schemas/__init__.py`) con campos `categorias_creadas`, `categorias_existentes`, `preguntas_creadas`, `preguntas_omitidas` y `total_procesadas`.
+- **Script CLI ejecutable:** Creación de `scripts/sembrar_datos.py` permitiendo la ejecución directa por terminal con resolución de ruta raíz, manejo de sesión `SesionLocal`, reporte visual por consola y cierre garantizado en bloque `finally`. Actualización de `scripts/sembrar_datos_prueba.py` como wrapper para delegar a la nueva implementación.
+- **Capa de presentación (API REST):** Incorporación del endpoint `POST /api/admin/sistema/sembrar` en `app/routes/admin/admin_router.py`, protegido con `requiere_rol(RolUsuario.ADMINISTRADOR)`. Permite disparar la siembra desde Swagger UI (/docs) para entornos remotos o Supabase. Documentado en OpenAPI con respuestas 200, 401 y 403.
+- **Testing automatizado:** Creación de `tests/test_sembrar_datos.py` con 10 pruebas unitarias y de integración que cubren lectura de JSON, siembra inicial, idempotencia estricta sin duplicaciones, tolerancia a datos malformados, activación de categorías en borrador, endpoint administrativo (200, 403, 401) y ejecución del script CLI. Actualización de `tests/test_seguridad_admin.py` para auditar 17 operaciones administrativas bajo `/api/admin`.
+
 ## 25/9 [5.1.4] Restricción de endpoints admin (Módulo 5 - Administración)
 
 - **Arquitectura de seguridad y Defensa en Profundidad:** Creación del router maestro `admin_router` (`app/routes/admin/admin_router.py`) con prefijo `/api/admin`, tag `"Administración"` y dependencias raíz `Depends(obtener_usuario_actual)` y `Depends(requiere_rol(RolUsuario.ADMINISTRADOR))`. Consolidación y anidamiento de los sub-routers `admin_pregunta_router` (`/preguntas`), `admin_categoria_router` (`/categorias`) y `admin_usuario_router` (`/usuarios`). Esta arquitectura asegura que todo endpoint administrativo actual o futuro bajo `/api/admin` herede de forma mandatoria la autenticación y autorización por rol a nivel de router raíz sin depender de decoradores individuales.
