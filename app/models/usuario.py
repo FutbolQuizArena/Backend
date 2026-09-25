@@ -70,3 +70,11 @@ class Usuario(Base):
         Lógica de mutación de dominio según el Diagrama de clases E4.
         """
         self.password_hash = nuevo_password_hash
+
+    def deshabilitar(self) -> None:
+        """Deshabilita al usuario impidiendo su acceso al sistema."""
+        self.esta_habilitado = False
+
+    def habilitar(self) -> None:
+        """Habilita al usuario permitiendo su acceso al sistema."""
+        self.esta_habilitado = True

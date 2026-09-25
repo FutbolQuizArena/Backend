@@ -143,6 +143,47 @@ pytest --cov=app tests/
 
 ---
 
+## 🌱 Siembra Inicial de Datos (Seed de Categorías y Preguntas)
+
+El sistema cuenta con un mecanismo modular e idempotente para poblar la base de datos (PostgreSQL / Supabase o local) con el banco inicial de preguntas y categorías.
+
+### 1. Archivo de preguntas (`scripts/preguntas_seed.json`)
+Las preguntas se definen en formato JSON con la siguiente estructura:
+```json
+[
+  {
+    "category": "Mundiales",
+    "difficulty": "Fácil",
+    "question": "¿Qué selección ganó el Mundial de 1978?",
+    "options": {
+      "A": "Argentina",
+      "B": "Brasil",
+      "C": "Países Bajos",
+      "D": "Italia"
+    },
+    "correct_option": "A"
+  }
+]
+```
+
+### 2. Ejecutar la siembra desde la terminal (CLI)
+Con el entorno virtual activado y las variables de entorno configuradas en `.env`:
+```powershell
+python scripts/sembrar_datos.py
+# o con la ruta explícita del entorno:
+.venv\Scripts\python scripts/sembrar_datos.py
+```
+> [!NOTE]
+> El proceso es **100% idempotente**: podés ejecutarlo múltiples veces; nunca duplicará categorías ni preguntas ya existentes en la base de datos.
+
+### 3. Ejecutar la siembra de forma remota (Swagger UI)
+Desde la documentación interactiva en `http://localhost:8000/docs`:
+1. Autenticate con un token de rol `ADMINISTRADOR` en el botón superior **Authorize**.
+2. Desplazate a la sección **"Administración"** y seleccioná `POST /api/admin/sistema/sembrar`.
+3. Hacé clic en **"Try it out"** y luego en **"Execute"**. Recibirás un resumen con el conteo de categorías y preguntas creadas y omitidas.
+
+---
+
 ## Flujo de Trabajo GitFlow
 
 El equipo trabaja bajo el modelo **GitFlow**:

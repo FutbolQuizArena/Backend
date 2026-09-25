@@ -1,11 +1,13 @@
-"""Modelo de base de datos para la entidad Pregunta (Tarea 2.1.1)."""
+"""Modelo de base de datos para la entidad Pregunta (Tarea 2.1.1 y 5.1.1)."""
 
+from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, DateTime, Enum as SQLEnum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from app.core.base_datos import Base
+from app.models.enumeraciones import EstadoPregunta
 
 
 class Pregunta(Base):
@@ -21,6 +23,14 @@ class Pregunta(Base):
     opcion_d = Column(String(255), nullable=False)
     respuesta_correcta = Column(String(1), nullable=False)  # "A" | "B" | "C" | "D"
     categoria_id = Column(Integer, ForeignKey("categorias.id"), nullable=False, index=True)
+    dificultad = Column(String(50), nullable=True, default="Media", server_default="Media")
+    estado = Column(
+        SQLEnum(EstadoPregunta, name="estado_pregunta_enum"),
+        nullable=False,
+        default=EstadoPregunta.ACTIVA,
+        server_default=EstadoPregunta.ACTIVA.value,
+    )
+    eliminada_en = Column(DateTime(timezone=True), nullable=True, default=None)
 
     categoria = relationship("Categoria", back_populates="preguntas")
 

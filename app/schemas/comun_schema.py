@@ -12,3 +12,16 @@ class MensajeResponse(BaseModel):
         examples=["Sesión cerrada exitosamente"],
     )
 
+
+class SemillaResumenResponse(BaseModel):
+    """Esquema de respuesta para el resultado del proceso de siembra de datos."""
+
+    categorias_creadas: int = Field(..., description="Cantidad de categorías nuevas insertadas")
+    categorias_existentes: int = Field(..., description="Cantidad de categorías que ya existían")
+    preguntas_creadas: int = Field(..., description="Cantidad de preguntas nuevas insertadas")
+    preguntas_omitidas: int = Field(
+        ...,
+        description="Cantidad de preguntas omitidas por ya existir en BD o tener estructura incompleta",
+    )
+    total_procesadas: int = Field(..., description="Total de preguntas evaluadas en el lote")
+
