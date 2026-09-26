@@ -64,8 +64,9 @@ def crear_pregunta(
     status_code=status.HTTP_200_OK,
     summary="Listar preguntas con paginación y filtros",
     description=(
-        "Devuelve un listado paginado (6 preguntas por página) de preguntas no eliminadas. "
-        "Permite filtrar por búsqueda parcial de texto en el enunciado, categoría y estado (ACTIVA o BORRADOR)."
+        "Devuelve un listado paginado (6 preguntas por página por defecto) de preguntas no eliminadas. "
+        "Permite filtrar por búsqueda parcial de texto en el enunciado, categoría, estado (ACTIVA o BORRADOR) "
+        "y configurar opcionalmente el tamaño de página."
     ),
     responses={
         status.HTTP_200_OK: {
@@ -78,6 +79,7 @@ def crear_pregunta(
 )
 def listar_preguntas(
     page: int = Query(1, ge=1, description="Número de página a consultar (comienza en 1)"),
+    page_size: Optional[int] = Query(None, ge=1, le=1000, description="Cantidad de preguntas por página (por defecto 6)"),
     buscar: Optional[str] = Query(None, description="Búsqueda libre por texto en el enunciado"),
     categoria_id: Optional[int] = Query(None, description="Filtrar por identificador de categoría"),
     estado: Optional[EstadoPregunta] = Query(None, description="Filtrar por estado: ACTIVA o BORRADOR"),
@@ -85,10 +87,11 @@ def listar_preguntas(
     admin_actual: Usuario = Depends(requiere_rol(RolUsuario.ADMINISTRADOR)),
 ) -> PreguntaListadoResponse:
     """Consulta la lista paginada de preguntas con filtros."""
+    tamano_pagina = page_size if page_size is not None else 6
     return pregunta_service.listar_preguntas(
         db=db,
         page=page,
-        page_size=6,
+        page_size=tamano_pagina,
         buscar=buscar,
         categoria_id=categoria_id,
         estado=estado,

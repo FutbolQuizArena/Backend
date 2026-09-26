@@ -37,6 +37,7 @@ def crear_pregunta(db: Session, datos: PreguntaCreate) -> Pregunta:
         estado=datos.estado or EstadoPregunta.ACTIVA,
         eliminada_en=None,
     )
+    nueva_pregunta.categoria = categoria
     return pregunta_repository.crear(db, nueva_pregunta)
 
 
@@ -66,6 +67,7 @@ def actualizar_pregunta(db: Session, pregunta_id: int, datos: PreguntaUpdate) ->
                 detalle="No se puede asociar una pregunta a una categoría inexistente",
             )
         pregunta.categoria_id = datos.categoria_id
+        pregunta.categoria = categoria
 
     if datos.enunciado is not None:
         pregunta.enunciado = datos.enunciado
@@ -111,7 +113,9 @@ def duplicar_pregunta(db: Session, pregunta_id: int) -> Pregunta:
     Por seguridad editorial, la copia resultante se inicializa en estado BORRADOR.
     """
     pregunta = obtener_pregunta(db, pregunta_id)
-    return pregunta_repository.duplicar(db, pregunta, estado_duplicada=EstadoPregunta.BORRADOR)
+    copia = pregunta_repository.duplicar(db, pregunta, estado_duplicada=EstadoPregunta.BORRADOR)
+    copia.categoria = pregunta.categoria
+    return copia
 
 
 def listar_preguntas(
