@@ -227,6 +227,37 @@ def test_listar_preguntas_paginacion_fija_6(
     assert datos2["total_paginas"] == 2
 
 
+def test_listar_preguntas_tamano_pagina_personalizado(
+    cliente: TestClient,
+    headers_admin: dict[str, str],
+    categoria_prueba: Categoria,
+    sesion_db: Session,
+) -> None:
+    """Verifica que se pueda especificar un page_size personalizado."""
+    for i in range(5):
+        pregunta = Pregunta(
+            enunciado=f"Pregunta personalizada {i + 1}",
+            opcion_a="A",
+            opcion_b="B",
+            opcion_c="C",
+            opcion_d="D",
+            respuesta_correcta="A",
+            categoria_id=categoria_prueba.id,
+            dificultad="Media",
+            estado=EstadoPregunta.ACTIVA,
+        )
+        sesion_db.add(pregunta)
+    sesion_db.commit()
+
+    resp = cliente.get("/api/admin/preguntas?page=1&page_size=2", headers=headers_admin)
+    assert resp.status_code == 200
+    datos = resp.json()
+    assert len(datos["items"]) == 2
+    assert datos["total"] == 5
+    assert datos["page"] == 1
+    assert datos["total_paginas"] == 3
+
+
 def test_listar_preguntas_filtro_buscar_case_insensitive(
     cliente: TestClient,
     headers_admin: dict[str, str],
