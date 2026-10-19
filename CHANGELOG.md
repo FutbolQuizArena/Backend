@@ -1,5 +1,9 @@
 # Changelog
 
+## 19/10/2026 Arreglo de issues Sonar
+
+- **Complejidad cognitiva (`python:S3776`, High):** Se separó la configuración de OpenAPI en funciones más pequeñas para reducir la complejidad de `crear_aplicacion()` en `app/main.py`, sin cambiar su comportamiento.
+
 ## 25/9 [3.2.2] Determinar ganador / avance de ronda (Módulo 3 - Torneos)
 
 - **Modelo de dominio:**
