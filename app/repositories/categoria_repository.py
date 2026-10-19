@@ -1,6 +1,6 @@
 """Funciones de acceso a datos para la entidad Categoria (Tarea 2.1.2 y 5.1.2)."""
 
-import random
+import secrets
 from typing import Optional
 
 from sqlalchemy import func
@@ -53,7 +53,7 @@ def obtener_categoria_aleatoria(db: Session) -> Categoria | None:
     )
     if not categorias:
         return None
-    return random.choice(categorias)
+    return secrets.choice(categorias)
 
 
 def crear_categoria(
