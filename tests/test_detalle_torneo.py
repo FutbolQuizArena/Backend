@@ -1,6 +1,8 @@
 """Pruebas unitarias y de integración para el detalle, participantes y cuadro del torneo (GET /api/torneos/{torneo_id})."""
 
 import pytest
+from datetime import datetime, timezone
+from types import SimpleNamespace
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
@@ -10,6 +12,57 @@ from app.models.usuario import Usuario
 from app.schemas.torneo_schema import TorneoCreate, TorneoUnirseRequest
 from app.schemas.usuario_schema import UsuarioCreate
 from app.services import autenticacion_service, torneo_service, usuario_service
+
+
+@pytest.mark.parametrize("origen", ["cache", "relaciones", "sin_usuario", "sin_relacion"])
+def test_detalle_cuadro_con_ganador_y_datos_incompletos(monkeypatch: pytest.MonkeyPatch, origen: str) -> None:
+    """Conserva jugadores, ganador y orden, incluso sin datos en la lista de participantes."""
+    jugador_a = SimpleNamespace(id=10, usuario_id=1, usuario=SimpleNamespace(nombre="Creador"))
+    jugador_b = SimpleNamespace(id=20, usuario_id=2, usuario=SimpleNamespace(nombre="Jugador"))
+    torneo = SimpleNamespace(
+        id=1, nombre="Copa", estado=EstadoTorneo.EN_CURSO, cantidad_participantes=4,
+        creador_id=1, creador=jugador_a.usuario, codigo_acceso="COPA01",
+        fecha_creacion=datetime.now(timezone.utc),
+        participantes=[jugador_a, jugador_b] if origen == "cache" else [],
+    )
+    if origen == "sin_usuario":
+        jugador_a.usuario = None
+        jugador_b.usuario = None
+    relacion_a = None if origen == "sin_relacion" else jugador_a
+    relacion_b = None if origen == "sin_relacion" else jugador_b
+    cruces = [
+        SimpleNamespace(
+            id=30, torneo_id=1, ronda=1, jugador_a_id=10, jugador_b_id=20,
+            ganador_id=10, estado=EstadoCruce.JUGADO,
+            jugador_a=relacion_a, jugador_b=relacion_b, ganador=relacion_a,
+        ),
+        SimpleNamespace(
+            id=40, torneo_id=1, ronda=2, jugador_a_id=10, jugador_b_id=20,
+            ganador_id=None, estado=EstadoCruce.PENDIENTE,
+            jugador_a=relacion_a, jugador_b=relacion_b, ganador=None,
+        ),
+    ]
+    repositorio = torneo_service.torneo_repository
+    monkeypatch.setattr(repositorio, "obtener_por_id", lambda *args, **kwargs: torneo)
+    monkeypatch.setattr(repositorio, "es_participante", lambda *args, **kwargs: False)
+    monkeypatch.setattr(repositorio, "obtener_cruces_por_torneo", lambda *args, **kwargs: cruces)
+
+    detalle = torneo_service.obtener_detalle_torneo(None, 1, SimpleNamespace(id=1))
+
+    assert [cruce.id for cruce in detalle.cuadro] == [30, 40]
+    assert detalle.cuadro[0].ganador_id == 10
+    assert detalle.cuadro[1].ganador is None
+    assert detalle.cantidad_participantes_actual == len(torneo.participantes)
+    if origen in ("sin_usuario", "sin_relacion"):
+        assert detalle.cuadro[0].jugador_a is None
+        assert detalle.cuadro[0].jugador_b is None
+        assert detalle.cuadro[0].ganador is None
+    else:
+        assert detalle.cuadro[0].jugador_a.nombre == "Creador"
+        assert detalle.cuadro[0].jugador_a.es_creador is True
+        assert detalle.cuadro[0].jugador_b.nombre == "Jugador"
+        assert detalle.cuadro[0].jugador_b.es_creador is False
+        assert detalle.cuadro[0].ganador == detalle.cuadro[0].jugador_a
 
 
 # ==============================================================================

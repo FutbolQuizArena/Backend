@@ -2,6 +2,7 @@
 
 ## 21/10/2026 Arreglo de issues Sonar
 
+- **Complejidad cognitiva (`python:S3776`, High):** Se separó la construcción del cuadro y de los datos de jugadores y ganador de `obtener_detalle_torneo()` en `app/services/torneo_service.py`, conservando el control de acceso y las respuestas. Se agregaron 4 casos de prueba en `tests/test_detalle_torneo.py` para comprobar el ganador y participantes obtenidos de la lista o de las relaciones, incluso con datos faltantes.
 - **Complejidad cognitiva (`python:S3776`, High):** Se separaron la creación y activación de categorías y la validación de preguntas de `sembrar_preguntas_y_categorias()` en `app/services/semilla_service.py`, conservando los contadores y la omisión de preguntas existentes o inválidas. Se creó `tests/test_semilla_service.py` con 11 casos de prueba, aprobados antes y después de la refactorización.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del usuario creador` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
@@ -17,6 +18,8 @@
 
 ## 19/10/2026 Arreglo de issues Sonar
 
+- **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.choice()` por `secrets.choice()` en `obtener_categoria_aleatoria()` de `app/repositories/categoria_repository.py`, conservando la selección entre categorías activas.
+- **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.shuffle()` por `random.SystemRandom().shuffle()` en `generar_cruces()` de `app/models/torneo.py`, conservando la formación de cruces con una fuente de aleatoriedad criptográficamente segura.
 - **Complejidad cognitiva (`python:S3776`, High):** Se separó la configuración de OpenAPI en funciones más pequeñas para reducir la complejidad de `crear_aplicacion()` en `app/main.py`, sin cambiar su comportamiento.
 
 ## 25/9 [3.2.2] Determinar ganador / avance de ronda (Módulo 3 - Torneos)

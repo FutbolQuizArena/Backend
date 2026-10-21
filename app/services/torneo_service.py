@@ -289,6 +289,57 @@ def salir_de_torneo(
     return "Has salido del torneo exitosamente"
 
 
+def _obtener_detalle_participante_cruce(
+    cruce: Cruce,
+    relacion: str,
+    participantes: dict[int, ParticipanteDetalleResponse],
+    creador_id: int,
+) -> ParticipanteDetalleResponse | None:
+    """Reutiliza el participante mapeado o lo obtiene de la relación del cruce."""
+    detalle = participantes.get(getattr(cruce, f"{relacion}_id"))
+    if detalle:
+        return detalle
+
+    participante = getattr(cruce, relacion, None)
+    if not participante or not participante.usuario:
+        return None
+
+    return ParticipanteDetalleResponse(
+        id=participante.id,
+        usuario_id=participante.usuario_id,
+        nombre=participante.usuario.nombre,
+        es_creador=(participante.usuario_id == creador_id),
+    )
+
+
+def _construir_cuadro_torneo(
+    cruces: list[Cruce],
+    participantes: dict[int, ParticipanteDetalleResponse],
+    creador_id: int,
+) -> list[CruceResponse]:
+    """Construye el cuadro conservando el orden y los datos de cada cruce."""
+    cuadro: list[CruceResponse] = []
+    for cruce in cruces:
+        jugador_a = _obtener_detalle_participante_cruce(cruce, "jugador_a", participantes, creador_id)
+        jugador_b = _obtener_detalle_participante_cruce(cruce, "jugador_b", participantes, creador_id)
+        ganador = None
+        if cruce.ganador_id:
+            ganador = _obtener_detalle_participante_cruce(cruce, "ganador", participantes, creador_id)
+        cuadro.append(CruceResponse(
+            id=cruce.id,
+            torneo_id=cruce.torneo_id,
+            ronda=cruce.ronda,
+            jugador_a_id=cruce.jugador_a_id,
+            jugador_b_id=cruce.jugador_b_id,
+            ganador_id=cruce.ganador_id,
+            estado=cruce.estado,
+            jugador_a=jugador_a,
+            jugador_b=jugador_b,
+            ganador=ganador,
+        ))
+    return cuadro
+
+
 def obtener_detalle_torneo(
     db: Session | int,
     torneo_id: int | Usuario,
@@ -349,51 +400,7 @@ def obtener_detalle_torneo(
 
     # Obtener cruces
     cruces_db = torneo_repository.obtener_cruces_por_torneo(sesion, torneo_id=torneo.id)
-    cuadro: list[CruceResponse] = []
-    for c in cruces_db:
-        jugador_a = participantes_dict.get(c.jugador_a_id)
-        if not jugador_a and hasattr(c, "jugador_a") and c.jugador_a and c.jugador_a.usuario:
-            jugador_a = ParticipanteDetalleResponse(
-                id=c.jugador_a.id,
-                usuario_id=c.jugador_a.usuario_id,
-                nombre=c.jugador_a.usuario.nombre,
-                es_creador=(c.jugador_a.usuario_id == torneo.creador_id),
-            )
-
-        jugador_b = participantes_dict.get(c.jugador_b_id)
-        if not jugador_b and hasattr(c, "jugador_b") and c.jugador_b and c.jugador_b.usuario:
-            jugador_b = ParticipanteDetalleResponse(
-                id=c.jugador_b.id,
-                usuario_id=c.jugador_b.usuario_id,
-                nombre=c.jugador_b.usuario.nombre,
-                es_creador=(c.jugador_b.usuario_id == torneo.creador_id),
-            )
-
-        ganador = None
-        if c.ganador_id:
-            ganador = participantes_dict.get(c.ganador_id)
-            if not ganador and hasattr(c, "ganador") and c.ganador and c.ganador.usuario:
-                ganador = ParticipanteDetalleResponse(
-                    id=c.ganador.id,
-                    usuario_id=c.ganador.usuario_id,
-                    nombre=c.ganador.usuario.nombre,
-                    es_creador=(c.ganador.usuario_id == torneo.creador_id),
-                )
-
-        cuadro.append(
-            CruceResponse(
-                id=c.id,
-                torneo_id=c.torneo_id,
-                ronda=c.ronda,
-                jugador_a_id=c.jugador_a_id,
-                jugador_b_id=c.jugador_b_id,
-                ganador_id=c.ganador_id,
-                estado=c.estado,
-                jugador_a=jugador_a,
-                jugador_b=jugador_b,
-                ganador=ganador,
-            )
-        )
+    cuadro = _construir_cuadro_torneo(cruces_db, participantes_dict, torneo.creador_id)
 
     creador_nombre = torneo.creador.nombre if (hasattr(torneo, "creador") and torneo.creador) else "Organizador"
 
