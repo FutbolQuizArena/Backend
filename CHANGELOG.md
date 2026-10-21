@@ -1,5 +1,10 @@
 # Changelog
 
+## 21/10/2026 Arreglo de issues Sonar
+
+- **Complejidad cognitiva (`python:S3776`, High):** Se extrajo la búsqueda de sesión de `crear_cruces()` en `app/repositories/torneo_repository.py` a una función auxiliar, conservando la persistencia con sesión explícita o inferida desde un cruce o su torneo.
+- **Literal duplicado (`python:S1192`, High):** Se reemplazaron las tres repeticiones de `participantes_torneo.id` en `app/models/cruce.py` por una constante compartida, conservando las claves foráneas de jugadores y ganador.
+
 ## 21/10/2026 Arreglo de seguridad JWT
 
 - **Clave JWT de ejemplo:** Se eliminó la clave pública por defecto y se exige una clave privada de al menos 32 bytes, rechazando el antiguo ejemplo. Se separó la clave de los tests y se actualizó la documentación para configurar el entorno y el despliegue.

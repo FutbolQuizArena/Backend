@@ -7,6 +7,8 @@ from sqlalchemy.orm import relationship
 from app.core.base_datos import Base
 from app.models.enumeraciones import EstadoCruce
 
+REFERENCIA_PARTICIPANTE_TORNEO = "participantes_torneo.id"
+
 if TYPE_CHECKING:
     from app.models.participante_torneo import ParticipanteTorneo
     from app.models.torneo import Torneo
@@ -27,19 +29,19 @@ class Cruce(Base):
     ronda = Column(Integer, nullable=False)
     jugador_a_id = Column(
         Integer,
-        ForeignKey("participantes_torneo.id", ondelete="CASCADE"),
+        ForeignKey(REFERENCIA_PARTICIPANTE_TORNEO, ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     jugador_b_id = Column(
         Integer,
-        ForeignKey("participantes_torneo.id", ondelete="CASCADE"),
+        ForeignKey(REFERENCIA_PARTICIPANTE_TORNEO, ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
     ganador_id = Column(
         Integer,
-        ForeignKey("participantes_torneo.id", ondelete="SET NULL"),
+        ForeignKey(REFERENCIA_PARTICIPANTE_TORNEO, ondelete="SET NULL"),
         nullable=True,
         index=True,
     )

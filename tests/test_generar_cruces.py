@@ -121,9 +121,11 @@ def test_modelo_generar_cruces_sin_participantes_retorna_vacio() -> None:
 # ==============================================================================
 
 
+@pytest.mark.parametrize("origen_sesion", ["explicita", "cruce", "torneo"])
 def test_repositorio_crear_cruces_con_sesion(
     sesion_db: Session,
     usuario_creador: Usuario,
+    origen_sesion: str,
 ) -> None:
     """Verifica que torneo_repository.crear_cruces persista y asigne IDs a una lista de cruces."""
     torneo = Torneo(
@@ -148,10 +150,24 @@ def test_repositorio_crear_cruces_con_sesion(
         ganador_id=None,
     )
 
-    cruces_creados = torneo_repository.crear_cruces(db=sesion_db, cruces=[c1])
+    if origen_sesion == "explicita":
+        cruces_creados = torneo_repository.crear_cruces(db=sesion_db, cruces=[c1])
+    else:
+        if origen_sesion == "cruce":
+            sesion_db.add(c1)
+        else:
+            c1.torneo = torneo
+        cruces_creados = torneo_repository.crear_cruces([c1])
     assert len(cruces_creados) == 1
     assert cruces_creados[0].id is not None
     assert cruces_creados[0].estado == EstadoCruce.PENDIENTE
+
+
+@pytest.mark.parametrize("cruces", [[], [Cruce(ronda=1)]])
+def test_repositorio_crear_cruces_sin_sesion_rechaza(cruces: list[Cruce]) -> None:
+    """Conserva el error cuando no existe una sesión que permita persistir."""
+    with pytest.raises(ValueError, match="No se pudo inferir la sesión"):
+        torneo_repository.crear_cruces(cruces)
 
 
 # ==============================================================================
