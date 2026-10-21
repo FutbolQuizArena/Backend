@@ -543,7 +543,9 @@ def _obtener_duelo_finalizado_cruce(
             mensaje=f"No se encontró ningún duelo con el ID {duelo_id}",
             codigo_estado=404,
         )
-    if {usuario_a_id, usuario_b_id} != {duelo.jugador1_id, duelo.jugador2_id}:
+    usuarios_cruce = {usuario_a_id, usuario_b_id}
+    usuarios_duelo = {duelo.jugador1_id, duelo.jugador2_id}
+    if usuarios_cruce.symmetric_difference(usuarios_duelo):
         raise TorneoNoDisponibleError(
             mensaje="El duelo indicado no corresponde a los participantes de este cruce",
             codigo_estado=400,
