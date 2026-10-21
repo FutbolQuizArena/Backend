@@ -36,6 +36,8 @@ from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.duelo_service import finalizar_duelo_si_corresponde
 from app.services.usuario_service import hashear_password
 
+MENSAJE_TORNEO_NO_DISPONIBLE = "El torneo no se encuentra disponible para unirse"
+
 
 def crear_torneo(
     db: Session,
@@ -103,21 +105,21 @@ def unirse_a_torneo(
     torneo = torneo_repository.obtener_por_codigo_acceso(db, codigo=datos.codigo_acceso)
     if torneo is None:
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 
     # Prevenir que el mismo usuario se una dos veces
     if torneo_repository.es_participante(db, torneo_id=torneo.id, usuario_id=usuario_actual.id):
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 
     # Validación encapsulada en el modelo de dominio según diagrama de clases E4
     if not torneo.unirse(usuario=usuario_actual, contrasena_ingresada=datos.contrasena):
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 

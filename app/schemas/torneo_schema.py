@@ -7,6 +7,11 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from app.models.enumeraciones import EstadoCruce, EstadoTorneo
 
+DESCRIPCION_IDENTIFICADOR_TORNEO = "Identificador único del torneo"
+DESCRIPCION_ESTADO_TORNEO = "Estado actual del torneo"
+DESCRIPCION_CREADOR_TORNEO = "Identificador del usuario creador"
+DESCRIPCION_REFERENCIA_TORNEO = "Identificador del torneo"
+
 
 class TorneoBase(BaseModel):
     """Atributos base del torneo."""
@@ -49,10 +54,10 @@ class TorneoResponse(TorneoBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(..., description="Identificador único del torneo")
+    id: int = Field(..., description=DESCRIPCION_IDENTIFICADOR_TORNEO)
     codigo_acceso: str = Field(..., description="Código de acceso único del torneo")
-    estado: EstadoTorneo = Field(..., description="Estado actual del torneo")
-    creador_id: int = Field(..., description="Identificador del usuario creador")
+    estado: EstadoTorneo = Field(..., description=DESCRIPCION_ESTADO_TORNEO)
+    creador_id: int = Field(..., description=DESCRIPCION_CREADOR_TORNEO)
     fecha_creacion: datetime = Field(..., description="Fecha y hora de creación del torneo")
 
 
@@ -69,7 +74,7 @@ class ParticipanteTorneoResponse(BaseModel):
 
     id: int = Field(..., description="Identificador único de la participación")
     usuario_id: int = Field(..., description="Identificador del usuario participante")
-    torneo_id: int = Field(..., description="Identificador del torneo")
+    torneo_id: int = Field(..., description=DESCRIPCION_REFERENCIA_TORNEO)
     fecha_ingreso: datetime = Field(..., description="Fecha y hora de ingreso al torneo")
 
 
@@ -107,7 +112,7 @@ class CruceResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int = Field(..., description="Identificador único del cruce")
-    torneo_id: int = Field(default=0, description="Identificador del torneo")
+    torneo_id: int = Field(default=0, description=DESCRIPCION_REFERENCIA_TORNEO)
     ronda: int = Field(..., description="Número de ronda eliminatoria")
     jugador_a_id: int | None = Field(default=None, description="Identificador del participante jugador A")
     jugador_b_id: int | None = Field(default=None, description="Identificador del participante jugador B")
@@ -123,12 +128,12 @@ class TorneoDetalleResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(..., description="Identificador único del torneo")
+    id: int = Field(..., description=DESCRIPCION_IDENTIFICADOR_TORNEO)
     nombre: str = Field(..., description="Nombre del torneo")
-    estado: EstadoTorneo = Field(..., description="Estado actual del torneo")
+    estado: EstadoTorneo = Field(..., description=DESCRIPCION_ESTADO_TORNEO)
     cantidad_participantes: int = Field(..., description="Cupo máximo de participantes")
     cantidad_participantes_actual: int = Field(..., description="Cantidad actual de participantes inscriptos")
-    creador_id: int = Field(..., description="Identificador del usuario creador")
+    creador_id: int = Field(..., description=DESCRIPCION_CREADOR_TORNEO)
     creador_nombre: str = Field(..., description="Nombre del usuario creador u organizador")
     codigo_acceso: str = Field(..., description="Código de acceso del torneo")
     fecha_creacion: datetime = Field(..., description="Fecha y hora de creación")
@@ -167,14 +172,14 @@ class TorneoListItemResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int = Field(..., description="Identificador único del torneo")
+    id: int = Field(..., description=DESCRIPCION_IDENTIFICADOR_TORNEO)
     nombre: str = Field(..., description="Nombre del torneo")
     cantidad_participantes: int = Field(..., description="Cupo máximo de participantes")
     cantidad_participantes_actual: int = Field(..., description="Cantidad actual de participantes inscriptos")
     tiene_contrasena: bool = Field(..., description="Indica si el torneo requiere contraseña de acceso")
-    estado: EstadoTorneo = Field(..., description="Estado actual del torneo")
+    estado: EstadoTorneo = Field(..., description=DESCRIPCION_ESTADO_TORNEO)
     fecha_creacion: datetime = Field(..., description="Fecha y hora de creación")
-    creador_id: int = Field(..., description="Identificador del usuario creador")
+    creador_id: int = Field(..., description=DESCRIPCION_CREADOR_TORNEO)
     codigo_acceso: str | None = Field(
         default=None,
         description="Código de acceso del torneo (visible únicamente para el creador)",
@@ -186,7 +191,7 @@ class CruceIniciarDueloResponse(BaseModel):
 
     cruce_id: int = Field(..., description="Identificador único del cruce")
     duelo_id: int = Field(..., description="Identificador de la PartidaDuelo asignada")
-    torneo_id: int = Field(..., description="Identificador del torneo")
+    torneo_id: int = Field(..., description=DESCRIPCION_REFERENCIA_TORNEO)
     ronda: int = Field(..., description="Ronda eliminatoria del cruce")
     mensaje: str = Field(..., description="Mensaje explicativo del estado del duelo")
 

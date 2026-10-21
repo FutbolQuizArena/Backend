@@ -2,6 +2,11 @@
 
 ## 21/10/2026 Arreglo de issues Sonar
 
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del usuario creador` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó el mensaje `El torneo no se encuentra disponible para unirse` en `app/services/torneo_service.py`, conservando las validaciones y respuestas de error.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador único del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Estado actual del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
 - **Complejidad cognitiva (`python:S3776`, High):** Se extrajo la búsqueda de sesión de `crear_cruces()` en `app/repositories/torneo_repository.py` a una función auxiliar, conservando la persistencia con sesión explícita o inferida desde un cruce o su torneo.
 - **Literal duplicado (`python:S1192`, High):** Se reemplazaron las tres repeticiones de `participantes_torneo.id` en `app/models/cruce.py` por una constante compartida, conservando las claves foráneas de jugadores y ganador.
 
