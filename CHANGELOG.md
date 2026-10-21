@@ -2,6 +2,7 @@
 
 ## 21/10/2026 Arreglo de issues Sonar
 
+- **Complejidad cognitiva (`python:S3776`, High):** Se separaron la creación y activación de categorías y la validación de preguntas de `sembrar_preguntas_y_categorias()` en `app/services/semilla_service.py`, conservando los contadores y la omisión de preguntas existentes o inválidas. Se creó `tests/test_semilla_service.py` con 11 casos de prueba, aprobados antes y después de la refactorización.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del usuario creador` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó el mensaje `El torneo no se encuentra disponible para unirse` en `app/services/torneo_service.py`, conservando las validaciones y respuestas de error.

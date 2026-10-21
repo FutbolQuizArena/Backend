@@ -37,6 +37,51 @@ def cargar_preguntas_desde_json(ruta_archivo: Optional[str] = None) -> list[dict
     return datos
 
 
+def _obtener_o_crear_categoria_activa(db: Session, nombre: str) -> tuple[Categoria, bool]:
+    """Devuelve una categoría activa e indica si fue creada."""
+    categoria = categoria_repository.obtener_categoria_por_nombre(db, nombre)
+    if categoria is None:
+        categoria = Categoria(nombre=nombre, estado=EstadoCategoria.ACTIVA)
+        db.add(categoria)
+        db.commit()
+        db.refresh(categoria)
+        return categoria, True
+
+    if categoria.estado != EstadoCategoria.ACTIVA:
+        categoria.estado = EstadoCategoria.ACTIVA
+        db.commit()
+        db.refresh(categoria)
+    return categoria, False
+
+
+def _preparar_datos_pregunta(item: dict[str, Any]) -> dict[str, str] | None:
+    """Normaliza una pregunta semilla y rechaza estructuras incompletas."""
+    enunciado = str(item.get("question", "")).strip()
+    opciones = item.get("options")
+    respuesta_correcta = str(item.get("correct_option", "")).strip().upper()
+    dificultad = str(item.get("difficulty", "Media")).strip()
+    if not enunciado or not isinstance(opciones, dict):
+        return None
+
+    opciones_normalizadas = [str(opciones.get(letra, "")).strip() for letra in ("A", "B", "C", "D")]
+    if not all(opciones_normalizadas):
+        return None
+    if respuesta_correcta not in ("A", "B", "C", "D"):
+        return None
+    if dificultad not in ("Fácil", "Media", "Difícil"):
+        dificultad = "Media"
+
+    return {
+        "enunciado": enunciado,
+        "opcion_a": opciones_normalizadas[0],
+        "opcion_b": opciones_normalizadas[1],
+        "opcion_c": opciones_normalizadas[2],
+        "opcion_d": opciones_normalizadas[3],
+        "respuesta_correcta": respuesta_correcta,
+        "dificultad": dificultad,
+    }
+
+
 def sembrar_preguntas_y_categorias(
     db: Session, lista_preguntas: list[dict[str, Any]]
 ) -> dict[str, int]:
@@ -60,7 +105,6 @@ def sembrar_preguntas_y_categorias(
 
     # Caché en memoria para evitar consultas reiteradas por categoría
     categorias_cache: dict[str, Categoria] = {}
-    categorias_contadas_existentes: set[str] = set()
 
     for item in lista_preguntas:
         total_procesadas += 1
@@ -75,47 +119,17 @@ def sembrar_preguntas_y_categorias(
         categoria = categorias_cache.get(clave_cat)
 
         if categoria is None:
-            categoria_existente = categoria_repository.obtener_categoria_por_nombre(db, cat_nombre)
-            if categoria_existente is None:
-                nueva_cat = Categoria(nombre=cat_nombre, estado=EstadoCategoria.ACTIVA)
-                db.add(nueva_cat)
-                db.commit()
-                db.refresh(nueva_cat)
-                categoria = nueva_cat
+            categoria, fue_creada = _obtener_o_crear_categoria_activa(db, cat_nombre)
+            if fue_creada:
                 categorias_creadas += 1
             else:
-                if categoria_existente.estado != EstadoCategoria.ACTIVA:
-                    categoria_existente.estado = EstadoCategoria.ACTIVA
-                    db.commit()
-                    db.refresh(categoria_existente)
-                categoria = categoria_existente
-                if clave_cat not in categorias_contadas_existentes:
-                    categorias_existentes += 1
-                    categorias_contadas_existentes.add(clave_cat)
+                categorias_existentes += 1
 
             categorias_cache[clave_cat] = categoria
 
         # 2. Validar estructura de la pregunta
-        enunciado = str(item.get("question", "")).strip()
-        opciones = item.get("options")
-        correct_option = str(item.get("correct_option", "")).strip().upper()
-        dificultad = str(item.get("difficulty", "Media")).strip()
-
-        if not enunciado or not isinstance(opciones, dict):
-            preguntas_omitidas += 1
-            continue
-
-        opcion_a = str(opciones.get("A", "")).strip()
-        opcion_b = str(opciones.get("B", "")).strip()
-        opcion_c = str(opciones.get("C", "")).strip()
-        opcion_d = str(opciones.get("D", "")).strip()
-
-        # Validar que existan las 4 opciones no vacías y la opción correcta sea A, B, C o D
-        if not (opcion_a and opcion_b and opcion_c and opcion_d):
-            preguntas_omitidas += 1
-            continue
-
-        if correct_option not in ("A", "B", "C", "D"):
+        datos_pregunta = _preparar_datos_pregunta(item)
+        if datos_pregunta is None:
             preguntas_omitidas += 1
             continue
 
@@ -124,7 +138,7 @@ def sembrar_preguntas_y_categorias(
             db.query(Pregunta)
             .filter(
                 Pregunta.categoria_id == categoria.id,
-                Pregunta.enunciado == enunciado,
+                Pregunta.enunciado == datos_pregunta["enunciado"],
             )
             .first()
         )
@@ -134,17 +148,8 @@ def sembrar_preguntas_y_categorias(
             continue
 
         # 4. Crear y persistir la nueva pregunta
-        if dificultad not in ("Fácil", "Media", "Difícil"):
-            dificultad = "Media"
-
         nueva_pregunta = Pregunta(
-            enunciado=enunciado,
-            opcion_a=opcion_a,
-            opcion_b=opcion_b,
-            opcion_c=opcion_c,
-            opcion_d=opcion_d,
-            respuesta_correcta=correct_option,
-            dificultad=dificultad,
+            **datos_pregunta,
             categoria_id=categoria.id,
             estado=EstadoPregunta.ACTIVA,
             eliminada_en=None,
