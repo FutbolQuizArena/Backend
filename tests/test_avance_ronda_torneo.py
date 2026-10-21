@@ -1,8 +1,10 @@
 """Pruebas unitarias y de integración para la determinación de ganador y avance de ronda (Sub-tarea 3.2.2)."""
 
 import pytest
+from types import SimpleNamespace
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
+from app.core.excepciones import TorneoNoDisponibleError
 
 from app.models.categoria import Categoria
 from app.models.cruce import Cruce
@@ -26,6 +28,101 @@ from app.schemas.torneo_schema import (
 )
 from app.schemas.usuario_schema import UsuarioCreate
 from app.services import autenticacion_service, duelo_service, torneo_service, usuario_service
+
+
+@pytest.fixture
+def contexto_resolucion_duelo(monkeypatch: pytest.MonkeyPatch):
+    """Aísla la resolución de un cruce sin completar aún la ronda."""
+    usuario_a = Usuario(id=1, nombre="Jugador A")
+    usuario_b = Usuario(id=2, nombre="Jugador B")
+    participante_a = ParticipanteTorneo(id=11, usuario_id=1, usuario=usuario_a)
+    participante_b = ParticipanteTorneo(id=22, usuario_id=2, usuario=usuario_b)
+    torneo = Torneo(id=1, creador_id=1, estado=EstadoTorneo.EN_CURSO)
+    cruce = Cruce(
+        id=10, torneo_id=1, ronda=1, estado=EstadoCruce.PENDIENTE,
+        jugador_a_id=11, jugador_b_id=22, jugador_a=participante_a, jugador_b=participante_b,
+    )
+    repositorio = torneo_service.torneo_repository
+    monkeypatch.setattr(repositorio, "obtener_por_id", lambda *args, **kwargs: torneo)
+    monkeypatch.setattr(repositorio, "obtener_cruce_por_id", lambda *args, **kwargs: cruce)
+    monkeypatch.setattr(repositorio, "actualizar_cruce", lambda *args, **kwargs: cruce)
+    monkeypatch.setattr(repositorio, "obtener_cruces_por_ronda", lambda *args, **kwargs: [
+        cruce, SimpleNamespace(estado=EstadoCruce.PENDIENTE),
+    ])
+    return cruce, usuario_a
+
+
+@pytest.mark.parametrize("numero_ganador,tiempo_1,tiempo_2,invertidos,ganador_id", [
+    (1, 20, 5, False, 11), (2, 5, 20, False, 22),
+    (0, 5, 10, False, 11), (0, 10, 5, False, 22),
+    (0, 5, 5, False, 11), (0, None, 0, False, 11),
+    (1, 10, 5, True, 22),
+])
+def test_resolver_duelo_ganador_y_desempates(
+    monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo,
+    numero_ganador, tiempo_1, tiempo_2, invertidos, ganador_id,
+) -> None:
+    """Conserva ganador declarado, desempates, orden invertido y prioridad del duelo."""
+    cruce, usuario = contexto_resolucion_duelo
+    tiempos = {1: tiempo_1, 2: tiempo_2}
+    duelo = SimpleNamespace(
+        id=50, jugador1_id=2 if invertidos else 1, jugador2_id=1 if invertidos else 2,
+        estado=EstadoPartida.FINALIZADA, numero_ganador=numero_ganador,
+        preguntas_de_jugador=lambda numero: [SimpleNamespace(tiempo_respuesta_segundos=tiempos[numero])],
+    )
+    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: duelo)
+    respuesta = torneo_service.resolver_cruce(
+        None, 1, cruce.id, usuario,
+        CruceResolverRequest(duelo_id=50, ganador_participante_id=999),
+    )
+    assert respuesta.ganador_id == ganador_id
+    assert cruce.ganador_id == ganador_id
+    assert cruce.estado == EstadoCruce.JUGADO
+    assert respuesta.ronda_completada is False
+    assert respuesta.puntos_otorgados_campeon == 0
+
+
+def test_resolver_duelo_finaliza_automaticamente(monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo) -> None:
+    """Conserva el intento de finalizar el duelo antes de resolver el cruce."""
+    cruce, usuario = contexto_resolucion_duelo
+    duelo = SimpleNamespace(
+        id=50, jugador1_id=1, jugador2_id=2, estado=EstadoPartida.EN_CURSO, numero_ganador=2,
+    )
+    llamadas = []
+
+    def finalizar(db, duelo_id):
+        llamadas.append(duelo_id)
+        duelo.estado = EstadoPartida.FINALIZADA
+        return duelo
+
+    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: duelo)
+    monkeypatch.setattr(torneo_service, "finalizar_duelo_si_corresponde", finalizar)
+    respuesta = torneo_service.resolver_cruce(None, 1, cruce.id, usuario, CruceResolverRequest(duelo_id=50))
+    assert llamadas == [50]
+    assert respuesta.ganador_id == cruce.jugador_b_id
+
+
+@pytest.mark.parametrize("caso,codigo,mensaje", [
+    ("inexistente", 404, "No se encontró ningún duelo"),
+    ("otros_jugadores", 400, "no corresponde a los participantes"),
+    ("sin_finalizar", 400, "aún no ha finalizado"),
+])
+def test_resolver_duelo_invalido_no_modifica_cruce(
+    monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo, caso, codigo, mensaje,
+) -> None:
+    """Rechaza duelos inválidos conservando el estado pendiente del cruce."""
+    cruce, usuario = contexto_resolucion_duelo
+    duelo = SimpleNamespace(
+        id=50, jugador1_id=1, jugador2_id=99 if caso == "otros_jugadores" else 2,
+        estado=EstadoPartida.EN_CURSO,
+    )
+    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: None if caso == "inexistente" else duelo)
+    monkeypatch.setattr(torneo_service, "finalizar_duelo_si_corresponde", lambda *args: duelo)
+    with pytest.raises(TorneoNoDisponibleError, match=mensaje) as error:
+        torneo_service.resolver_cruce(None, 1, cruce.id, usuario, CruceResolverRequest(duelo_id=50))
+    assert error.value.codigo_estado == codigo
+    assert cruce.estado == EstadoCruce.PENDIENTE
+    assert cruce.ganador_id is None
 
 
 # ==============================================================================

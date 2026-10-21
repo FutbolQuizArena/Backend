@@ -2,6 +2,7 @@
 
 ## 21/10/2026 Arreglo de issues Sonar
 
+- **Complejidad cognitiva (`python:S3776`, High):** Se separaron la validación del duelo, la determinación del ganador y el avance o cierre del torneo de `resolver_cruce()` en `app/services/torneo_service.py`, conservando permisos, desempates y premios. Se agregaron 11 casos en `tests/test_avance_ronda_torneo.py` para ganadores, desempates, finalización automática y duelos inválidos, aprobados con la versión anterior y la refactorizada.
 - **Complejidad cognitiva (`python:S3776`, High):** Se separó la construcción del cuadro y de los datos de jugadores y ganador de `obtener_detalle_torneo()` en `app/services/torneo_service.py`, conservando el control de acceso y las respuestas. Se agregaron 4 casos de prueba en `tests/test_detalle_torneo.py` para comprobar el ganador y participantes obtenidos de la lista o de las relaciones, incluso con datos faltantes.
 - **Complejidad cognitiva (`python:S3776`, High):** Se separaron la creación y activación de categorías y la validación de preguntas de `sembrar_preguntas_y_categorias()` en `app/services/semilla_service.py`, conservando los contadores y la omisión de preguntas existentes o inválidas. Se creó `tests/test_semilla_service.py` con 11 casos de prueba, aprobados antes y después de la refactorización.
 - **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del usuario creador` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
