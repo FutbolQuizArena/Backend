@@ -22,7 +22,7 @@ En macOS/Linux, usar `source .venv/bin/activate` y `cp .env.example .env`. La co
 
 ```dotenv
 DATABASE_URL=postgresql://postgres:[PASSWORD]@[HOST]:6543/postgres
-JWT_SECRET=super_secreto_futbolquiz_arena_cambiar_en_produccion
+JWT_SECRET=
 JWT_EXPIRATION_MIN=60
 ENTORNO=desarrollo
 TITULO_APP="FutbolQuiz Arena API"
@@ -33,6 +33,8 @@ DEBUG=true
 Para Supabase en la nube, la URL utiliza el **puerto 6543 (Transaction Mode / PgBouncer)** para permitir alta concurrencia y múltiples conexiones simultáneas desde el cliente sin agotar los límites del servidor.
 
 Rutas raíz: la API se expone bajo el prefijo `/api`. La documentación Swagger UI interactiva queda accesible en `http://localhost:8000/docs`, Redoc en `http://localhost:8000/redoc` y la especificación OpenAPI JSON en `http://localhost:8000/openapi.json`. El servidor incluye middleware de CORS configurado con `allow_credentials=True` y soporte para los orígenes del frontend (`http://localhost:5173`, `http://localhost:3000`, etc.).
+
+Antes de iniciar el backend, generá una clave con `python -c "import secrets; print(secrets.token_hex(32))"` y guardala en `JWT_SECRET` del `.env` local o en las variables privadas del despliegue. No la subas a Git ni la compartas. La aplicación exige al menos 32 bytes y rechaza la antigua clave de ejemplo. Al cambiar la clave, los usuarios deben iniciar sesión nuevamente. Los tests generan una clave efímera independiente.
 
 ## Home y consulta de estado
 

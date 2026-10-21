@@ -1,5 +1,9 @@
 # Changelog
 
+## 21/10/2026 Arreglo de seguridad JWT
+
+- **Clave JWT de ejemplo:** Se eliminó la clave pública por defecto y se exige una clave privada de al menos 32 bytes, rechazando el antiguo ejemplo. Se separó la clave de los tests y se actualizó la documentación para configurar el entorno y el despliegue.
+
 ## 19/10/2026 Arreglo de issues Sonar
 
 - **Complejidad cognitiva (`python:S3776`, High):** Se separó la configuración de OpenAPI en funciones más pequeñas para reducir la complejidad de `crear_aplicacion()` en `app/main.py`, sin cambiar su comportamiento.
