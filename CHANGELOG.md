@@ -2,6 +2,7 @@
 
 ## 22/10/2026 Arreglo de issues Sonar
 
+- **Aserción compuesta (`python:S9073`, Medium):** Se separaron las comprobaciones de existencia y contenido de la descripción de OpenAPI en `tests/test_edicion_perfil.py`, permitiendo identificar cuál falla sin cambiar lo que verifica el test.
 - **Tests de excepciones (`python:S5778`, Medium, 6 issues):** Se movió la construcción de solicitudes fuera de los bloques `pytest.raises()` de `tests/test_avance_ronda_torneo.py`, dejando solo la llamada al servicio que debe lanzar la excepción.
 - **Excepciones genéricas (`python:S5958`, Medium, 5 issues):** Se reemplazó `Exception` por `TorneoNoDisponibleError` o `TorneoAccesoDenegadoError` en las pruebas de validación de cruces, comprobando también el mensaje y el código de estado esperado.
 

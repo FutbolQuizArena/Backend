@@ -218,7 +218,8 @@ def test_swagger_documentacion_endpoint_perfil_me(cliente: TestClient) -> None:
     op_get = schema["paths"]["/api/usuarios/me"]["get"]
 
     assert op_get["summary"] == "Obtener perfil del usuario autenticado"
-    assert "description" in op_get and len(op_get["description"]) > 0
+    assert "description" in op_get
+    assert len(op_get["description"]) > 0
     assert "200" in op_get["responses"]
     assert "401" in op_get["responses"]
     assert op_get["security"] == [{"BearerAuth": []}]
