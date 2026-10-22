@@ -4,7 +4,7 @@ import pytest
 from types import SimpleNamespace
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-from app.core.excepciones import TorneoNoDisponibleError
+from app.core.excepciones import TorneoAccesoDenegadoError, TorneoNoDisponibleError
 
 from app.models.categoria import Categoria
 from app.models.cruce import Cruce
@@ -118,8 +118,9 @@ def test_resolver_duelo_invalido_no_modifica_cruce(
     )
     monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: None if caso == "inexistente" else duelo)
     monkeypatch.setattr(torneo_service, "finalizar_duelo_si_corresponde", lambda *args: duelo)
+    datos = CruceResolverRequest(duelo_id=50)
     with pytest.raises(TorneoNoDisponibleError, match=mensaje) as error:
-        torneo_service.resolver_cruce(None, 1, cruce.id, usuario, CruceResolverRequest(duelo_id=50))
+        torneo_service.resolver_cruce(None, 1, cruce.id, usuario, datos)
     assert error.value.codigo_estado == codigo
     assert cruce.estado == EstadoCruce.PENDIENTE
     assert cruce.ganador_id is None
@@ -607,45 +608,47 @@ def test_validaciones_resolver_cruce(
     cruce = torneo_repository.obtener_cruces_por_ronda(sesion_db, torneo.id, ronda=1)[0]
 
     # 1. Torneo inexistente -> 404
-    with pytest.raises(Exception) as exc:
+    datos_ganador = CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+    with pytest.raises(TorneoNoDisponibleError, match="No se encontró ningún torneo") as exc:
         torneo_service.resolver_cruce(
-            sesion_db, 999999, cruce.id, usuario_creador, CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+            sesion_db, 999999, cruce.id, usuario_creador, datos_ganador
         )
-    assert "No se encontró ningún torneo" in str(exc.value)
+    assert exc.value.codigo_estado == 404
 
     # 2. Cruce inexistente -> 404
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(TorneoNoDisponibleError, match="No se encontró ningún cruce") as exc:
         torneo_service.resolver_cruce(
-            sesion_db, torneo.id, 999999, usuario_creador, CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+            sesion_db, torneo.id, 999999, usuario_creador, datos_ganador
         )
-    assert "No se encontró ningún cruce" in str(exc.value)
+    assert exc.value.codigo_estado == 404
 
     # 3. Participante ajeno como ganador -> 400
-    with pytest.raises(Exception) as exc:
+    datos_ganador_ajeno = CruceResolverRequest(ganador_participante_id=999999)
+    with pytest.raises(TorneoNoDisponibleError, match="no pertenece a este cruce") as exc:
         torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_creador, CruceResolverRequest(ganador_participante_id=999999)
+            sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador_ajeno
         )
-    assert "no pertenece a este cruce" in str(exc.value)
+    assert exc.value.codigo_estado == 400
 
     # 4. Usuario ajeno intentando resolver -> 403
     usuario_externo = crear_usuarios_prueba(sesion_db, 1, prefijo="externo")[0]
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(TorneoAccesoDenegadoError, match="No tienes permisos") as exc:
         torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_externo, CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+            sesion_db, torneo.id, cruce.id, usuario_externo, datos_ganador
         )
-    assert "No tienes permisos" in str(exc.value)
+    assert exc.value.codigo_estado == 403
 
     # 5. Resolver exitosamente el cruce
     torneo_service.resolver_cruce(
-        sesion_db, torneo.id, cruce.id, usuario_creador, CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+        sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador
     )
 
     # 6. Intentar resolver un cruce ya JUGADO -> 400
-    with pytest.raises(Exception) as exc:
+    with pytest.raises(TorneoNoDisponibleError, match="ya ha sido resuelto") as exc:
         torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_creador, CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
+            sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador
         )
-    assert "ya ha sido resuelto" in str(exc.value)
+    assert exc.value.codigo_estado == 400
 
 
 # ==============================================================================

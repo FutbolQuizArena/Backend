@@ -1,5 +1,10 @@
 # Changelog
 
+## 22/10/2026 Arreglo de issues Sonar
+
+- **Tests de excepciones (`python:S5778`, Medium, 6 issues):** Se movió la construcción de solicitudes fuera de los bloques `pytest.raises()` de `tests/test_avance_ronda_torneo.py`, dejando solo la llamada al servicio que debe lanzar la excepción.
+- **Excepciones genéricas (`python:S5958`, Medium, 5 issues):** Se reemplazó `Exception` por `TorneoNoDisponibleError` o `TorneoAccesoDenegadoError` en las pruebas de validación de cruces, comprobando también el mensaje y el código de estado esperado.
+
 ## 21/10/2026 Arreglo de issues Sonar
 
 - **Comparación de jugadores (`pythonbugs:S2583`, Reliability, Medium):** Se reemplazó la comparación directa de conjuntos en `_obtener_duelo_finalizado_cruce()` por su diferencia simétrica, conservando la aceptación de duelos válidos con jugadores en cualquier orden y el rechazo de jugadores ajenos. La resolución de la advertencia se verificará en el próximo análisis.
