@@ -2,6 +2,9 @@
 
 ## 22/10/2026 Arreglo de issues Sonar
 
+- **Condicional anidado (`python:S3358`, Medium):** Se separó la obtención del nombre de categoría en `DueloJuegoResponse.desde_duelo()` de `app/schemas/duelo_schema.py`, conservando la prioridad del atributo directo y la alternativa desde la relación.
+- **Condicional anidado (`python:S3358`, Medium):** Se separó la obtención del nombre de categoría en `PartidaIndividualResponse.desde_partida()` de `app/schemas/partida_schema.py`, conservando las respuestas con o sin categoría.
+- **Tipo opcional (`python:S5890`, Medium):** Se corrigió `ResultadoPartidaResponse.partida_id` a `int | None` para que su tipo coincida con el valor por defecto `None`.
 - **Aserción compuesta (`python:S9073`, Medium):** Se separaron las comprobaciones de existencia y contenido de la descripción de OpenAPI en `tests/test_edicion_perfil.py`, permitiendo identificar cuál falla sin cambiar lo que verifica el test.
 - **Tests de excepciones (`python:S5778`, Medium, 6 issues):** Se movió la construcción de solicitudes fuera de los bloques `pytest.raises()` de `tests/test_avance_ronda_torneo.py`, dejando solo la llamada al servicio que debe lanzar la excepción.
 - **Excepciones genéricas (`python:S5958`, Medium, 5 issues):** Se reemplazó `Exception` por `TorneoNoDisponibleError` o `TorneoAccesoDenegadoError` en las pruebas de validación de cruces, comprobando también el mensaje y el código de estado esperado.
