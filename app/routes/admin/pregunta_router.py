@@ -30,7 +30,6 @@ admin_pregunta_router = APIRouter(
 
 @admin_pregunta_router.post(
     "",
-    response_model=PreguntaAdminResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Crear nueva pregunta",
     description=(
@@ -60,7 +59,6 @@ def crear_pregunta(
 
 @admin_pregunta_router.get(
     "",
-    response_model=PreguntaListadoResponse,
     status_code=status.HTTP_200_OK,
     summary="Listar preguntas con paginación y filtros",
     description=(
@@ -100,7 +98,6 @@ def listar_preguntas(
 
 @admin_pregunta_router.get(
     "/{pregunta_id}",
-    response_model=PreguntaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Obtener detalle de una pregunta",
     description="Devuelve la información completa de una pregunta específica por su ID.",
@@ -126,7 +123,6 @@ def obtener_pregunta(
 
 @admin_pregunta_router.patch(
     "/{pregunta_id}",
-    response_model=PreguntaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Actualizar parcialmente una pregunta",
     description="Permite modificar el enunciado, opciones, categoría, dificultad o estado de una pregunta existente.",
@@ -154,7 +150,6 @@ def actualizar_pregunta(
 
 @admin_pregunta_router.delete(
     "/{pregunta_id}",
-    response_model=MensajeResponse,
     status_code=status.HTTP_200_OK,
     summary="Eliminar pregunta (soft-delete)",
     description=(
@@ -184,7 +179,6 @@ def eliminar_pregunta(
 
 @admin_pregunta_router.post(
     "/{pregunta_id}/duplicar",
-    response_model=PreguntaAdminResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Duplicar pregunta existente",
     description=(
@@ -213,7 +207,6 @@ def duplicar_pregunta(
 
 @admin_pregunta_router.patch(
     "/{pregunta_id}/estado",
-    response_model=PreguntaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Cambiar estado de la pregunta",
     description="Permite alternar rápidamente el estado de la pregunta entre ACTIVA y BORRADOR.",

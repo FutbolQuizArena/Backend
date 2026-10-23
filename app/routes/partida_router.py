@@ -20,7 +20,6 @@ partida_router = APIRouter(prefix="/api/partidas", tags=["Partidas"])
 
 @partida_router.get(
     "/categorias",
-    response_model=list[CategoriaResponse],
     status_code=status.HTTP_200_OK,
     summary="Listar categorías disponibles para partidas",
     description="Devuelve las categorías activas para la ruleta y las partidas.",
@@ -34,7 +33,6 @@ def listar_categorias_partidas(
 
 @partida_router.post(
     "/individual",
-    response_model=PartidaIndividualResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Iniciar una partida individual",
     description=(
@@ -54,7 +52,6 @@ def iniciar_partida_individual(
 
 @partida_router.post(
     "/preguntas/{pregunta_partida_id}/respuesta",
-    response_model=RespuestaPartidaResponse,
     status_code=status.HTTP_200_OK,
     summary="Responder una pregunta de la partida individual",
     description=(
@@ -85,7 +82,6 @@ def responder_pregunta_partida(
 
 @partida_router.get(
     "/{partida_id}/resultado",
-    response_model=ResultadoPartidaResponse,
     status_code=status.HTTP_200_OK,
     summary="Finalizar y consultar el resultado de la partida individual",
     description=(

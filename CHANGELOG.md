@@ -1,5 +1,11 @@
 # Changelog
 
+## 23/10/2026 Arreglo de issues Sonar Low
+
+- **Modelo de respuesta redundante (`python:S8409`, Low, 39 issues):** Se eliminó el parámetro `response_model` de los decoradores de rutas donde repetía exactamente la anotación del tipo de retorno. FastAPI sigue infiriendo el mismo esquema para validar y serializar las respuestas de autenticación, usuarios, categorías, partidas, duelos, torneos y administración.
+- **Inyección de dependencias (`python:S8410`, Low, 4 issues):** Se reemplazó la declaración de dependencias como valores por defecto (`db: Session = Depends(...)`) por anotaciones `Annotated[Session, Depends(...)]` en las rutas de categorías públicas y salud, y para la sesión y el usuario administrador de la siembra de datos.
+
+
 ## 22/10/2026 Arreglo de issues Sonar
 
 - **Condicional anidado (`python:S3358`, Medium):** Se separó la obtención del nombre de categoría en `DueloJuegoResponse.desde_duelo()` de `app/schemas/duelo_schema.py`, conservando la prioridad del atributo directo y la alternativa desde la relación.

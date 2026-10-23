@@ -14,7 +14,6 @@ usuario_router = APIRouter(prefix="/api/usuarios", tags=["Usuarios"])
 
 @usuario_router.get(
     "/me",
-    response_model=UsuarioResponse,
     status_code=status.HTTP_200_OK,
     summary="Obtener perfil del usuario autenticado",
     description=(
@@ -51,7 +50,6 @@ def obtener_perfil_me(
 
 @usuario_router.patch(
     "/me",
-    response_model=UsuarioResponse,
     status_code=status.HTTP_200_OK,
     summary="Actualizar perfil del usuario autenticado",
     description=(
@@ -122,7 +120,6 @@ def actualizar_perfil_me(
 
 @usuario_router.patch(
     "/me/password",
-    response_model=UsuarioResponse,
     status_code=status.HTTP_200_OK,
     summary="Cambiar contraseña del usuario autenticado (modal)",
     description=(

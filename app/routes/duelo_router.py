@@ -25,7 +25,6 @@ def _numero_de_jugador(duelo, usuario_id: int) -> int:
 
 @duelo_router.post(
     "/online",
-    response_model=DueloJuegoResponse,
     status_code=status.HTTP_200_OK,
     summary="Buscar o crear un duelo en línea",
     description=(
@@ -47,7 +46,6 @@ def buscar_o_crear_duelo_online(
 
 @duelo_router.post(
     "/local",
-    response_model=DueloJuegoResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Iniciar un duelo local",
     description=(
@@ -69,7 +67,6 @@ def iniciar_duelo_local(
 
 @duelo_router.post(
     "/preguntas/{pregunta_partida_id}/respuesta",
-    response_model=RespuestaPartidaResponse,
     status_code=status.HTTP_200_OK,
     summary="Responder una pregunta dentro de un duelo",
     description=(
@@ -102,7 +99,6 @@ def responder_pregunta_duelo(
 
 @duelo_router.get(
     "/{duelo_id}",
-    response_model=DueloEstadoResponse,
     status_code=status.HTTP_200_OK,
     summary="Consultar estado y resultado de un duelo",
     description=(
