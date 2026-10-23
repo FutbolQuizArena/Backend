@@ -40,7 +40,7 @@ def obtener_preguntas_aleatorias_sin_repeticion(
         raise ExcepcionValidacion(
             mensaje="La categoría seleccionada no cuenta con suficientes preguntas para iniciar una partida"
         )
-    return random.sample(preguntas, cantidad)
+    return random.SystemRandom().sample(preguntas, cantidad)
 
 
 def crear(db: Session, pregunta: Pregunta) -> Pregunta:
