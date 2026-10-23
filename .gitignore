@@ -1,0 +1,37 @@
+# Entregables y documentación no versionable
+documentacion del proyecto (entregables)/
+
+# Entorno virtual de Python
+.venv/
+venv/
+ENV/
+env/
+
+# Byte-compiled / archivos de ejecución
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variables de entorno y secretos
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Pruebas y cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs y base de datos local temporal
+*.log
+*.sqlite3
+*.db
