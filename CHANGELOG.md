@@ -1,7 +1,8 @@
 # Changelog
 
-## 23/10/2026 Arreglo de issues Sonar Low
+## 23/10/2026 Arreglo de issues Sonar
 
+- **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.sample()` por `random.SystemRandom().sample()` en `obtener_preguntas_aleatorias_sin_repeticion()` de `app/repositories/pregunta_repository.py`, conservando la selección sin repeticiones de preguntas activas y no eliminadas y el rechazo cuando no hay suficientes preguntas.
 - **Modelo de respuesta redundante (`python:S8409`, Low, 39 issues):** Se eliminó el parámetro `response_model` de los decoradores de rutas donde repetía exactamente la anotación del tipo de retorno. FastAPI sigue infiriendo el mismo esquema para validar y serializar las respuestas de autenticación, usuarios, categorías, partidas, duelos, torneos y administración.
 - **Inyección de dependencias (`python:S8410`, Low, 4 issues):** Se reemplazó la declaración de dependencias como valores por defecto (`db: Session = Depends(...)`) por anotaciones `Annotated[Session, Depends(...)]` en las rutas de categorías públicas y salud, y para la sesión y el usuario administrador de la siembra de datos.
 
