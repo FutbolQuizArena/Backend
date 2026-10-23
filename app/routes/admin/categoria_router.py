@@ -29,7 +29,6 @@ admin_categoria_router = APIRouter(
 
 @admin_categoria_router.post(
     "",
-    response_model=CategoriaAdminResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Crear nueva categoría",
     description="Permite a un administrador crear una nueva categoría de preguntas en el sistema.",
@@ -55,7 +54,6 @@ def crear_categoria(
 
 @admin_categoria_router.get(
     "",
-    response_model=list[CategoriaAdminResponse],
     status_code=status.HTTP_200_OK,
     summary="Listar categorías",
     description="Devuelve el listado de categorías con la cantidad de preguntas asociadas y filtros opcionales.",
@@ -80,7 +78,6 @@ def listar_categorias(
 
 @admin_categoria_router.get(
     "/{categoria_id}",
-    response_model=CategoriaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Obtener detalle de categoría",
     description="Devuelve la información de una categoría específica por su ID junto a su cantidad de preguntas.",
@@ -105,7 +102,6 @@ def obtener_categoria(
 
 @admin_categoria_router.patch(
     "/{categoria_id}",
-    response_model=CategoriaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Actualizar categoría",
     description="Permite modificar el nombre y/o estado de una categoría existente.",
@@ -133,7 +129,6 @@ def actualizar_categoria(
 
 @admin_categoria_router.patch(
     "/{categoria_id}/estado",
-    response_model=CategoriaAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Cambiar estado de categoría",
     description="Permite alternar rápidamente el estado de la categoría entre ACTIVA y BORRADOR.",
@@ -160,7 +155,6 @@ def cambiar_estado_categoria(
 
 @admin_categoria_router.delete(
     "/{categoria_id}",
-    response_model=MensajeResponse,
     status_code=status.HTTP_200_OK,
     summary="Eliminar categoría",
     description=(

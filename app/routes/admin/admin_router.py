@@ -1,5 +1,7 @@
 """Router maestro para la consolidación y defensa en profundidad del panel de administración (Tarea 5.1.4)."""
 
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 
 from app.core.base_datos import obtener_db
@@ -30,7 +32,6 @@ admin_router.include_router(admin_usuario_router)
 
 @admin_router.post(
     "/sistema/sembrar",
-    response_model=SemillaResumenResponse,
     summary="Sembrar categorías y preguntas iniciales",
     description=(
         "Lee el archivo de datos semilla (scripts/preguntas_seed.json) y persiste "
@@ -46,8 +47,8 @@ admin_router.include_router(admin_usuario_router)
     },
 )
 def sembrar_datos_sistema(
-    db: Session = Depends(obtener_db),
-    admin: Usuario = Depends(obtener_usuario_actual),
+    db: Annotated[Session, Depends(obtener_db)],
+    admin: Annotated[Usuario, Depends(obtener_usuario_actual)],
 ) -> SemillaResumenResponse:
     """Ejecuta la siembra de preguntas y categorías desde el archivo seed JSON."""
     preguntas = semilla_service.cargar_preguntas_desde_json()

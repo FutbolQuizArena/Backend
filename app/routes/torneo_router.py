@@ -26,7 +26,6 @@ torneo_router = APIRouter(prefix="/api/torneos", tags=["Torneos"])
 
 @torneo_router.post(
     "",
-    response_model=TorneoCreadoResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Crear un nuevo torneo",
     description=(
@@ -82,7 +81,6 @@ def crear_torneo(
 
 @torneo_router.post(
     "/unirse",
-    response_model=TorneoResponse,
     status_code=status.HTTP_200_OK,
     summary="Unirse a un torneo mediante código de acceso",
     description=(
@@ -150,7 +148,6 @@ def unirse_a_torneo(
 
 @torneo_router.get(
     "",
-    response_model=list[TorneoListItemResponse],
     status_code=status.HTTP_200_OK,
     summary="Listar torneos según filtro",
     description=(
@@ -210,7 +207,6 @@ def listar_torneos(
 
 @torneo_router.get(
     "/{torneo_id}",
-    response_model=TorneoDetalleResponse,
     status_code=status.HTTP_200_OK,
     summary="Obtener estado, participantes y cuadro de un torneo",
     description=(
@@ -280,7 +276,6 @@ def obtener_detalle_torneo(
 
 @torneo_router.delete(
     "/{torneo_id}/salir",
-    response_model=MensajeResponse,
     status_code=status.HTTP_200_OK,
     summary="Salir de un torneo",
     description=(
@@ -349,7 +344,6 @@ def salir_de_torneo(
 
 @torneo_router.post(
     "/{torneo_id}/cruces/{cruce_id}/iniciar-duelo",
-    response_model=CruceIniciarDueloResponse,
     status_code=status.HTTP_200_OK,
     summary="Iniciar o recuperar el duelo para un cruce eliminatorio",
     description=(
@@ -393,7 +387,6 @@ def iniciar_duelo_cruce(
 
 @torneo_router.post(
     "/{torneo_id}/cruces/{cruce_id}/resolver",
-    response_model=CruceResolucionResponse,
     status_code=status.HTTP_200_OK,
     summary="Resolver cruce eliminatorio y avanzar ronda",
     description=(

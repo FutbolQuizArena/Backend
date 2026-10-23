@@ -65,11 +65,11 @@ class DueloJuegoResponse(BaseModel):
                     opcion_d=pregunta_partida.pregunta.opcion_d,
                 )
             )
-        categoria_nombre = (
-            duelo.categoria_nombre
-            if hasattr(duelo, "categoria_nombre")
-            else (duelo.categoria.nombre if getattr(duelo, "categoria", None) else None)
-        )
+        if hasattr(duelo, "categoria_nombre"):
+            categoria_nombre = duelo.categoria_nombre
+        else:
+            categoria = getattr(duelo, "categoria", None)
+            categoria_nombre = categoria.nombre if categoria else None
         estado_str = duelo.estado.value if hasattr(duelo.estado, "value") else str(duelo.estado)
         return cls(
             id=duelo.id,

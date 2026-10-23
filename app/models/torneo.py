@@ -131,7 +131,7 @@ class Torneo(Base):
         No interactúa con la base de datos ni instancia entidades Cruce.
         """
         participantes_mezclados = list(self.participantes or [])
-        random.shuffle(participantes_mezclados)
+        random.SystemRandom().shuffle(participantes_mezclados)
         pares: list[tuple["ParticipanteTorneo", "ParticipanteTorneo"]] = []
         for i in range(0, len(participantes_mezclados), 2):
             if i + 1 < len(participantes_mezclados):

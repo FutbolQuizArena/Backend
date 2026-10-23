@@ -1,11 +1,16 @@
 """Configuración y fixtures para pruebas con Pytest."""
 
 from typing import Generator
+import os
+import secrets
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
+
+# Clave efímera exclusiva de tests; no usa la clave local ni la del despliegue.
+os.environ["JWT_SECRET"] = secrets.token_hex(32)
 
 from app.main import app
 from app.core.base_datos import Base, obtener_db

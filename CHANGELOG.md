@@ -1,5 +1,44 @@
 # Changelog
 
+## 23/10/2026 Arreglo de issues Sonar Low
+
+- **Modelo de respuesta redundante (`python:S8409`, Low, 39 issues):** Se eliminó el parámetro `response_model` de los decoradores de rutas donde repetía exactamente la anotación del tipo de retorno. FastAPI sigue infiriendo el mismo esquema para validar y serializar las respuestas de autenticación, usuarios, categorías, partidas, duelos, torneos y administración.
+- **Inyección de dependencias (`python:S8410`, Low, 4 issues):** Se reemplazó la declaración de dependencias como valores por defecto (`db: Session = Depends(...)`) por anotaciones `Annotated[Session, Depends(...)]` en las rutas de categorías públicas y salud, y para la sesión y el usuario administrador de la siembra de datos.
+
+
+## 22/10/2026 Arreglo de issues Sonar
+
+- **Condicional anidado (`python:S3358`, Medium):** Se separó la obtención del nombre de categoría en `DueloJuegoResponse.desde_duelo()` de `app/schemas/duelo_schema.py`, conservando la prioridad del atributo directo y la alternativa desde la relación.
+- **Condicional anidado (`python:S3358`, Medium):** Se separó la obtención del nombre de categoría en `PartidaIndividualResponse.desde_partida()` de `app/schemas/partida_schema.py`, conservando las respuestas con o sin categoría.
+- **Tipo opcional (`python:S5890`, Medium):** Se corrigió `ResultadoPartidaResponse.partida_id` a `int | None` para que su tipo coincida con el valor por defecto `None`.
+- **Aserción compuesta (`python:S9073`, Medium):** Se separaron las comprobaciones de existencia y contenido de la descripción de OpenAPI en `tests/test_edicion_perfil.py`, permitiendo identificar cuál falla sin cambiar lo que verifica el test.
+- **Tests de excepciones (`python:S5778`, Medium, 6 issues):** Se movió la construcción de solicitudes fuera de los bloques `pytest.raises()` de `tests/test_avance_ronda_torneo.py`, dejando solo la llamada al servicio que debe lanzar la excepción.
+- **Excepciones genéricas (`python:S5958`, Medium, 5 issues):** Se reemplazó `Exception` por `TorneoNoDisponibleError` o `TorneoAccesoDenegadoError` en las pruebas de validación de cruces, comprobando también el mensaje y el código de estado esperado.
+
+## 21/10/2026 Arreglo de issues Sonar
+
+- **Comparación de jugadores (`pythonbugs:S2583`, Reliability, Medium):** Se reemplazó la comparación directa de conjuntos en `_obtener_duelo_finalizado_cruce()` por su diferencia simétrica, conservando la aceptación de duelos válidos con jugadores en cualquier orden y el rechazo de jugadores ajenos. La resolución de la advertencia se verificará en el próximo análisis.
+- **Complejidad cognitiva (`python:S3776`, High):** Se separaron la validación del duelo, la determinación del ganador y el avance o cierre del torneo de `resolver_cruce()` en `app/services/torneo_service.py`, conservando permisos, desempates y premios. Se agregaron 11 casos en `tests/test_avance_ronda_torneo.py` para ganadores, desempates, finalización automática y duelos inválidos, aprobados con la versión anterior y la refactorizada.
+- **Complejidad cognitiva (`python:S3776`, High):** Se separó la construcción del cuadro y de los datos de jugadores y ganador de `obtener_detalle_torneo()` en `app/services/torneo_service.py`, conservando el control de acceso y las respuestas. Se agregaron 4 casos de prueba en `tests/test_detalle_torneo.py` para comprobar el ganador y participantes obtenidos de la lista o de las relaciones, incluso con datos faltantes.
+- **Complejidad cognitiva (`python:S3776`, High):** Se separaron la creación y activación de categorías y la validación de preguntas de `sembrar_preguntas_y_categorias()` en `app/services/semilla_service.py`, conservando los contadores y la omisión de preguntas existentes o inválidas. Se creó `tests/test_semilla_service.py` con 11 casos de prueba, aprobados antes y después de la refactorización.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del usuario creador` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó el mensaje `El torneo no se encuentra disponible para unirse` en `app/services/torneo_service.py`, conservando las validaciones y respuestas de error.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Identificador único del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Literal duplicado (`python:S1192`, High):** Se centralizó `Estado actual del torneo` en una constante de `app/schemas/torneo_schema.py`, conservando las descripciones de la API.
+- **Complejidad cognitiva (`python:S3776`, High):** Se extrajo la búsqueda de sesión de `crear_cruces()` en `app/repositories/torneo_repository.py` a una función auxiliar, conservando la persistencia con sesión explícita o inferida desde un cruce o su torneo.
+- **Literal duplicado (`python:S1192`, High):** Se reemplazaron las tres repeticiones de `participantes_torneo.id` en `app/models/cruce.py` por una constante compartida, conservando las claves foráneas de jugadores y ganador.
+
+## 21/10/2026 Arreglo de seguridad JWT
+
+- **Clave JWT de ejemplo:** Se eliminó la clave pública por defecto y se exige una clave privada de al menos 32 bytes, rechazando el antiguo ejemplo. Se separó la clave de los tests y se actualizó la documentación para configurar el entorno y el despliegue.
+
+## 19/10/2026 Arreglo de issues Sonar
+
+- **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.choice()` por `secrets.choice()` en `obtener_categoria_aleatoria()` de `app/repositories/categoria_repository.py`, conservando la selección entre categorías activas.
+- **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.shuffle()` por `random.SystemRandom().shuffle()` en `generar_cruces()` de `app/models/torneo.py`, conservando la formación de cruces con una fuente de aleatoriedad criptográficamente segura.
+- **Complejidad cognitiva (`python:S3776`, High):** Se separó la configuración de OpenAPI en funciones más pequeñas para reducir la complejidad de `crear_aplicacion()` en `app/main.py`, sin cambiar su comportamiento.
+
 ## 25/9 [3.2.2] Determinar ganador / avance de ronda (Módulo 3 - Torneos)
 
 - **Modelo de dominio:**

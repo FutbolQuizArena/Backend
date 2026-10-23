@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
 from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import registrar_manejadores_excepcion
@@ -15,6 +16,59 @@ from app.routes import (
     torneo_router,
     usuario_router,
 )
+
+
+def configurar_operacion_openapi(ruta: str, operacion: dict) -> None:
+    """Documenta la autenticación y las respuestas de una operación."""
+    es_administrativa = ruta.startswith("/api/admin")
+    if es_administrativa or "security" in operacion:
+        operacion["security"] = [{"BearerAuth": []}]
+
+    if not es_administrativa:
+        return
+
+    etiquetas = operacion.setdefault("tags", [])
+    if "Administración" not in etiquetas:
+        etiquetas.append("Administración")
+    respuestas = operacion.setdefault("responses", {})
+    respuestas.setdefault("401", {"description": "Token inválido, expirado o ausente."})
+    respuestas.setdefault("403", {"description": "Acceso restringido a administradores."})
+
+
+def configurar_operaciones_openapi(esquema: dict) -> None:
+    """Aplica la documentación de seguridad a las operaciones del esquema."""
+    for ruta, elementos_ruta in esquema.get("paths", {}).items():
+        for operacion in elementos_ruta.values():
+            if isinstance(operacion, dict):
+                configurar_operacion_openapi(ruta, operacion)
+
+
+def configurar_openapi(aplicacion: FastAPI) -> None:
+    """Configura Bearer JWT en Swagger y conserva la caché de OpenAPI."""
+    def openapi_personalizado() -> dict:
+        if aplicacion.openapi_schema:
+            return aplicacion.openapi_schema
+
+        esquema = get_openapi(
+            title=aplicacion.title,
+            version=aplicacion.version,
+            description=aplicacion.description,
+            routes=aplicacion.routes,
+        )
+        esquema.setdefault("components", {})["securitySchemes"] = {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Pegá el token JWT obtenido en /api/auth/login (sin las comillas ni 'Bearer').",
+            }
+        }
+        configurar_operaciones_openapi(esquema)
+        aplicacion.openapi_schema = esquema
+        return esquema
+
+    aplicacion.openapi = openapi_personalizado
+
 
 def crear_aplicacion() -> FastAPI:
     """Crea y configura la instancia de FastAPI."""
@@ -57,47 +111,7 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(partida_router)
     aplicacion.include_router(admin_router)
 
-    # Configuración de OpenAPI para habilitar el botón "Authorize" (Bearer JWT) en Swagger UI
-    from fastapi.openapi.utils import get_openapi
-
-    def openapi_personalizado():
-        if aplicacion.openapi_schema:
-            return aplicacion.openapi_schema
-        schema = get_openapi(
-            title=aplicacion.title,
-            version=aplicacion.version,
-            description=aplicacion.description,
-            routes=aplicacion.routes,
-        )
-        # Configuración de BearerAuth estándar en componentes OpenAPI
-        schema.setdefault("components", {})["securitySchemes"] = {
-            "BearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT",
-                "description": "Pegá el token JWT obtenido en /api/auth/login (sin las comillas ni 'Bearer').",
-            }
-        }
-        # Asociar BearerAuth y tags a todas las operaciones que requieren autenticación
-        for path, path_item in schema.get("paths", {}).items():
-            for method, operation in path_item.items():
-                if isinstance(operation, dict):
-                    # Si es ruta administrativa o requiere seguridad
-                    if path.startswith("/api/admin") or "security" in operation:
-                        operation["security"] = [{"BearerAuth": []}]
-                    # Garantizar el tag "Administración" y documentar 401/403 en rutas de admin
-                    if path.startswith("/api/admin"):
-                        tags = operation.setdefault("tags", [])
-                        if "Administración" not in tags:
-                            tags.append("Administración")
-                        responses = operation.setdefault("responses", {})
-                        responses.setdefault("401", {"description": "Token inválido, expirado o ausente."})
-                        responses.setdefault("403", {"description": "Acceso restringido a administradores."})
-
-        aplicacion.openapi_schema = schema
-        return aplicacion.openapi_schema
-
-    aplicacion.openapi = openapi_personalizado
+    configurar_openapi(aplicacion)
 
     return aplicacion
 

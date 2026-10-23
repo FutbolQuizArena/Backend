@@ -1,7 +1,7 @@
 """Repositorio de acceso a datos para la entidad Torneo y sus participantes."""
 
 from sqlalchemy import func
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, joinedload, object_session
 
 from app.models.cruce import Cruce
 from app.models.enumeraciones import EstadoTorneo
@@ -102,6 +102,19 @@ def actualizar_estado(db: Session, torneo: Torneo, nuevo_estado: EstadoTorneo) -
     return torneo
 
 
+def _inferir_sesion_cruces(cruces: list[Cruce]) -> Session:
+    """Busca la primera sesión asociada a un cruce o a su torneo."""
+    for cruce in cruces:
+        sesion = object_session(cruce)
+        if sesion is None:
+            torneo = getattr(cruce, "torneo", None)
+            if torneo is not None:
+                sesion = object_session(torneo)
+        if sesion is not None:
+            return sesion
+    raise ValueError("No se pudo inferir la sesión de base de datos para persistir los cruces")
+
+
 def crear_cruces(
     db: Session | list[Cruce],
     cruces: list[Cruce] | None = None,
@@ -114,15 +127,7 @@ def crear_cruces(
     """
     if isinstance(db, list):
         lista_cruces = db
-        sesion = None
-        for c in lista_cruces:
-            from sqlalchemy.orm import object_session
-            s = object_session(c) or (object_session(c.torneo) if hasattr(c, "torneo") and c.torneo else None)
-            if s is not None:
-                sesion = s
-                break
-        if sesion is None:
-            raise ValueError("No se pudo inferir la sesión de base de datos para persistir los cruces")
+        sesion = _inferir_sesion_cruces(lista_cruces)
     else:
         sesion = db
         lista_cruces = cruces or []

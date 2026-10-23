@@ -1,5 +1,7 @@
 """Controlador para verificar el estado de salud y conexión del servicio."""
 
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -16,7 +18,7 @@ salud_router = APIRouter(prefix="/api", tags=["Salud"])
     summary="Verificar salud del backend y base de datos",
     description="Comprueba que el backend esté operativo y confirma la conectividad activa con PostgreSQL.",
 )
-def verificar_salud(db: Session = Depends(obtener_db)) -> dict:
+def verificar_salud(db: Annotated[Session, Depends(obtener_db)]) -> dict:
     """Confirma que la base de datos esté accesible y responde con estado OK."""
     try:
         db.execute(text("SELECT 1"))

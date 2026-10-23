@@ -36,6 +36,8 @@ from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.duelo_service import finalizar_duelo_si_corresponde
 from app.services.usuario_service import hashear_password
 
+MENSAJE_TORNEO_NO_DISPONIBLE = "El torneo no se encuentra disponible para unirse"
+
 
 def crear_torneo(
     db: Session,
@@ -103,21 +105,21 @@ def unirse_a_torneo(
     torneo = torneo_repository.obtener_por_codigo_acceso(db, codigo=datos.codigo_acceso)
     if torneo is None:
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 
     # Prevenir que el mismo usuario se una dos veces
     if torneo_repository.es_participante(db, torneo_id=torneo.id, usuario_id=usuario_actual.id):
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 
     # Validación encapsulada en el modelo de dominio según diagrama de clases E4
     if not torneo.unirse(usuario=usuario_actual, contrasena_ingresada=datos.contrasena):
         raise TorneoNoDisponibleError(
-            mensaje="El torneo no se encuentra disponible para unirse",
+            mensaje=MENSAJE_TORNEO_NO_DISPONIBLE,
             detalle=None,
         )
 
@@ -287,6 +289,57 @@ def salir_de_torneo(
     return "Has salido del torneo exitosamente"
 
 
+def _obtener_detalle_participante_cruce(
+    cruce: Cruce,
+    relacion: str,
+    participantes: dict[int, ParticipanteDetalleResponse],
+    creador_id: int,
+) -> ParticipanteDetalleResponse | None:
+    """Reutiliza el participante mapeado o lo obtiene de la relación del cruce."""
+    detalle = participantes.get(getattr(cruce, f"{relacion}_id"))
+    if detalle:
+        return detalle
+
+    participante = getattr(cruce, relacion, None)
+    if not participante or not participante.usuario:
+        return None
+
+    return ParticipanteDetalleResponse(
+        id=participante.id,
+        usuario_id=participante.usuario_id,
+        nombre=participante.usuario.nombre,
+        es_creador=(participante.usuario_id == creador_id),
+    )
+
+
+def _construir_cuadro_torneo(
+    cruces: list[Cruce],
+    participantes: dict[int, ParticipanteDetalleResponse],
+    creador_id: int,
+) -> list[CruceResponse]:
+    """Construye el cuadro conservando el orden y los datos de cada cruce."""
+    cuadro: list[CruceResponse] = []
+    for cruce in cruces:
+        jugador_a = _obtener_detalle_participante_cruce(cruce, "jugador_a", participantes, creador_id)
+        jugador_b = _obtener_detalle_participante_cruce(cruce, "jugador_b", participantes, creador_id)
+        ganador = None
+        if cruce.ganador_id:
+            ganador = _obtener_detalle_participante_cruce(cruce, "ganador", participantes, creador_id)
+        cuadro.append(CruceResponse(
+            id=cruce.id,
+            torneo_id=cruce.torneo_id,
+            ronda=cruce.ronda,
+            jugador_a_id=cruce.jugador_a_id,
+            jugador_b_id=cruce.jugador_b_id,
+            ganador_id=cruce.ganador_id,
+            estado=cruce.estado,
+            jugador_a=jugador_a,
+            jugador_b=jugador_b,
+            ganador=ganador,
+        ))
+    return cuadro
+
+
 def obtener_detalle_torneo(
     db: Session | int,
     torneo_id: int | Usuario,
@@ -347,51 +400,7 @@ def obtener_detalle_torneo(
 
     # Obtener cruces
     cruces_db = torneo_repository.obtener_cruces_por_torneo(sesion, torneo_id=torneo.id)
-    cuadro: list[CruceResponse] = []
-    for c in cruces_db:
-        jugador_a = participantes_dict.get(c.jugador_a_id)
-        if not jugador_a and hasattr(c, "jugador_a") and c.jugador_a and c.jugador_a.usuario:
-            jugador_a = ParticipanteDetalleResponse(
-                id=c.jugador_a.id,
-                usuario_id=c.jugador_a.usuario_id,
-                nombre=c.jugador_a.usuario.nombre,
-                es_creador=(c.jugador_a.usuario_id == torneo.creador_id),
-            )
-
-        jugador_b = participantes_dict.get(c.jugador_b_id)
-        if not jugador_b and hasattr(c, "jugador_b") and c.jugador_b and c.jugador_b.usuario:
-            jugador_b = ParticipanteDetalleResponse(
-                id=c.jugador_b.id,
-                usuario_id=c.jugador_b.usuario_id,
-                nombre=c.jugador_b.usuario.nombre,
-                es_creador=(c.jugador_b.usuario_id == torneo.creador_id),
-            )
-
-        ganador = None
-        if c.ganador_id:
-            ganador = participantes_dict.get(c.ganador_id)
-            if not ganador and hasattr(c, "ganador") and c.ganador and c.ganador.usuario:
-                ganador = ParticipanteDetalleResponse(
-                    id=c.ganador.id,
-                    usuario_id=c.ganador.usuario_id,
-                    nombre=c.ganador.usuario.nombre,
-                    es_creador=(c.ganador.usuario_id == torneo.creador_id),
-                )
-
-        cuadro.append(
-            CruceResponse(
-                id=c.id,
-                torneo_id=c.torneo_id,
-                ronda=c.ronda,
-                jugador_a_id=c.jugador_a_id,
-                jugador_b_id=c.jugador_b_id,
-                ganador_id=c.ganador_id,
-                estado=c.estado,
-                jugador_a=jugador_a,
-                jugador_b=jugador_b,
-                ganador=ganador,
-            )
-        )
+    cuadro = _construir_cuadro_torneo(cruces_db, participantes_dict, torneo.creador_id)
 
     creador_nombre = torneo.creador.nombre if (hasattr(torneo, "creador") and torneo.creador) else "Organizador"
 
@@ -524,6 +533,74 @@ def iniciar_duelo_cruce(
     )
 
 
+def _obtener_duelo_finalizado_cruce(
+    db: Session, duelo_id: int, usuario_a_id: int | None, usuario_b_id: int | None,
+) -> PartidaDuelo:
+    """Valida los jugadores del duelo e intenta finalizarlo cuando corresponde."""
+    duelo = duelo_repository.obtener_duelo_por_id(db, duelo_id)
+    if duelo is None:
+        raise TorneoNoDisponibleError(
+            mensaje=f"No se encontró ningún duelo con el ID {duelo_id}",
+            codigo_estado=404,
+        )
+    usuarios_cruce = {usuario_a_id, usuario_b_id}
+    usuarios_duelo = {duelo.jugador1_id, duelo.jugador2_id}
+    if usuarios_cruce.symmetric_difference(usuarios_duelo):
+        raise TorneoNoDisponibleError(
+            mensaje="El duelo indicado no corresponde a los participantes de este cruce",
+            codigo_estado=400,
+        )
+    if duelo.estado != EstadoPartida.FINALIZADA:
+        duelo = finalizar_duelo_si_corresponde(db, duelo.id)
+        if duelo.estado != EstadoPartida.FINALIZADA:
+            raise TorneoNoDisponibleError(
+                mensaje="El duelo aún no ha finalizado; ambos jugadores deben completar sus preguntas",
+                codigo_estado=400,
+            )
+    return duelo
+
+
+def _obtener_usuario_ganador_duelo(duelo: PartidaDuelo) -> int:
+    """Obtiene el ganador y conserva el desempate por tiempo a favor del jugador 1 si igualan."""
+    if duelo.numero_ganador == 1:
+        return duelo.jugador1_id
+    if duelo.numero_ganador == 2:
+        return duelo.jugador2_id
+
+    tiempo_jugador_1 = sum(p.tiempo_respuesta_segundos or 0 for p in duelo.preguntas_de_jugador(1))
+    tiempo_jugador_2 = sum(p.tiempo_respuesta_segundos or 0 for p in duelo.preguntas_de_jugador(2))
+    if tiempo_jugador_2 < tiempo_jugador_1:
+        return duelo.jugador2_id
+    return duelo.jugador1_id
+
+
+def _determinar_ganador_cruce(
+    db: Session, cruce: Cruce, datos: CruceResolverRequest,
+    usuario_a_id: int | None, usuario_b_id: int | None,
+) -> ParticipanteTorneo:
+    """Selecciona un participante desde el duelo o desde el identificador explícito."""
+    ganador_participante = None
+    if datos.duelo_id is not None:
+        duelo = _obtener_duelo_finalizado_cruce(db, datos.duelo_id, usuario_a_id, usuario_b_id)
+        ganador_usuario_id = _obtener_usuario_ganador_duelo(duelo)
+        ganador_participante = cruce.jugador_a if ganador_usuario_id == usuario_a_id else cruce.jugador_b
+    elif datos.ganador_participante_id is not None:
+        if datos.ganador_participante_id not in (cruce.jugador_a_id, cruce.jugador_b_id):
+            raise TorneoNoDisponibleError(
+                mensaje=f"El participante {datos.ganador_participante_id} no pertenece a este cruce",
+                codigo_estado=400,
+            )
+        ganador_participante = (
+            cruce.jugador_a if datos.ganador_participante_id == cruce.jugador_a_id else cruce.jugador_b
+        )
+    if ganador_participante is None:
+        raise TorneoNoDisponibleError(
+            mensaje="No se pudo determinar el participante ganador del cruce",
+            codigo_estado=400,
+        )
+    return ganador_participante
+
+
 def resolver_cruce(
     db: Session,
     torneo_id: int,
@@ -574,75 +651,19 @@ def resolver_cruce(
             mensaje="No tienes permisos para resolver este cruce"
         )
 
-    ganador_participante: ParticipanteTorneo | None = None
-
-    if datos.duelo_id is not None:
-        duelo = duelo_repository.obtener_duelo_por_id(db, datos.duelo_id)
-        if duelo is None:
-            raise TorneoNoDisponibleError(
-                mensaje=f"No se encontró ningún duelo con el ID {datos.duelo_id}",
-                codigo_estado=404,
-            )
-
-        u_cruce = {usuario_a_id, usuario_b_id}
-        u_duelo = {duelo.jugador1_id, duelo.jugador2_id}
-        if u_cruce != u_duelo:
-            raise TorneoNoDisponibleError(
-                mensaje="El duelo indicado no corresponde a los participantes de este cruce",
-                codigo_estado=400,
-            )
-
-        if duelo.estado != EstadoPartida.FINALIZADA:
-            # Intento de finalización automática por si ambos terminaron
-            duelo = finalizar_duelo_si_corresponde(db, duelo.id)
-            if duelo.estado != EstadoPartida.FINALIZADA:
-                raise TorneoNoDisponibleError(
-                    mensaje="El duelo aún no ha finalizado; ambos jugadores deben completar sus preguntas",
-                    codigo_estado=400,
-                )
-
-        # Determinar usuario ganador del duelo
-        if duelo.numero_ganador == 1:
-            ganador_usuario_id = duelo.jugador1_id
-        elif duelo.numero_ganador == 2:
-            ganador_usuario_id = duelo.jugador2_id
-        else:
-            # Desempate por menor tiempo de respuesta acumulado
-            t1 = sum(p.tiempo_respuesta_segundos or 0 for p in duelo.preguntas_de_jugador(1))
-            t2 = sum(p.tiempo_respuesta_segundos or 0 for p in duelo.preguntas_de_jugador(2))
-            if t1 < t2:
-                ganador_usuario_id = duelo.jugador1_id
-            elif t2 < t1:
-                ganador_usuario_id = duelo.jugador2_id
-            else:
-                ganador_usuario_id = duelo.jugador1_id
-
-        if ganador_usuario_id == usuario_a_id:
-            ganador_participante = cruce.jugador_a
-        else:
-            ganador_participante = cruce.jugador_b
-
-    elif datos.ganador_participante_id is not None:
-        if datos.ganador_participante_id not in (cruce.jugador_a_id, cruce.jugador_b_id):
-            raise TorneoNoDisponibleError(
-                mensaje=f"El participante {datos.ganador_participante_id} no pertenece a este cruce",
-                codigo_estado=400,
-            )
-        if datos.ganador_participante_id == cruce.jugador_a_id:
-            ganador_participante = cruce.jugador_a
-        else:
-            ganador_participante = cruce.jugador_b
-
-    if ganador_participante is None:
-        raise TorneoNoDisponibleError(
-            mensaje="No se pudo determinar el participante ganador del cruce",
-            codigo_estado=400,
-        )
+    ganador_participante = _determinar_ganador_cruce(db, cruce, datos, usuario_a_id, usuario_b_id)
 
     # Invocación a método de dominio
     cruce.determinar_ganador(ganador_participante)
     torneo_repository.actualizar_cruce(db, cruce)
 
+    return _evaluar_avance_ronda(db, torneo, cruce, ganador_participante)
+
+
+def _evaluar_avance_ronda(
+    db: Session, torneo: Torneo, cruce: Cruce, ganador_participante: ParticipanteTorneo,
+) -> CruceResolucionResponse:
+    """Informa pendientes, genera la próxima ronda o finaliza y premia al campeón."""
     # Evaluar cruces de la ronda actual
     cruces_ronda = torneo_repository.obtener_cruces_por_ronda(db, torneo_id=torneo.id, ronda=cruce.ronda)
     quedan_pendientes = any(c.estado == EstadoCruce.PENDIENTE for c in cruces_ronda)

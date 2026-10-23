@@ -46,11 +46,11 @@ class PartidaIndividualResponse(BaseModel):
                     opcion_d=pregunta_partida.pregunta.opcion_d,
                 )
             )
-        categoria_nombre = (
-            partida.categoria_nombre
-            if hasattr(partida, "categoria_nombre")
-            else (partida.categoria.nombre if getattr(partida, "categoria", None) else None)
-        )
+        if hasattr(partida, "categoria_nombre"):
+            categoria_nombre = partida.categoria_nombre
+        else:
+            categoria = getattr(partida, "categoria", None)
+            categoria_nombre = categoria.nombre if categoria else None
         return cls(
             id=partida.id,
             categoria_id=partida.categoria_id,
@@ -79,7 +79,7 @@ class ResultadoPartidaResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    partida_id: int = None
+    partida_id: int | None = None
     puntaje_final: int
     fecha_fin: datetime | None
 

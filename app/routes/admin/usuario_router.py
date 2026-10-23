@@ -26,7 +26,6 @@ admin_usuario_router = APIRouter(
 
 @admin_usuario_router.get(
     "",
-    response_model=list[UsuarioAdminResponse],
     status_code=status.HTTP_200_OK,
     summary="Listar usuarios",
     description="Devuelve el listado de usuarios con filtros opcionales de búsqueda por texto, rol y estado.",
@@ -57,7 +56,6 @@ def listar_usuarios(
 
 @admin_usuario_router.get(
     "/{usuario_id}",
-    response_model=UsuarioAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Obtener detalle de usuario",
     description="Devuelve la información administrativa de un usuario específico por su ID.",
@@ -82,7 +80,6 @@ def obtener_usuario(
 
 @admin_usuario_router.patch(
     "/{usuario_id}/estado",
-    response_model=UsuarioAdminResponse,
     status_code=status.HTTP_200_OK,
     summary="Cambiar estado de habilitación de usuario",
     description="Permite habilitar o deshabilitar una cuenta de usuario sin borrar su historial ni puntajes acumulados.",

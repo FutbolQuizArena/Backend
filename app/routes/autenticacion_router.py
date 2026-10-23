@@ -17,7 +17,6 @@ auth_router = autenticacion_router  # Alias para compatibilidad
 
 @autenticacion_router.post(
     "/registro",
-    response_model=UsuarioResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Registrar un nuevo usuario",
     description=(
@@ -67,7 +66,6 @@ def registrar(
 
 @autenticacion_router.post(
     "/login",
-    response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
     summary="Iniciar sesión y obtener token JWT",
     description=(
@@ -122,7 +120,6 @@ def login(
 
 @autenticacion_router.post(
     "/logout",
-    response_model=MensajeResponse,
     status_code=status.HTTP_200_OK,
     summary="Cerrar sesión",
     description=(
