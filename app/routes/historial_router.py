@@ -11,6 +11,7 @@ from app.models.usuario import Usuario
 from app.schemas.historial_schema import (
     HistorialDuelosResponse,
     HistorialPartidasIndividualesResponse,
+    HistorialTorneosResponse,
 )
 from app.services import historial_service
 
@@ -65,3 +66,27 @@ def consultar_historial_duelos(
 ) -> HistorialDuelosResponse:
     """Endpoint del historial de duelos, delegando la lógica al servicio."""
     return historial_service.obtener_historial_duelos(db, usuario_actual=usuario_actual)
+
+
+@historial_router.get(
+    "/torneos",
+    status_code=status.HTTP_200_OK,
+    summary="Consultar el historial de torneos",
+    description=(
+        "Devuelve los torneos en los que participó el usuario autenticado, del más reciente "
+        "al más antiguo, con su estado, la ronda alcanzada y si resultó campeón. Cada jugador "
+        "solo ve sus propias participaciones. "
+        "Requiere token JWT Bearer en el encabezado Authorization."
+    ),
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+        },
+    },
+)
+def consultar_historial_torneos(
+    usuario_actual: Annotated[Usuario, Depends(obtener_usuario_actual)],
+    db: Annotated[Session, Depends(obtener_db)],
+) -> HistorialTorneosResponse:
+    """Endpoint del historial de torneos, delegando la lógica al servicio."""
+    return historial_service.obtener_historial_torneos(db, usuario_actual=usuario_actual)

@@ -2,14 +2,18 @@
 
 from sqlalchemy.orm import Session
 
+from app.models.enumeraciones import EstadoTorneo
+from app.models.participante_torneo import ParticipanteTorneo
 from app.models.partida_duelo import PartidaDuelo
 from app.models.usuario import Usuario
-from app.repositories import duelo_repository, partida_repository
+from app.repositories import duelo_repository, partida_repository, torneo_repository
 from app.schemas.historial_schema import (
     HistorialDueloItem,
     HistorialDuelosResponse,
     HistorialPartidaIndividualItem,
     HistorialPartidasIndividualesResponse,
+    HistorialTorneoItem,
+    HistorialTorneosResponse,
     ResultadoDuelo,
 )
 
@@ -70,3 +74,63 @@ def obtener_historial_duelos(db: Session, usuario_actual: Usuario) -> HistorialD
     duelos = duelo_repository.listar_finalizados_por_jugador(db, jugador_id=usuario_actual.id)
     items = [_armar_item_duelo(duelo, usuario_actual.id) for duelo in duelos]
     return HistorialDuelosResponse(duelos=items, total=len(items))
+
+
+def _armar_item_torneo(
+    participacion: ParticipanteTorneo,
+    ronda_alcanzada: int | None,
+    es_campeon: bool,
+) -> HistorialTorneoItem:
+    """Convierte una participación en un item del historial de torneos."""
+    torneo = participacion.torneo
+    return HistorialTorneoItem(
+        torneo_id=torneo.id,
+        nombre=torneo.nombre,
+        estado=torneo.estado,
+        ronda_alcanzada=ronda_alcanzada,
+        es_campeon=es_campeon,
+        fecha_creacion=torneo.fecha_creacion,
+    )
+
+
+def obtener_historial_torneos(db: Session, usuario_actual: Usuario) -> HistorialTorneosResponse:
+    """Arma el historial de torneos del usuario con la ronda alcanzada en cada uno
+    (Tarea 4.1.5, RF-15 y RF-17).
+
+    La ronda alcanzada es la última ronda en la que el jugador tuvo un cruce. Es campeón
+    quien ganó el cruce de la última ronda de un torneo ya finalizado. Los datos se leen
+    con tres consultas en total, sin importar cuántos torneos haya jugado.
+    """
+    participaciones = torneo_repository.listar_participaciones_de_usuario(
+        db, usuario_id=usuario_actual.id
+    )
+    ids_participaciones = {participacion.id for participacion in participaciones}
+    cruces = torneo_repository.obtener_cruces_de_participantes(db, list(ids_participaciones))
+    ultima_ronda_por_torneo = torneo_repository.obtener_ultima_ronda_por_torneo(
+        db, [participacion.torneo_id for participacion in participaciones]
+    )
+
+    ronda_por_participacion: dict[int, int] = {}
+    finales_ganadas: set[int] = set()
+    for cruce in cruces:
+        for participacion_id in (cruce.jugador_a_id, cruce.jugador_b_id):
+            if participacion_id in ids_participaciones:
+                ronda_por_participacion[participacion_id] = max(
+                    ronda_por_participacion.get(participacion_id, 0), cruce.ronda
+                )
+        es_ultima_ronda = cruce.ronda == ultima_ronda_por_torneo.get(cruce.torneo_id)
+        if es_ultima_ronda and cruce.ganador_id in ids_participaciones:
+            finales_ganadas.add(cruce.ganador_id)
+
+    items = [
+        _armar_item_torneo(
+            participacion,
+            ronda_alcanzada=ronda_por_participacion.get(participacion.id),
+            es_campeon=(
+                participacion.torneo.estado == EstadoTorneo.FINALIZADO
+                and participacion.id in finales_ganadas
+            ),
+        )
+        for participacion in participaciones
+    ]
+    return HistorialTorneosResponse(torneos=items, total=len(items))
