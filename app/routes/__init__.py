@@ -10,6 +10,7 @@ from app.routes.autenticacion_router import autenticacion_router
 from app.routes.categoria_router import categoria_router
 from app.routes.duelo_router import duelo_router
 from app.routes.partida_router import partida_router
+from app.routes.ranking_router import ranking_router
 from app.routes.salud_router import salud_router
 from app.routes.torneo_router import torneo_router
 from app.routes.usuario_router import usuario_router
@@ -23,6 +24,7 @@ __all__ = [
     "categoria_router",
     "duelo_router",
     "partida_router",
+    "ranking_router",
     "salud_router",
     "torneo_router",
     "usuario_router",
