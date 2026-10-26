@@ -32,8 +32,10 @@ from app.schemas.torneo_schema import (
     TorneoListItemResponse,
     TorneoUnirseRequest,
 )
+from app.services import ranking_service
 from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.duelo_service import finalizar_duelo_si_corresponde
+from app.services.ranking_service import PUNTOS_CAMPEON_TORNEO
 from app.services.usuario_service import hashear_password
 
 MENSAJE_TORNEO_NO_DISPONIBLE = "El torneo no se encuentra disponible para unirse"
@@ -717,7 +719,9 @@ def _evaluar_avance_ronda(
     torneo.finalizar_torneo()
     campeon_participante = ganadores_ordenados[0]
     campeon_usuario = campeon_participante.usuario
-    campeon_usuario.sumar_puntaje(1500)
+    ranking_service.acumular_puntaje(
+        db, usuario_id=campeon_usuario.id, puntos=PUNTOS_CAMPEON_TORNEO
+    )
     db.commit()
     db.refresh(torneo)
     db.refresh(campeon_usuario)
@@ -739,6 +743,5 @@ def _evaluar_avance_ronda(
         nueva_ronda=None,
         torneo_finalizado=True,
         campeon=campeon_detalle,
-        puntos_otorgados_campeon=1500,
+        puntos_otorgados_campeon=PUNTOS_CAMPEON_TORNEO,
     )
-

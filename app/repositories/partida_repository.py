@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.models.enumeraciones import EstadoPartida, TipoPartida
 from app.models.partida import PartidaIndividual, PreguntaPartida
-from app.models.usuario import Usuario
+
 
 
 def crear_partida_individual(db: Session, jugador_id: int, categoria_id: int) -> PartidaIndividual:
@@ -71,15 +71,3 @@ def finalizar_partida_individual(
     db.commit()
     db.refresh(partida)
     return partida
-
-
-def sumar_puntaje_a_usuario(db: Session, usuario_id: int, puntos: int) -> Usuario | None:
-    """Suma puntos al puntaje_total acumulado del usuario."""
-    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
-    if usuario is None:
-        return None
-    usuario.puntaje_total = (usuario.puntaje_total or 0) + puntos
-    db.add(usuario)
-    db.commit()
-    db.refresh(usuario)
-    return usuario

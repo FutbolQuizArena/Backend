@@ -32,6 +32,25 @@ def actualizar(db: Session, usuario: Usuario) -> Usuario:
     db.refresh(usuario)
     return usuario
 
+def acumular_puntaje(db: Session, usuario_id: int, puntos: int) -> Usuario | None:
+    """Suma puntos al puntaje_total del usuario con un UPDATE atómico (Tarea 4.1.1).
+
+    El incremento lo calcula la base de datos (puntaje_total = puntaje_total + puntos),
+    así dos partidas que terminan al mismo tiempo no se pisan entre sí.
+    Devuelve el usuario actualizado, o None si el usuario no existe.
+    """
+    filas_actualizadas = (
+        db.query(Usuario)
+        .filter(Usuario.id == usuario_id)
+        .update(
+            {Usuario.puntaje_total: Usuario.puntaje_total + puntos},
+            synchronize_session=False,
+        )
+    )
+    db.commit()
+    if filas_actualizadas == 0:
+        return None
+    return obtener_por_id(db, id=usuario_id)
 
 def listar_usuarios_admin(
     db: Session,
