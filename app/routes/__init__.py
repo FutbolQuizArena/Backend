@@ -9,6 +9,7 @@ from app.routes.admin import (
 from app.routes.autenticacion_router import autenticacion_router
 from app.routes.categoria_router import categoria_router
 from app.routes.duelo_router import duelo_router
+from app.routes.historial_router import historial_router
 from app.routes.partida_router import partida_router
 from app.routes.ranking_router import ranking_router
 from app.routes.salud_router import salud_router
@@ -23,6 +24,7 @@ __all__ = [
     "autenticacion_router",
     "categoria_router",
     "duelo_router",
+    "historial_router",
     "partida_router",
     "ranking_router",
     "salud_router",

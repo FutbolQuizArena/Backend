@@ -2,11 +2,10 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.enumeraciones import EstadoPartida, TipoPartida
 from app.models.partida import PartidaIndividual, PreguntaPartida
-
 
 
 def crear_partida_individual(db: Session, jugador_id: int, categoria_id: int) -> PartidaIndividual:
@@ -71,3 +70,21 @@ def finalizar_partida_individual(
     db.commit()
     db.refresh(partida)
     return partida
+
+
+def listar_individuales_finalizadas_por_jugador(
+    db: Session, jugador_id: int
+) -> list[PartidaIndividual]:
+    """Devuelve las partidas individuales finalizadas de un jugador, de la más reciente a la
+    más antigua (Tarea 4.1.3). Las partidas en curso no forman parte del historial.
+    """
+    return (
+        db.query(PartidaIndividual)
+        .options(joinedload(PartidaIndividual.categoria))
+        .filter(
+            PartidaIndividual.jugador_id == jugador_id,
+            PartidaIndividual.estado == EstadoPartida.FINALIZADA,
+        )
+        .order_by(PartidaIndividual.fecha_fin.desc(), PartidaIndividual.id.desc())
+        .all()
+    )
