@@ -20,6 +20,7 @@ from app.repositories import (
     partida_repository,
     pregunta_repository,
 )
+from app.services import ranking_service
 from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.puntaje_service import calcular_puntaje
 
@@ -243,17 +244,16 @@ def finalizar_duelo_si_corresponde(db: Session, duelo_id: int) -> PartidaDuelo:
     duelo.puntaje_jugador2 = sum(p.puntaje_obtenido for p in preguntas_jugador2)
     duelo.determinar_ganador()
     duelo.estado = EstadoPartida.FINALIZADA
+    duelo.fecha_fin = datetime.now(timezone.utc)
 
     db.add(duelo)
     db.commit()
     db.refresh(duelo)
 
-    partida_repository.sumar_puntaje_a_usuario(
-        db=db, usuario_id=duelo.jugador1_id, puntos=duelo.puntaje_jugador1
-    )
+    ranking_service.acumular_puntaje(db, usuario_id=duelo.jugador1_id, puntos=duelo.puntaje_jugador1)
     if duelo.jugador2_id is not None:
-        partida_repository.sumar_puntaje_a_usuario(
-            db=db, usuario_id=duelo.jugador2_id, puntos=duelo.puntaje_jugador2
+        ranking_service.acumular_puntaje(
+            db, usuario_id=duelo.jugador2_id, puntos=duelo.puntaje_jugador2
         )
 
     return duelo

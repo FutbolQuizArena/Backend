@@ -1,6 +1,7 @@
 """Funciones de acceso a datos para PartidaDuelo (Tarea 2.1.8)."""
 
-from sqlalchemy.orm import Session
+from sqlalchemy import func, or_
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.enumeraciones import EstadoPartida, ModalidadDuelo, TipoPartida
 from app.models.partida_duelo import PartidaDuelo
@@ -54,4 +55,33 @@ def buscar_duelo_pendiente_de_rival(db: Session, jugador_id: int) -> PartidaDuel
         .order_by(PartidaDuelo.fecha_inicio.asc())
         .with_for_update()
         .first()
+    )
+
+
+def listar_finalizados_por_jugador(db: Session, jugador_id: int) -> list[PartidaDuelo]:
+    """Devuelve los duelos jugados y finalizados de un jugador, del más reciente al más antiguo
+    (Tarea 4.1.4).
+
+    Solo cuenta un duelo que se llegó a disputar: uno local, o uno online con rival. Los duelos
+    online que se cerraron sin que nadie se uniera no forman parte del historial. Si un duelo
+    no guardó fecha_fin, se ordena por su fecha_inicio.
+    """
+    fecha_de_cierre = func.coalesce(PartidaDuelo.fecha_fin, PartidaDuelo.fecha_inicio)
+    return (
+        db.query(PartidaDuelo)
+        .options(
+            joinedload(PartidaDuelo.categoria),
+            joinedload(PartidaDuelo.jugador1),
+            joinedload(PartidaDuelo.jugador2),
+        )
+        .filter(
+            PartidaDuelo.estado == EstadoPartida.FINALIZADA,
+            or_(PartidaDuelo.jugador1_id == jugador_id, PartidaDuelo.jugador2_id == jugador_id),
+            or_(
+                PartidaDuelo.modalidad == ModalidadDuelo.LOCAL.value,
+                PartidaDuelo.jugador2_id.is_not(None),
+            ),
+        )
+        .order_by(fecha_de_cierre.desc(), PartidaDuelo.id.desc())
+        .all()
     )

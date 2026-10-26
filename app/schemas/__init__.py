@@ -1,6 +1,16 @@
 """Esquemas Pydantic de la aplicación."""
 
 from app.schemas.comun_schema import MensajeResponse, SemillaResumenResponse
+from app.schemas.historial_schema import (
+    HistorialDueloItem,
+    HistorialDuelosResponse,
+    HistorialPartidaIndividualItem,
+    HistorialPartidasIndividualesResponse,
+    HistorialTorneoItem,
+    HistorialTorneosResponse,
+    ResultadoDuelo,
+)
+from app.schemas.ranking_schema import JugadorRankingResponse, RankingResponse
 from app.schemas.torneo_schema import (
     CruceIniciarDueloResponse,
     CruceResolucionResponse,
@@ -27,8 +37,17 @@ __all__ = [
     "CruceResolverRequest",
     "CruceResponse",
     "FiltroTorneoEnum",
+    "HistorialDueloItem",
+    "HistorialDuelosResponse",
+    "HistorialPartidaIndividualItem",
+    "HistorialPartidasIndividualesResponse",
+    "HistorialTorneoItem",
+    "HistorialTorneosResponse",
+    "JugadorRankingResponse",
     "MensajeResponse",
     "ParticipanteTorneoResponse",
+    "RankingResponse",
+    "ResultadoDuelo",
     "SemillaResumenResponse",
     "TorneoBase",
     "TorneoCreadoResponse",

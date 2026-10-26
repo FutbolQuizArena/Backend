@@ -11,6 +11,7 @@ from app.models.partida import PartidaIndividual
 from app.models.usuario import Usuario
 from app.repositories import categoria_repository, partida_repository, pregunta_repository
 from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
+from app.services import ranking_service
 from app.services.puntaje_service import calcular_puntaje
 from sqlalchemy.orm import Session
 
@@ -100,7 +101,5 @@ def finalizar_partida_individual(
     partida = partida_repository.finalizar_partida_individual(
         db=db, partida=partida, puntaje_final=puntaje_total
     )
-    partida_repository.sumar_puntaje_a_usuario(
-        db=db, usuario_id=usuario_actual.id, puntos=puntaje_total
-    )
+    ranking_service.acumular_puntaje(db, usuario_id=usuario_actual.id, puntos=puntaje_total)
     return partida
