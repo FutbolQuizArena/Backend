@@ -244,6 +244,7 @@ def finalizar_duelo_si_corresponde(db: Session, duelo_id: int) -> PartidaDuelo:
     duelo.puntaje_jugador2 = sum(p.puntaje_obtenido for p in preguntas_jugador2)
     duelo.determinar_ganador()
     duelo.estado = EstadoPartida.FINALIZADA
+    duelo.fecha_fin = datetime.now(timezone.utc)
 
     db.add(duelo)
     db.commit()

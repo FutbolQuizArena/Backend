@@ -8,7 +8,10 @@ from sqlalchemy.orm import Session
 from app.core.base_datos import obtener_db
 from app.core.seguridad import obtener_usuario_actual
 from app.models.usuario import Usuario
-from app.schemas.historial_schema import HistorialPartidasIndividualesResponse
+from app.schemas.historial_schema import (
+    HistorialDuelosResponse,
+    HistorialPartidasIndividualesResponse,
+)
 from app.services import historial_service
 
 historial_router = APIRouter(prefix="/api/historial", tags=["Historial"])
@@ -38,3 +41,27 @@ def consultar_historial_partidas_individuales(
     return historial_service.obtener_historial_partidas_individuales(
         db, usuario_actual=usuario_actual
     )
+
+
+@historial_router.get(
+    "/duelos",
+    status_code=status.HTTP_200_OK,
+    summary="Consultar el historial de duelos",
+    description=(
+        "Devuelve los duelos finalizados del usuario autenticado (online y locales), del más "
+        "reciente al más antiguo, con el rival, los puntajes de ambos y el resultado visto "
+        "desde su lado (VICTORIA, DERROTA o EMPATE). Cada jugador solo ve sus propios duelos. "
+        "Requiere token JWT Bearer en el encabezado Authorization."
+    ),
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Token inválido, expirado o ausente.",
+        },
+    },
+)
+def consultar_historial_duelos(
+    usuario_actual: Annotated[Usuario, Depends(obtener_usuario_actual)],
+    db: Annotated[Session, Depends(obtener_db)],
+) -> HistorialDuelosResponse:
+    """Endpoint del historial de duelos, delegando la lógica al servicio."""
+    return historial_service.obtener_historial_duelos(db, usuario_actual=usuario_actual)
