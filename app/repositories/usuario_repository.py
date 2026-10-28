@@ -33,7 +33,7 @@ def actualizar(db: Session, usuario: Usuario) -> Usuario:
     return usuario
 
 
-def acumular_puntaje(db: Session, usuario_id: int, puntos: int) -> Usuario | None:
+def acumular_puntaje(db: Session, usuario_id: int, puntos: int, confirmar: bool = True) -> Usuario | None:
     """Suma puntos al puntaje_total del usuario con un UPDATE atómico (Tarea 4.1.1).
 
     El incremento lo calcula la base de datos (puntaje_total = puntaje_total + puntos),
@@ -48,7 +48,10 @@ def acumular_puntaje(db: Session, usuario_id: int, puntos: int) -> Usuario | Non
             synchronize_session=False,
         )
     )
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     if filas_actualizadas == 0:
         return None
     return obtener_por_id(db, id=usuario_id)

@@ -6,6 +6,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from app.models.enumeraciones import EstadoCruce, EstadoTorneo
+from app.schemas.duelo_schema import DueloJuegoResponse
 
 DESCRIPCION_IDENTIFICADOR_TORNEO = "Identificador único del torneo"
 DESCRIPCION_ESTADO_TORNEO = "Estado actual del torneo"
@@ -114,6 +115,7 @@ class CruceResponse(BaseModel):
     id: int = Field(..., description="Identificador único del cruce")
     torneo_id: int = Field(default=0, description=DESCRIPCION_REFERENCIA_TORNEO)
     ronda: int = Field(..., description="Número de ronda eliminatoria")
+    duelo_id: int | None = None
     jugador_a_id: int | None = Field(default=None, description="Identificador del participante jugador A")
     jugador_b_id: int | None = Field(default=None, description="Identificador del participante jugador B")
     ganador_id: int | None = Field(default=None, description="Identificador del participante ganador")
@@ -194,25 +196,15 @@ class CruceIniciarDueloResponse(BaseModel):
     torneo_id: int = Field(..., description=DESCRIPCION_REFERENCIA_TORNEO)
     ronda: int = Field(..., description="Ronda eliminatoria del cruce")
     mensaje: str = Field(..., description="Mensaje explicativo del estado del duelo")
+    duelo: DueloJuegoResponse
 
 
 class CruceResolverRequest(BaseModel):
     """Esquema de solicitud para resolver un cruce eliminatorio (Tarea 3.2.2)."""
 
-    duelo_id: int | None = Field(
-        default=None,
-        description="ID del duelo finalizado para determinar automáticamente el ganador",
-    )
-    ganador_participante_id: int | None = Field(
-        default=None,
-        description="ID explícito del participante ganador (útil para tests o resolución directa)",
-    )
+    model_config = ConfigDict(extra="forbid")
 
-    @model_validator(mode="after")
-    def validar_criterio_resolucion(self) -> "CruceResolverRequest":
-        if self.duelo_id is None and self.ganador_participante_id is None:
-            raise ValueError("Se debe proporcionar al menos 'duelo_id' o 'ganador_participante_id'")
-        return self
+    duelo_id: int = Field(..., gt=0, description="ID del duelo asignado al cruce; el servidor calcula el ganador")
 
 
 class CruceResolucionResponse(BaseModel):

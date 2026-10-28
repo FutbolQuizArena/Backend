@@ -7,7 +7,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.models.categoria import Categoria
-from app.models.enumeraciones import EstadoCategoria
+from app.models.enumeraciones import EstadoCategoria, EstadoPregunta
 from app.models.pregunta import Pregunta
 
 
@@ -54,6 +54,17 @@ def obtener_categoria_aleatoria(db: Session) -> Categoria | None:
     if not categorias:
         return None
     return secrets.choice(categorias)
+
+
+def obtener_categoria_jugable(db: Session, cantidad: int) -> Categoria | None:
+    """Elige solo categorías activas con suficientes preguntas activas sin eliminar."""
+    categorias = (
+        db.query(Categoria).join(Pregunta, Pregunta.categoria_id == Categoria.id)
+        .filter(Categoria.estado == EstadoCategoria.ACTIVA,
+                Pregunta.estado == EstadoPregunta.ACTIVA, Pregunta.eliminada_en.is_(None))
+        .group_by(Categoria.id).having(func.count(Pregunta.id) >= cantidad).all()
+    )
+    return secrets.choice(categorias) if categorias else None
 
 
 def crear_categoria(

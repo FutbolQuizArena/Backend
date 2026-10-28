@@ -1,5 +1,6 @@
 # Entregables y documentación no versionable
 documentacion del proyecto (entregables)/
+/docs/
 
 # Entorno virtual de Python
 .venv/
