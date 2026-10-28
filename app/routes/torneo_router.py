@@ -349,7 +349,9 @@ def salir_de_torneo(
     description=(
         "Crea o recupera la PartidaDuelo online entre los dos participantes del cruce eliminatorio, "
         "asignando la categoría y las 10 preguntas compartidas para ambos. "
-        "Solo los participantes que integran el cruce pueden iniciar o acceder al duelo."
+        "Solo los participantes que integran el cruce pueden iniciar o acceder al duelo. "
+        "Devuelve también duelo con las preguntas propias y esta_respondida para retomar la partida. "
+        "Los reintentos recuperan siempre el mismo duelo, incluso después de finalizar."
     ),
     responses={
         status.HTTP_200_OK: {
@@ -390,8 +392,9 @@ def iniciar_duelo_cruce(
     status_code=status.HTTP_200_OK,
     summary="Resolver cruce eliminatorio y avanzar ronda",
     description=(
-        "Determina el participante ganador del cruce a partir de un duelo disputado (duelo_id) "
-        "o especificando directamente el ID del participante ganador (ganador_participante_id). "
+        "Determina el participante ganador exclusivamente a partir del duelo asignado al cruce (duelo_id). "
+        "No acepta ganadores enviados por el cliente. La última respuesta del duelo ya resuelve "
+        "automáticamente el cruce; este endpoint permite reintentar sin duplicar rondas ni premios. "
         "Evalúa si la ronda actual concluyó: si aún hay cruces pendientes espera; si todos finalizaron, "
         "genera automáticamente la siguiente ronda o consagra y premia al campeón si era la Final."
     ),

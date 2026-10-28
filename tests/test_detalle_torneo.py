@@ -32,12 +32,12 @@ def test_detalle_cuadro_con_ganador_y_datos_incompletos(monkeypatch: pytest.Monk
     relacion_b = None if origen == "sin_relacion" else jugador_b
     cruces = [
         SimpleNamespace(
-            id=30, torneo_id=1, ronda=1, jugador_a_id=10, jugador_b_id=20,
+                id=30, torneo_id=1, ronda=1, duelo_id=None, jugador_a_id=10, jugador_b_id=20,
             ganador_id=10, estado=EstadoCruce.JUGADO,
             jugador_a=relacion_a, jugador_b=relacion_b, ganador=relacion_a,
         ),
         SimpleNamespace(
-            id=40, torneo_id=1, ronda=2, jugador_a_id=10, jugador_b_id=20,
+                id=40, torneo_id=1, ronda=2, duelo_id=None, jugador_a_id=10, jugador_b_id=20,
             ganador_id=None, estado=EstadoCruce.PENDIENTE,
             jugador_a=relacion_a, jugador_b=relacion_b, ganador=None,
         ),

@@ -19,7 +19,6 @@ def test_migracion_revocaciones_upgrade_y_downgrade() -> None:
     config = Config(str(raiz / "alembic.ini"))
     config.set_main_option("script_location", str(raiz / "alembic"))
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_heads() == ["e11aa3222dc9"]
     revision = scripts.get_revision("e11aa3222dc9")
     assert revision.down_revision == "d8f92144b20a"
     migracion = run_path(revision.path)

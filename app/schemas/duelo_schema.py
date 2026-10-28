@@ -63,6 +63,7 @@ class DueloJuegoResponse(BaseModel):
                     opcion_b=pregunta_partida.pregunta.opcion_b,
                     opcion_c=pregunta_partida.pregunta.opcion_c,
                     opcion_d=pregunta_partida.pregunta.opcion_d,
+                    esta_respondida=pregunta_partida.esta_respondida,
                 )
             )
         if hasattr(duelo, "categoria_nombre"):

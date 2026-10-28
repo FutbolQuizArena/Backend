@@ -150,8 +150,12 @@ Normaliza el código a mayúsculas, valida la contraseña si el torneo es privad
 El cuadro organiza los cruces por rondas sucesivas (**Octavos de final, Cuartos de final, Semifinal y Final**). Cada cruce informa su identificador, ronda, jugador A, jugador B, estado (`PENDIENTE` o `JUGADO`) y el ganador asignado.
 
 El motor de avance de llaves provee:
-- `POST /api/torneos/cruces/{id}/iniciar-duelo`: vincula el cruce del torneo con una partida de duelo real entre los dos competidores emparejados.
-- `POST /api/torneos/cruces/{id}/resolver`: recibe el ganador del cruce, lo clasifica automáticamente al cruce correspondiente de la ronda siguiente y, si se resolvió el cruce final, consagra al campeón y finaliza el torneo pasando su estado a `FINALIZADO`.
+
+- `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/iniciar-duelo`: crea o recupera el único duelo del cruce. Devuelve `duelo_id` y `duelo` con las 10 preguntas del jugador autenticado y su indicador `esta_respondida`.
+- La última respuesta a `POST /api/duelos/preguntas/{pregunta_partida_id}/respuesta` finaliza automáticamente el duelo y el cruce. Cuando todos los cruces de la ronda terminaron, genera la siguiente ronda o consagra al campeón y suma el premio de 1.500 puntos, además de los puntos del duelo.
+- `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/resolver`, con `{ "duelo_id": 123 }`, permite recuperar o reintentar la resolución. Nunca acepta un ganador elegido por el cliente. Los reintentos no duplican rondas ni puntos.
+
+Antes de usar esta versión en una base existente, ejecutar `python -m alembic upgrade head` para agregar la asociación persistente `cruces_torneo.duelo_id`. Las escrituras se serializan por torneo con bloqueos de fila en PostgreSQL y se confirman completas o se revierten ante fallos. Ver [contrato y flujo de integración del frontend](docs/torneos.md).
 
 ## Sesión JWT y seguridad — actividad 1.2.5
 
