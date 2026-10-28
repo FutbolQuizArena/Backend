@@ -168,8 +168,16 @@ El controlador `app/routes/autenticacion_router.py` gestiona el acceso bajo el p
 
 - `POST /api/auth/registro`: recibe `{ nombre, email, password }`. Valida nombre no vacío, formato de correo válido y contraseña de longitud mínima. Hashea la clave con algoritmos de derivación de claves seguros y verifica la unicidad del email; ante correos ya existentes responde con `409 Conflict` y código `EMAIL_YA_REGISTRADO`. Asigna por defecto el rol `JUGADOR` y devuelve `201 Created` con el perfil del usuario creado (omitiendo hashes y contraseñas).
 - `POST /api/auth/login`: recibe `{ email, password }`. Valida las credenciales contra la base de datos; si el correo no existe o la contraseña no coincide, responde con `401 Unauthorized` y código `CREDENCIALES_INVALIDAS`. Si la cuenta fue suspendida, responde con `CUENTA_DESHABILITADA`. Al autenticar exitosamente, retorna `{ access_token, token_type: "bearer" }`.
-- `POST /api/auth/logout`: endpoint autenticado para registrar el cierre formal de sesión en el backend.
+- `POST /api/auth/logout`: revoca el token Bearer de la petición en la base de datos. Las peticiones posteriores con ese token reciben `401 TOKEN_INVALIDO` en todas las rutas protegidas. Las otras sesiones del usuario siguen activas; cada login emite un JWT distinto (`jti`). El frontend debe llamar al endpoint antes de descartar el token y confirmar el cierre cuando recibe HTTP 200.
 - Todas las respuestas de error en la API respetan el formato estándar `{ code, message, detail }`, facilitando su consumo y presentación directa en el frontend.
+
+### Migración para la revocación de tokens
+
+El código y la migración `e11aa3222dc9` deben desplegarse juntos. Con la configuración de la base correspondiente, ejecutar `python -m alembic upgrade head` antes de iniciar esta versión. La migración parte de `d8f92144b20a` y crea `tokens_revocados`. No aplicar esta migración sobre la base del despliegue mientras el código remoto aún no la incluya.
+
+Se guarda una huella SHA-256 de la firma decodificada y el vencimiento, nunca el JWT completo. Esto también permite revocar tokens anteriores sin `jti` y evita evadir la revocación cambiando el padding Base64 de la firma. Cada petición protegida consulta la base: las revocaciones sobreviven a reinicios y se comparten entre instancias. Los registros vencidos se eliminan al procesar posteriores cierres de sesión. No se aceptan tokens sin vencimiento.
+
+Para volver a la versión anterior, ejecutar `python -m alembic downgrade d8f92144b20a` desde una copia que incluya la migración, antes de desplegar el código anterior. El downgrade elimina la tabla y sus revocaciones, por lo que los tokens revocados que todavía no expiraron vuelven a ser utilizables por esa versión.
 
 ## Estructura y diseño
 

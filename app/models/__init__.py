@@ -15,6 +15,7 @@ from app.models.partida import Partida, PartidaIndividual, PreguntaPartida
 from app.models.partida_duelo import PartidaDuelo
 from app.models.pregunta import Pregunta
 from app.models.torneo import Torneo
+from app.models.token_revocado import TokenRevocado
 from app.models.usuario import Usuario
 
 __all__ = [
@@ -33,5 +34,6 @@ __all__ = [
     "RolUsuario",
     "TipoPartida",
     "Torneo",
+    "TokenRevocado",
     "Usuario",
 ]

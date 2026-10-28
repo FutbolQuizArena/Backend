@@ -24,7 +24,7 @@ def obtener_usuario_actual(
 
     Flujo:
       1. Valida y decodifica el token mediante autenticacion_service.decodificar_token_jwt.
-      2. Si el token es inválido o expiró, lanza TokenInvalidoError (HTTP 401).
+      2. Si el token es inválido, expiró o fue revocado, lanza TokenInvalidoError (HTTP 401).
       3. Obtiene el usuario de la base de datos a partir del id extraído del payload.
       4. Si el usuario no existe o se encuentra deshabilitado (esta_habilitado=False),
          lanza TokenInvalidoError (HTTP 401) sin revelar detalles.
@@ -37,6 +37,8 @@ def obtener_usuario_actual(
         payload: Dict[str, Any] = autenticacion_service.decodificar_token_jwt(token)
     except Exception:
         raise TokenInvalidoError()
+
+    autenticacion_service.validar_token_no_revocado(db, token)
 
     id_usuario = payload.get("id") or payload.get("sub")
     if id_usuario is None:

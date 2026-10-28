@@ -1,5 +1,9 @@
 # Changelog
 
+## 27/10/2026 Revocación de tokens al cerrar sesión
+
+- **Revocación JWT:** Se invalidan los tokens al cerrar sesión y se rechaza su reutilización con HTTP 401, conservando las demás sesiones. Se agregaron persistencia en base de datos, identificadores únicos por token y la migración Alembic e11aa3222dc9. Se actualizó la documentación y se incorporaron pruebas de seguridad, persistencia y migración; suite completa: **353 pruebas aprobadas**.
+
 ## 23/10/2026 Arreglo de issues Sonar
 
 - **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.sample()` por `random.SystemRandom().sample()` en `obtener_preguntas_aleatorias_sin_repeticion()` de `app/repositories/pregunta_repository.py`, conservando la selección sin repeticiones de preguntas activas y no eliminadas y el rechazo cuando no hay suficientes preguntas.

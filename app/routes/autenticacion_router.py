@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.base_datos import obtener_db
-from app.core.seguridad import obtener_usuario_actual
+from app.core.seguridad import obtener_usuario_actual, oauth2_scheme
 from app.models.usuario import Usuario
 from app.schemas.autenticacion_schema import LoginRequest, TokenResponse
 from app.schemas.comun_schema import MensajeResponse
@@ -123,10 +123,9 @@ def login(
     status_code=status.HTTP_200_OK,
     summary="Cerrar sesión",
     description=(
-        "Cierra la sesión del usuario autenticado. En una arquitectura JWT stateless, "
-        "la invalidación efectiva del token es responsabilidad del cliente (descartando "
-        "el JWT almacenado). Este endpoint valida que exista una sesión activa válida "
-        "antes de confirmar el cierre de sesión."
+        "Revoca el token de la sesión actual en la base de datos. Después del cierre, "
+        "ese token recibe HTTP 401 en cualquier ruta protegida, aunque no haya expirado. "
+        "Las demás sesiones del usuario siguen activas. El cliente debe descartar su copia."
     ),
     responses={
         status.HTTP_200_OK: {
@@ -149,7 +148,10 @@ def login(
 )
 def cerrar_sesion(
     usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(obtener_db),
 ) -> MensajeResponse:
     """Endpoint para cerrar la sesión del usuario autenticado."""
+    autenticacion_service.revocar_token(db, token)
     return MensajeResponse(mensaje="Sesión cerrada exitosamente")
 
