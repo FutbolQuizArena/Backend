@@ -1,5 +1,11 @@
 # Changelog
 
+## 28/10/2026 Torneos jugables mediante duelos reales
+
+- La API dejó de aceptar `ganador_participante_id`: el ganador se calcula a partir del duelo asignado. La última respuesta avanza el cuadro automáticamente hasta consagrar y premiar al campeón, según RF-09 y RF-11.
+- Ingresos, salidas, creación de duelos, respuestas y resoluciones usan transacciones y bloqueos de fila para conservar cupos y evitar duplicaciones ante solicitudes simultáneas o repetidas.
+- El inicio de cruce entrega las preguntas del jugador con `esta_respondida` para poder retomar. Se admiten respuestas nulas cuando vence el tiempo. El desempate por tiempo queda reflejado en el resultado del duelo de torneo.
+- Se seleccionan categorías activas con al menos 10 preguntas activas no eliminadas.
 ## 27/10/2026 Revocación de tokens al cerrar sesión
 
 - **Revocación JWT:** Se invalidan los tokens al cerrar sesión y se rechaza su reutilización con HTTP 401, conservando las demás sesiones. Se agregaron persistencia en base de datos, identificadores únicos por token y la migración Alembic e11aa3222dc9. Se actualizó la documentación y se incorporaron pruebas de seguridad, persistencia y migración; suite completa: **353 pruebas aprobadas**.

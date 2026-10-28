@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PreguntaJuegoResponse(BaseModel):
@@ -17,6 +17,7 @@ class PreguntaJuegoResponse(BaseModel):
     opcion_b: str
     opcion_c: str
     opcion_d: str
+    esta_respondida: bool = False
 
 
 class PartidaIndividualResponse(BaseModel):
@@ -63,8 +64,8 @@ class PartidaIndividualResponse(BaseModel):
 class RespuestaPartidaRequest(BaseModel):
     """Datos enviados por el jugador al responder una pregunta."""
 
-    opcion_seleccionada: str
-    tiempo_respuesta_segundos: int
+    opcion_seleccionada: str | None = None
+    tiempo_respuesta_segundos: int = Field(..., ge=0)
 
 
 class RespuestaPartidaResponse(BaseModel):

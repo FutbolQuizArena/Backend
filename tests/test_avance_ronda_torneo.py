@@ -30,100 +30,32 @@ from app.schemas.usuario_schema import UsuarioCreate
 from app.services import autenticacion_service, duelo_service, torneo_service, usuario_service
 
 
-@pytest.fixture
-def contexto_resolucion_duelo(monkeypatch: pytest.MonkeyPatch):
-    """Aísla la resolución de un cruce sin completar aún la ronda."""
-    usuario_a = Usuario(id=1, nombre="Jugador A")
-    usuario_b = Usuario(id=2, nombre="Jugador B")
-    participante_a = ParticipanteTorneo(id=11, usuario_id=1, usuario=usuario_a)
-    participante_b = ParticipanteTorneo(id=22, usuario_id=2, usuario=usuario_b)
-    torneo = Torneo(id=1, creador_id=1, estado=EstadoTorneo.EN_CURSO)
-    cruce = Cruce(
-        id=10, torneo_id=1, ronda=1, estado=EstadoCruce.PENDIENTE,
-        jugador_a_id=11, jugador_b_id=22, jugador_a=participante_a, jugador_b=participante_b,
-    )
-    repositorio = torneo_service.torneo_repository
-    monkeypatch.setattr(repositorio, "obtener_por_id", lambda *args, **kwargs: torneo)
-    monkeypatch.setattr(repositorio, "obtener_cruce_por_id", lambda *args, **kwargs: cruce)
-    monkeypatch.setattr(repositorio, "actualizar_cruce", lambda *args, **kwargs: cruce)
-    monkeypatch.setattr(repositorio, "obtener_cruces_por_ronda", lambda *args, **kwargs: [
-        cruce, SimpleNamespace(estado=EstadoCruce.PENDIENTE),
-    ])
-    return cruce, usuario_a
-
-
 @pytest.mark.parametrize("numero_ganador,tiempo_1,tiempo_2,invertidos,ganador_id", [
-    (1, 20, 5, False, 11), (2, 5, 20, False, 22),
-    (0, 5, 10, False, 11), (0, 10, 5, False, 22),
-    (0, 5, 5, False, 11), (0, None, 0, False, 11),
-    (1, 10, 5, True, 22),
+    (1, 20, 5, False, 1), (2, 5, 20, False, 2),
+    (None, 5, 10, False, 1), (None, 10, 5, False, 2),
+    (None, 5, 5, False, 1), (None, None, 0, False, 1),
+    (1, 10, 5, True, 2),
 ])
-def test_resolver_duelo_ganador_y_desempates(
-    monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo,
-    numero_ganador, tiempo_1, tiempo_2, invertidos, ganador_id,
-) -> None:
-    """Conserva ganador declarado, desempates, orden invertido y prioridad del duelo."""
-    cruce, usuario = contexto_resolucion_duelo
+def test_ganador_duelo_y_desempates(numero_ganador, tiempo_1, tiempo_2, invertidos, ganador_id):
     tiempos = {1: tiempo_1, 2: tiempo_2}
     duelo = SimpleNamespace(
-        id=50, jugador1_id=2 if invertidos else 1, jugador2_id=1 if invertidos else 2,
-        estado=EstadoPartida.FINALIZADA, numero_ganador=numero_ganador,
-        preguntas_de_jugador=lambda numero: [SimpleNamespace(tiempo_respuesta_segundos=tiempos[numero])],
+        jugador1_id=2 if invertidos else 1, jugador2_id=1 if invertidos else 2,
+        numero_ganador=numero_ganador,
+        preguntas_de_jugador=lambda n: [SimpleNamespace(tiempo_respuesta_segundos=tiempos[n])],
     )
-    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: duelo)
-    respuesta = torneo_service.resolver_cruce(
-        None, 1, cruce.id, usuario,
-        CruceResolverRequest(duelo_id=50, ganador_participante_id=999),
-    )
-    assert respuesta.ganador_id == ganador_id
-    assert cruce.ganador_id == ganador_id
-    assert cruce.estado == EstadoCruce.JUGADO
-    assert respuesta.ronda_completada is False
-    assert respuesta.puntos_otorgados_campeon == 0
+    assert torneo_service._obtener_usuario_ganador_duelo(duelo) == ganador_id
 
 
-def test_resolver_duelo_finaliza_automaticamente(monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo) -> None:
-    """Conserva el intento de finalizar el duelo antes de resolver el cruce."""
-    cruce, usuario = contexto_resolucion_duelo
-    duelo = SimpleNamespace(
-        id=50, jugador1_id=1, jugador2_id=2, estado=EstadoPartida.EN_CURSO, numero_ganador=2,
-    )
-    llamadas = []
-
-    def finalizar(db, duelo_id):
-        llamadas.append(duelo_id)
-        duelo.estado = EstadoPartida.FINALIZADA
-        return duelo
-
-    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: duelo)
-    monkeypatch.setattr(torneo_service, "finalizar_duelo_si_corresponde", finalizar)
-    respuesta = torneo_service.resolver_cruce(None, 1, cruce.id, usuario, CruceResolverRequest(duelo_id=50))
-    assert llamadas == [50]
-    assert respuesta.ganador_id == cruce.jugador_b_id
-
-
-@pytest.mark.parametrize("caso,codigo,mensaje", [
-    ("inexistente", 404, "No se encontró ningún duelo"),
-    ("otros_jugadores", 400, "no corresponde a los participantes"),
-    ("sin_finalizar", 400, "aún no ha finalizado"),
-])
-def test_resolver_duelo_invalido_no_modifica_cruce(
-    monkeypatch: pytest.MonkeyPatch, contexto_resolucion_duelo, caso, codigo, mensaje,
-) -> None:
-    """Rechaza duelos inválidos conservando el estado pendiente del cruce."""
-    cruce, usuario = contexto_resolucion_duelo
-    duelo = SimpleNamespace(
-        id=50, jugador1_id=1, jugador2_id=99 if caso == "otros_jugadores" else 2,
-        estado=EstadoPartida.EN_CURSO,
-    )
-    monkeypatch.setattr(duelo_repository, "obtener_duelo_por_id", lambda *args: None if caso == "inexistente" else duelo)
-    monkeypatch.setattr(torneo_service, "finalizar_duelo_si_corresponde", lambda *args: duelo)
-    datos = CruceResolverRequest(duelo_id=50)
-    with pytest.raises(TorneoNoDisponibleError, match=mensaje) as error:
-        torneo_service.resolver_cruce(None, 1, cruce.id, usuario, datos)
-    assert error.value.codigo_estado == codigo
-    assert cruce.estado == EstadoCruce.PENDIENTE
-    assert cruce.ganador_id is None
+def preparar_duelo_ganado(db, torneo, cruce, ganador_id):
+    """Carga respuestas de un duelo real; nunca envía un ganador al endpoint."""
+    respuesta = torneo_service.iniciar_duelo_cruce(db, torneo.id, cruce.id, cruce.jugador_a.usuario)
+    duelo = duelo_repository.obtener_duelo_por_id(db, respuesta.duelo_id)
+    ganador_numero = 1 if ganador_id == cruce.jugador_a_id else 2
+    for pregunta in duelo.preguntas:
+        acierto = pregunta.numero_jugador == ganador_numero
+        pregunta.registrar_respuesta("A" if acierto else "B", 5, acierto, 100 if acierto else 0)
+    db.flush()
+    return CruceResolverRequest(duelo_id=duelo.id)
 
 
 # ==============================================================================
@@ -298,6 +230,7 @@ def test_modelo_torneo_finalizar_torneo() -> None:
 def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
     sesion_db: Session,
     usuario_creador: Usuario,
+    categoria_con_preguntas: Categoria,
 ) -> None:
     """Flujo end-to-end de un torneo de 4 jugadores:
 
@@ -333,7 +266,7 @@ def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
         torneo_id=torneo.id,
         cruce_id=cruce_semis_1.id,
         usuario_actual=usuario_creador,
-        datos=CruceResolverRequest(ganador_participante_id=cruce_semis_1.jugador_a_id),
+        datos=preparar_duelo_ganado(sesion_db, torneo, cruce_semis_1, cruce_semis_1.jugador_a_id),
     )
     assert res_1.ronda_completada is False
     assert res_1.siguiente_ronda_generada is False
@@ -348,7 +281,7 @@ def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
         torneo_id=torneo.id,
         cruce_id=cruce_semis_2.id,
         usuario_actual=usuario_creador,
-        datos=CruceResolverRequest(ganador_participante_id=cruce_semis_2.jugador_b_id),
+        datos=preparar_duelo_ganado(sesion_db, torneo, cruce_semis_2, cruce_semis_2.jugador_b_id),
     )
     assert res_2.ronda_completada is True
     assert res_2.siguiente_ronda_generada is True
@@ -374,7 +307,7 @@ def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
         torneo_id=torneo.id,
         cruce_id=cruce_final.id,
         usuario_actual=usuario_creador,
-        datos=CruceResolverRequest(ganador_participante_id=cruce_final.jugador_a_id),
+        datos=preparar_duelo_ganado(sesion_db, torneo, cruce_final, cruce_final.jugador_a_id),
     )
 
     assert res_final.ronda_completada is True
@@ -390,7 +323,7 @@ def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
 
     # El usuario campeón sumó exactamente 1500 puntos
     sesion_db.refresh(usuario_campeon)
-    assert usuario_campeon.puntaje_total == puntaje_previo + 1500
+    assert usuario_campeon.puntaje_total == puntaje_previo + 1000 + 1500
 
 
 # ==============================================================================
@@ -401,6 +334,7 @@ def test_flujo_completo_torneo_4_jugadores_avance_y_coronacion(
 def test_flujo_torneo_8_jugadores_tres_rondas_completo(
     sesion_db: Session,
     usuario_creador: Usuario,
+    categoria_con_preguntas: Categoria,
 ) -> None:
     """Torneo de 8 jugadores: Cuartos (4 cruces) -> Semis (2 cruces) -> Final (1 cruce)."""
     torneo = torneo_service.crear_torneo(
@@ -428,7 +362,7 @@ def test_flujo_torneo_8_jugadores_tres_rondas_completo(
             torneo_id=torneo.id,
             cruce_id=cruce.id,
             usuario_actual=usuario_creador,
-            datos=CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id),
+            datos=preparar_duelo_ganado(sesion_db, torneo, cruce, cruce.jugador_a_id),
         )
         if i < 3:
             assert res.siguiente_ronda_generada is False
@@ -446,7 +380,7 @@ def test_flujo_torneo_8_jugadores_tres_rondas_completo(
             torneo_id=torneo.id,
             cruce_id=cruce.id,
             usuario_actual=usuario_creador,
-            datos=CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id),
+            datos=preparar_duelo_ganado(sesion_db, torneo, cruce, cruce.jugador_a_id),
         )
         if i < 1:
             assert res.siguiente_ronda_generada is False
@@ -464,7 +398,7 @@ def test_flujo_torneo_8_jugadores_tres_rondas_completo(
         torneo_id=torneo.id,
         cruce_id=cruce_final.id,
         usuario_actual=usuario_creador,
-        datos=CruceResolverRequest(ganador_participante_id=cruce_final.jugador_a_id),
+        datos=preparar_duelo_ganado(sesion_db, torneo, cruce_final, cruce_final.jugador_a_id),
     )
     assert res_final.torneo_finalizado is True
     assert res_final.puntos_otorgados_campeon == 1500
@@ -587,68 +521,25 @@ def test_resolver_cruce_con_duelo_finalizado_real(
 # ==============================================================================
 
 
-def test_validaciones_resolver_cruce(
-    sesion_db: Session,
-    usuario_creador: Usuario,
-) -> None:
-    """Verifica el rechazo ante parámetros o estados inconsistentes al resolver cruces."""
-    torneo = torneo_service.crear_torneo(
-        sesion_db,
-        TorneoCreate(nombre="Torneo Validaciones", cantidad_participantes=4),
-        usuario_creador,
-    )
-    jugadores = crear_usuarios_prueba(sesion_db, 3, prefijo="valCruces")
-    for j in jugadores:
-        torneo_service.unirse_a_torneo(
-            sesion_db,
-            TorneoUnirseRequest(codigo_acceso=torneo.codigo_acceso),
-            j,
-        )
-
-    cruce = torneo_repository.obtener_cruces_por_ronda(sesion_db, torneo.id, ronda=1)[0]
-
-    # 1. Torneo inexistente -> 404
-    datos_ganador = CruceResolverRequest(ganador_participante_id=cruce.jugador_a_id)
-    with pytest.raises(TorneoNoDisponibleError, match="No se encontró ningún torneo") as exc:
-        torneo_service.resolver_cruce(
-            sesion_db, 999999, cruce.id, usuario_creador, datos_ganador
-        )
-    assert exc.value.codigo_estado == 404
-
-    # 2. Cruce inexistente -> 404
-    with pytest.raises(TorneoNoDisponibleError, match="No se encontró ningún cruce") as exc:
-        torneo_service.resolver_cruce(
-            sesion_db, torneo.id, 999999, usuario_creador, datos_ganador
-        )
-    assert exc.value.codigo_estado == 404
-
-    # 3. Participante ajeno como ganador -> 400
-    datos_ganador_ajeno = CruceResolverRequest(ganador_participante_id=999999)
-    with pytest.raises(TorneoNoDisponibleError, match="no pertenece a este cruce") as exc:
-        torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador_ajeno
-        )
-    assert exc.value.codigo_estado == 400
-
-    # 4. Usuario ajeno intentando resolver -> 403
-    usuario_externo = crear_usuarios_prueba(sesion_db, 1, prefijo="externo")[0]
-    with pytest.raises(TorneoAccesoDenegadoError, match="No tienes permisos") as exc:
-        torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_externo, datos_ganador
-        )
-    assert exc.value.codigo_estado == 403
-
-    # 5. Resolver exitosamente el cruce
-    torneo_service.resolver_cruce(
-        sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador
-    )
-
-    # 6. Intentar resolver un cruce ya JUGADO -> 400
-    with pytest.raises(TorneoNoDisponibleError, match="ya ha sido resuelto") as exc:
-        torneo_service.resolver_cruce(
-            sesion_db, torneo.id, cruce.id, usuario_creador, datos_ganador
-        )
-    assert exc.value.codigo_estado == 400
+def test_validaciones_resolver_cruce(sesion_db, usuario_creador, categoria_con_preguntas):
+    torneo = torneo_service.crear_torneo(sesion_db, TorneoCreate(nombre="Validaciones", cantidad_participantes=4), usuario_creador)
+    for jugador in crear_usuarios_prueba(sesion_db, 3, "validaciones"):
+        torneo_service.unirse_a_torneo(sesion_db, TorneoUnirseRequest(codigo_acceso=torneo.codigo_acceso), jugador)
+    cruce = torneo_repository.obtener_cruces_por_ronda(sesion_db, torneo.id, 1)[0]
+    datos = CruceResolverRequest(duelo_id=999999)
+    for torneo_id, cruce_id, mensaje in [(999999, cruce.id, "ningún torneo"), (torneo.id, 999999, "ningún cruce")]:
+        with pytest.raises(TorneoNoDisponibleError, match=mensaje) as exc:
+            torneo_service.resolver_cruce(sesion_db, torneo_id, cruce_id, usuario_creador, datos)
+        assert exc.value.codigo_estado == 404
+    externo = crear_usuarios_prueba(sesion_db, 1, "externo")[0]
+    with pytest.raises(TorneoAccesoDenegadoError):
+        torneo_service.resolver_cruce(sesion_db, torneo.id, cruce.id, externo, datos)
+    with pytest.raises(TorneoNoDisponibleError, match="no está asignado"):
+        torneo_service.resolver_cruce(sesion_db, torneo.id, cruce.id, usuario_creador, datos)
+    datos = preparar_duelo_ganado(sesion_db, torneo, cruce, cruce.jugador_a_id)
+    respuesta = torneo_service.resolver_cruce(sesion_db, torneo.id, cruce.id, usuario_creador, datos)
+    repetida = torneo_service.resolver_cruce(sesion_db, torneo.id, cruce.id, usuario_creador, datos)
+    assert respuesta == repetida
 
 
 # ==============================================================================
@@ -707,6 +598,7 @@ def test_http_resolver_cruce_endpoint(
     cliente: TestClient,
     sesion_db: Session,
     usuario_creador: Usuario,
+    categoria_con_preguntas: Categoria,
 ) -> None:
     """Verifica el endpoint POST /api/torneos/{id}/cruces/{cruce_id}/resolver vía API REST."""
     torneo = torneo_service.crear_torneo(
@@ -727,15 +619,17 @@ def test_http_resolver_cruce_endpoint(
     # Sin token -> 401
     resp_sin_token = cliente.post(
         f"/api/torneos/{torneo.id}/cruces/{cruce.id}/resolver",
-        json={"ganador_participante_id": cruce.jugador_a_id},
+        json={"duelo_id": 999999},
     )
     assert resp_sin_token.status_code == 401
 
-    # Creador resuelve el cruce -> 200 OK
+    datos_duelo = preparar_duelo_ganado(sesion_db, torneo, cruce, cruce.jugador_a_id)
+
+    # Creador solicita calcular el resultado real -> 200 OK
     resp_ok = cliente.post(
         f"/api/torneos/{torneo.id}/cruces/{cruce.id}/resolver",
         headers=auth_header(usuario_creador),
-        json={"ganador_participante_id": cruce.jugador_a_id},
+        json=datos_duelo.model_dump(),
     )
     assert resp_ok.status_code == 200
     datos = resp_ok.json()

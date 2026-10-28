@@ -1,6 +1,6 @@
 # Entregables y documentación no versionable
 documentacion del proyecto (entregables)/
-/docs
+/docs/
 
 # Entorno virtual de Python
 .venv/
@@ -21,6 +21,8 @@ __pycache__/
 
 # Pruebas y cobertura
 .pytest_cache/
+.pytest_cache_local/
+.pytest_tmp/
 .coverage
 htmlcov/
 .tox/

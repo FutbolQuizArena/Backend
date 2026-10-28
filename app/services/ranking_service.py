@@ -10,7 +10,7 @@ from app.schemas.ranking_schema import JugadorRankingResponse, RankingResponse
 PUNTOS_CAMPEON_TORNEO = 1500
 
 
-def acumular_puntaje(db: Session, usuario_id: int, puntos: int) -> Usuario | None:
+def acumular_puntaje(db: Session, usuario_id: int, puntos: int, confirmar: bool = True) -> Usuario | None:
     """
     Suma al puntaje acumulado de un usuario los puntos ganados al finalizar una partida
     individual, un duelo o un torneo (RF-11). El ranking general se ordena por ese puntaje.
@@ -22,7 +22,9 @@ def acumular_puntaje(db: Session, usuario_id: int, puntos: int) -> Usuario | Non
     """
     if puntos <= 0:
         return usuario_repository.obtener_por_id(db, id=usuario_id)
-    return usuario_repository.acumular_puntaje(db, usuario_id=usuario_id, puntos=puntos)
+    if confirmar:
+        return usuario_repository.acumular_puntaje(db, usuario_id=usuario_id, puntos=puntos)
+    return usuario_repository.acumular_puntaje(db, usuario_id=usuario_id, puntos=puntos, confirmar=False)
 
 
 def _participa_del_ranking(usuario: Usuario) -> bool:

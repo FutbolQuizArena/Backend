@@ -42,7 +42,10 @@ def sesion_db() -> Generator[Session, None, None]:
     """Provee una sesión de base de datos limpia para cada prueba."""
     conexion = motor_pruebas.connect()
     transaccion = conexion.begin()
-    sesion = SesionPruebas(bind=conexion)
+    # SQLite no inicia BEGIN al abrir un savepoint en su modo de transacción legacy.
+    # El BEGIN explícito mantiene los commits/rollbacks del servicio dentro del test.
+    conexion.exec_driver_sql("BEGIN")
+    sesion = SesionPruebas(bind=conexion, join_transaction_mode="create_savepoint")
 
     yield sesion
 

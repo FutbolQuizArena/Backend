@@ -9,6 +9,15 @@ from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
 
 
+def bloquear_torneo(db: Session, torneo_id: int) -> Torneo | None:
+    """Serializa escrituras del torneo hasta commit/rollback, sin bloquear outer joins."""
+    torneo = (db.query(Torneo).filter(Torneo.id == torneo_id)
+              .populate_existing().with_for_update().first())
+    if torneo is not None:
+        db.expire(torneo, ["participantes", "cruces"])
+    return torneo
+
+
 def _subquery_conteo_participantes(db: Session):
     """Subquery escalar correlacionada para calcular el total de participantes por torneo sin N+1."""
     return (
@@ -228,6 +237,7 @@ def obtener_cruce_por_id(db: Session, cruce_id: int) -> Cruce | None:
             joinedload(Cruce.torneo).joinedload(Torneo.participantes),
         )
         .filter(Cruce.id == cruce_id)
+        .populate_existing()
         .first()
     )
 
@@ -242,6 +252,7 @@ def obtener_cruces_por_ronda(db: Session, torneo_id: int, ronda: int) -> list[Cr
             joinedload(Cruce.ganador).joinedload(ParticipanteTorneo.usuario),
         )
         .filter(Cruce.torneo_id == torneo_id, Cruce.ronda == ronda)
+        .populate_existing()
         .order_by(Cruce.id.asc())
         .all()
     )
