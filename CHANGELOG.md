@@ -1,5 +1,9 @@
 # Changelog
 
+## 29/10/2026 Conexión a Supabase
+
+- Se desactivaron las consultas preparadas automáticas de Psycopg 3 para evitar el error intermitente `DuplicatePreparedStatement` con el pool de Supabase. Se agregaron pruebas de configuración; no requiere migraciones ni cambios en frontend.
+
 ## 29/10/2026 Emparejamiento de duelos online
 
 - Se corrigieron las esperas separadas ante búsquedas simultáneas mediante un bloqueo compartido en PostgreSQL y una única transacción para guardar el emparejamiento y sus preguntas.
