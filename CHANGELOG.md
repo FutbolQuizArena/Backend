@@ -1,5 +1,9 @@
 # Changelog
 
+## 29/10/2026 Emparejamiento de duelos online
+
+- Se corrigieron las esperas separadas ante búsquedas simultáneas mediante un bloqueo compartido en PostgreSQL y una única transacción para guardar el emparejamiento y sus preguntas.
+
 ## 28/10/2026 Correcciones Sonar en duelos y torneos
 
 - Se reformuló la comparación de jugadores del duelo asignado al cruce para conservar la validación en cualquier orden y evitar el hallazgo de condición constante.

@@ -54,21 +54,20 @@ def _buscar_duelos_pendientes_del_jugador(db: Session, jugador_id: int) -> list[
 
 
 def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> PartidaDuelo:
-    """Empareja al jugador con un duelo en línea (RF-05):
+    """Empareja o crea una espera en una única transacción, sin búsquedas simultáneas."""
+    try:
+        duelo_repository.bloquear_cola_online(db)
+        duelo = _buscar_o_crear_duelo_online(db, usuario_actual)
+        db.commit()
+        db.refresh(duelo)
+        return duelo
+    except Exception:
+        db.rollback()
+        raise
 
-    - Si hay un duelo esperando rival (creado por otro jugador), se une a ese duelo,
-      queda EN_CURSO y comparte las mismas 10 preguntas que el jugador 1.
-    - Si no hay ninguno esperando, crea un duelo nuevo con categoría y preguntas
-      al azar, y queda PENDIENTE_RIVAL hasta que otro jugador se sume.
 
-    Nota sobre la corrección de la race condition: antes, el cambio de estado a
-    EN_CURSO se guardaba (commit) ANTES de insertar las preguntas del jugador 2.
-    Si esa inserción fallaba (por ejemplo, por un pedido duplicado), el duelo
-    quedaba en un estado roto: EN_CURSO, con jugador 2 asignado, pero sin sus
-    preguntas. Ahora todo se guarda junto en un solo commit al final: si algo
-    falla, no se guarda nada, y el duelo queda tal cual estaba (PENDIENTE_RIVAL),
-    disponible para que alguien más lo intente de nuevo.
-    """
+def _buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> PartidaDuelo:
+    """Modifica la cola con el bloqueo adquirido y sin confirmar parcialmente."""
     duelo_pendiente = duelo_repository.buscar_duelo_pendiente_de_rival(
         db=db, jugador_id=usuario_actual.id
     )
@@ -85,6 +84,7 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
             partida_id=duelo_pendiente.id,
             pregunta_ids=[pp.pregunta_id for pp in preguntas_jugador1],
             numero_jugador=2,
+            confirmar=False,
         )
 
         # Si el jugador que se une tenía algún duelo propio previo en PENDIENTE_RIVAL, lo finalizamos
@@ -96,8 +96,6 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
             d.fecha_fin = datetime.now(timezone.utc)
             db.add(d)
 
-        db.commit()
-        db.refresh(duelo_pendiente)
         return duelo_pendiente
 
     # Si no hay rival esperando, verificar si el usuario actual ya posee un duelo pendiente esperando rival
@@ -112,8 +110,6 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
                 sobrante.estado = EstadoPartida.FINALIZADA
                 sobrante.fecha_fin = datetime.now(timezone.utc)
                 db.add(sobrante)
-            db.commit()
-            db.refresh(duelo_activo)
         return duelo_activo
 
     categoria = categoria_repository.obtener_categoria_aleatoria(db)
@@ -131,14 +127,15 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
         jugador1_id=usuario_actual.id,
         categoria_id=categoria.id,
         modalidad=ModalidadDuelo.ONLINE,
+        confirmar=False,
     )
     partida_repository.agregar_preguntas_a_partida(
         db=db,
         partida_id=duelo_nuevo.id,
         pregunta_ids=[pregunta.id for pregunta in preguntas],
         numero_jugador=1,
+        confirmar=False,
     )
-    db.refresh(duelo_nuevo)
     return duelo_nuevo
 
 

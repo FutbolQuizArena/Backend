@@ -1,14 +1,25 @@
 """Funciones de acceso a datos para PartidaDuelo (Tarea 2.1.8)."""
 
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, text
 from sqlalchemy.orm import Session, joinedload
 
 from app.models.enumeraciones import EstadoPartida, ModalidadDuelo, TipoPartida
 from app.models.partida_duelo import PartidaDuelo
 
 
+def bloquear_cola_online(db: Session) -> None:
+    """Serializa el emparejamiento incluso cuando no hay filas para bloquear.
+
+    PostgreSQL comparte este bloqueo entre procesos y lo libera al confirmar o
+    revertir la transacción. SQLite se usa únicamente en las pruebas locales.
+    """
+    if db.get_bind().dialect.name == "postgresql":
+        db.execute(text("SELECT pg_advisory_xact_lock(20261029, 1)"))
+
+
 def crear_duelo(
-    db: Session, jugador1_id: int, categoria_id: int, modalidad: ModalidadDuelo
+    db: Session, jugador1_id: int, categoria_id: int, modalidad: ModalidadDuelo,
+    confirmar: bool = True,
 ) -> PartidaDuelo:
     """
     Crea un duelo nuevo.
@@ -24,8 +35,11 @@ def crear_duelo(
         jugador1_id=jugador1_id,
     )
     db.add(duelo)
-    db.commit()
-    db.refresh(duelo)
+    if confirmar:
+        db.commit()
+        db.refresh(duelo)
+    else:
+        db.flush()
     return duelo
 
 

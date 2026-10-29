@@ -29,7 +29,8 @@ def obtener_partida_individual_por_id(db: Session, partida_id: int) -> PartidaIn
 
 
 def agregar_preguntas_a_partida(
-    db: Session, partida_id: int, pregunta_ids: list[int], numero_jugador: int = 1
+    db: Session, partida_id: int, pregunta_ids: list[int], numero_jugador: int = 1,
+    confirmar: bool = True,
 ) -> list[PreguntaPartida]:
     """Crea las filas PreguntaPartida asociadas a una partida, en el orden dado."""
     preguntas_partida = []
@@ -42,7 +43,10 @@ def agregar_preguntas_a_partida(
         )
         db.add(pregunta_partida)
         preguntas_partida.append(pregunta_partida)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     return preguntas_partida
 
 
