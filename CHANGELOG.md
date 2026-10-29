@@ -1,5 +1,9 @@
 # Changelog
 
+## 29/10/2026 Corrección Sonar en duelos
+
+- Se centralizó el mensaje `No se encontró el duelo` en una constante para resolver la duplicación señalada por `python:S1192`, conservando las respuestas de error.
+
 ## 29/10/2026 Conexión a Supabase
 
 - Se desactivaron las consultas preparadas automáticas de Psycopg 3 para evitar el error intermitente `DuplicatePreparedStatement` con el pool de Supabase. Se agregaron pruebas de configuración; no requiere migraciones ni cambios en frontend.

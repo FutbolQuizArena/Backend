@@ -28,6 +28,9 @@ from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.puntaje_service import calcular_puntaje
 
 
+MENSAJE_DUELO_NO_ENCONTRADO = "No se encontró el duelo"
+
+
 def _numero_de_jugador(duelo: PartidaDuelo, usuario_id: int) -> int:
     """Determina si el usuario es el jugador 1 o el jugador 2 del duelo."""
     if duelo.jugador1_id == usuario_id:
@@ -81,7 +84,7 @@ def cancelar_busqueda_online(db: Session, duelo_id: int, usuario_actual: Usuario
             .populate_existing().with_for_update().first()
         )
         if duelo is None:
-            raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
+            raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
         if duelo.jugador1_id != usuario_actual.id:
             raise AccesoDenegadoError(mensaje="Solo quien inició la búsqueda puede cancelarla")
         if duelo.modalidad != ModalidadDuelo.ONLINE.value:
@@ -246,7 +249,7 @@ def _responder_pregunta_duelo(
 
     duelo = duelo_repository.obtener_duelo_por_id(db, pregunta_partida.partida_id)
     if duelo is None:
-        raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
+        raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
 
     cruce = db.query(Cruce).filter(Cruce.duelo_id == duelo.id).first()
     if cruce:
@@ -314,7 +317,7 @@ def _finalizar_duelo(db: Session, duelo_id: int) -> PartidaDuelo:
     duelo = (db.query(PartidaDuelo).filter(PartidaDuelo.id == duelo_id)
              .populate_existing().with_for_update().first())
     if duelo is None:
-        raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
+        raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
     db.expire(duelo, ["preguntas"])
     if duelo.estado == EstadoPartida.FINALIZADA:
         if cruce and cruce.estado != EstadoCruce.JUGADO:
