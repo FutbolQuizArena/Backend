@@ -119,6 +119,7 @@ El controlador `app/routes/partida_router.py` gestiona el ciclo completo del mod
 El controlador `app/routes/duelo_router.py` implementa las dos modalidades de enfrentamiento directo de trivias:
 
 - **Duelo Online (`POST /api/duelos/online`)**: sistema de emparejamiento automático (*matchmaking*). Si encuentra una partida en estado `PENDIENTE_RIVAL`, asocia al usuario autenticado como jugador 2, pasa el estado a `EN_CURSO` y comparte el mismo conjunto de preguntas. Si no hay rival esperando, crea una nueva partida de duelo y queda en espera.
+- Las búsquedas sin rival vencen a los **120 segundos** (`DUELO_ESPERA_MAX_SEGUNDOS`). Las respuestas incluyen `busqueda_expira_en` para la cuenta regresiva. `POST /api/duelos/{id}/cancelar` cancela una búsqueda propia; devuelve `200` al cerrarla o `409 BUSQUEDA_YA_EMPAREJADA` si ya se encontró rival. Las esperas cerradas no suman puntos ni aparecen como partidas jugadas. Ver [contrato de búsqueda y cancelación para frontend](DUELOS_ONLINE.md).
 - **Duelo Local / Pass & Play (`POST /api/duelos/local`)**: inicia una partida para dos jugadores en un mismo dispositivo por turnos alternados, recibiendo el nombre del invitado sin requerir cuenta adicional.
 - `POST /api/duelos/preguntas/{id}/respuesta` procesa las respuestas de cada competidor calculando los puntos de manera individual.
 - `GET /api/duelos/{id}` y `GET /api/duelos/{id}/estado` permiten a ambos participantes consultar el estado de la partida, el progreso del rival y la resolución final del ganador (`numero_ganador`: 1, 2 o empate).

@@ -65,7 +65,11 @@ class PartidaDuelo(Partida):
 
     @property
     def es_empate(self) -> bool:
-        return self.estado == EstadoPartida.FINALIZADA and self.numero_ganador is None
+        return (
+            self.estado == EstadoPartida.FINALIZADA
+            and self.numero_ganador is None
+            and (not self.es_duelo_online or self.jugador2_id is not None)
+        )
 
     def unirse_como_rival(self, jugador2_id: int) -> None:
         """Asigna al segundo jugador de un duelo online y marca el momento del emparejamiento."""

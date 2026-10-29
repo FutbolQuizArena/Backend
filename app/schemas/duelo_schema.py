@@ -1,8 +1,29 @@
 """Esquemas Pydantic para las respuestas del duelo (Tarea 2.1.11 y endpoints de juego)."""
 
+from datetime import datetime, timedelta, timezone
+
 from pydantic import BaseModel, ConfigDict
 
+from app.core.configuracion import CONFIGURACION
+from app.models.enumeraciones import EstadoPartida, ModalidadDuelo
 from app.schemas.partida_schema import PreguntaJuegoResponse
+
+
+def vencimiento_busqueda(duelo) -> datetime | None:
+    """Informa el límite original de la espera en UTC."""
+    if duelo.modalidad != ModalidadDuelo.ONLINE.value or duelo.estado != EstadoPartida.PENDIENTE_RIVAL:
+        return None
+    inicio = duelo.fecha_inicio
+    if inicio.tzinfo is None:
+        inicio = inicio.replace(tzinfo=timezone.utc)
+    return inicio + timedelta(seconds=CONFIGURACION.DUELO_ESPERA_MAX_SEGUNDOS)
+
+
+class DueloCancelarResponse(BaseModel):
+    """Confirmación de que una búsqueda ya no admite rivales."""
+
+    id: int
+    estado: str
 
 
 class DueloEstadoResponse(BaseModel):
@@ -25,6 +46,7 @@ class DueloEstadoResponse(BaseModel):
     aciertos_jugador2: int = 0
     numero_ganador: int | None
     es_empate: bool
+    busqueda_expira_en: datetime | None = None
 
 
 class DueloIniciarLocalRequest(BaseModel):
@@ -48,6 +70,7 @@ class DueloJuegoResponse(BaseModel):
     jugador1_nombre: str | None = None
     jugador2_nombre: str | None = None
     preguntas: list[PreguntaJuegoResponse]
+    busqueda_expira_en: datetime | None = None
 
     @classmethod
     def desde_duelo(cls, duelo, numero_jugador: int) -> "DueloJuegoResponse":
@@ -83,4 +106,5 @@ class DueloJuegoResponse(BaseModel):
             jugador1_nombre=duelo.jugador1_nombre,
             jugador2_nombre=duelo.jugador2_nombre,
             preguntas=preguntas_juego,
+            busqueda_expira_en=vencimiento_busqueda(duelo),
         )

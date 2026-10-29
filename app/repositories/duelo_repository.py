@@ -1,5 +1,7 @@
 """Funciones de acceso a datos para PartidaDuelo (Tarea 2.1.8)."""
 
+from datetime import datetime, timedelta
+
 from sqlalchemy import func, or_, text
 from sqlalchemy.orm import Session, joinedload
 
@@ -15,6 +17,24 @@ def bloquear_cola_online(db: Session) -> None:
     """
     if db.get_bind().dialect.name == "postgresql":
         db.execute(text("SELECT pg_advisory_xact_lock(20261029, 1)"))
+
+
+def cerrar_busquedas_vencidas(db: Session, ahora: datetime, espera_segundos: int) -> None:
+    """Cierra esperas antiguas en la transacción que ya tiene bloqueada la cola."""
+    duelos = (
+        db.query(PartidaDuelo)
+        .filter(
+            PartidaDuelo.modalidad == ModalidadDuelo.ONLINE.value,
+            PartidaDuelo.estado == EstadoPartida.PENDIENTE_RIVAL,
+            PartidaDuelo.jugador2_id.is_(None),
+            PartidaDuelo.fecha_inicio <= ahora - timedelta(seconds=espera_segundos),
+        )
+        .populate_existing().with_for_update().all()
+    )
+    for duelo in duelos:
+        duelo.estado = EstadoPartida.FINALIZADA
+        duelo.fecha_fin = ahora
+    db.flush()
 
 
 def crear_duelo(

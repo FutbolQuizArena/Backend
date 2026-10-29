@@ -4,7 +4,10 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
+from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import (
+    AccesoDenegadoError,
+    ExcepcionBase,
     ExcepcionNoAutorizado,
     ExcepcionRecursoNoEncontrado,
     ExcepcionValidacion,
@@ -57,7 +60,41 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
     """Empareja o crea una espera en una única transacción, sin búsquedas simultáneas."""
     try:
         duelo_repository.bloquear_cola_online(db)
+        duelo_repository.cerrar_busquedas_vencidas(
+            db, datetime.now(timezone.utc), CONFIGURACION.DUELO_ESPERA_MAX_SEGUNDOS,
+        )
         duelo = _buscar_o_crear_duelo_online(db, usuario_actual)
+        db.commit()
+        db.refresh(duelo)
+        return duelo
+    except Exception:
+        db.rollback()
+        raise
+
+
+def cancelar_busqueda_online(db: Session, duelo_id: int, usuario_actual: Usuario) -> PartidaDuelo:
+    """Cancela una espera propia sin competir con un emparejamiento simultáneo."""
+    try:
+        duelo_repository.bloquear_cola_online(db)
+        duelo = (
+            db.query(PartidaDuelo).filter(PartidaDuelo.id == duelo_id)
+            .populate_existing().with_for_update().first()
+        )
+        if duelo is None:
+            raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
+        if duelo.jugador1_id != usuario_actual.id:
+            raise AccesoDenegadoError(mensaje="Solo quien inició la búsqueda puede cancelarla")
+        if duelo.modalidad != ModalidadDuelo.ONLINE.value:
+            raise ExcepcionValidacion(mensaje="Solo se pueden cancelar búsquedas de duelos online")
+        if duelo.jugador2_id is not None or duelo.estado == EstadoPartida.EN_CURSO:
+            raise ExcepcionBase(
+                codigo="BUSQUEDA_YA_EMPAREJADA",
+                mensaje="Ya se encontró un rival. No se puede cancelar la búsqueda.",
+                codigo_estado=409,
+            )
+        if duelo.estado == EstadoPartida.PENDIENTE_RIVAL:
+            duelo.estado = EstadoPartida.FINALIZADA
+            duelo.fecha_fin = datetime.now(timezone.utc)
         db.commit()
         db.refresh(duelo)
         return duelo
@@ -247,6 +284,12 @@ def _responder_pregunta_duelo(
 def finalizar_duelo_si_corresponde(db: Session, duelo_id: int, confirmar: bool = True) -> PartidaDuelo:
     """Finaliza duelo, puntajes y cruce en una sola transacción, sin duplicar premios."""
     try:
+        actual = duelo_repository.obtener_duelo_por_id(db, duelo_id)
+        if actual is not None and actual.estado == EstadoPartida.PENDIENTE_RIVAL:
+            duelo_repository.bloquear_cola_online(db)
+            duelo_repository.cerrar_busquedas_vencidas(
+                db, datetime.now(timezone.utc), CONFIGURACION.DUELO_ESPERA_MAX_SEGUNDOS,
+            )
         duelo = _finalizar_duelo(db, duelo_id)
         if confirmar:
             db.commit()
