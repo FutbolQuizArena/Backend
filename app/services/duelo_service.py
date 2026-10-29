@@ -298,11 +298,16 @@ def _finalizar_duelo(db: Session, duelo_id: int) -> PartidaDuelo:
     duelo.estado = EstadoPartida.FINALIZADA
     duelo.fecha_fin = datetime.now(timezone.utc)
     db.flush()
+    _acumular_puntajes_duelo(db, duelo)
+    if cruce:
+        resolver_cruce_desde_duelo(db, torneo, cruce, duelo)
+    return duelo
+
+
+def _acumular_puntajes_duelo(db: Session, duelo: PartidaDuelo) -> None:
+    """Acumula puntos sin confirmar la transacción y bloqueando usuarios por ID."""
     puntos = {duelo.jugador1_id: duelo.puntaje_jugador1}
     if duelo.jugador2_id is not None:
         puntos[duelo.jugador2_id] = duelo.puntaje_jugador2
     for usuario_id in sorted(puntos):
         ranking_service.acumular_puntaje(db, usuario_id, puntos[usuario_id], confirmar=False)
-    if cruce:
-        resolver_cruce_desde_duelo(db, torneo, cruce, duelo)
-    return duelo

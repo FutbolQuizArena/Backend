@@ -319,4 +319,4 @@ def obtener_ultima_ronda_por_torneo(db: Session, torneo_ids: list[int]) -> dict[
         .group_by(Cruce.torneo_id)
         .all()
     )
-    return {torneo_id: ronda for torneo_id, ronda in filas}
+    return dict(filas)

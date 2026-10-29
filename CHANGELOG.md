@@ -1,5 +1,10 @@
 # Changelog
 
+## 28/10/2026 Correcciones Sonar en duelos y torneos
+
+- Se reformuló la comparación de jugadores del duelo asignado al cruce para conservar la validación en cualquier orden y evitar el hallazgo de condición constante.
+- Se separó la acumulación de puntajes al finalizar un duelo, conservando la transacción y el orden de bloqueo por usuario. Se simplificó la construcción del diccionario de últimas rondas por torneo.
+
 ## 28/10/2026 Alta y edición administrativa de usuarios
 
 - Se agregaron `POST /api/admin/usuarios` y `PATCH /api/admin/usuarios/{usuario_id}`, restringidos a administradores, con el mismo formato de usuario del listado. El alta permite elegir `JUGADOR` o `ADMINISTRADOR`, guarda la contraseña con bcrypt y nunca devuelve la clave ni el hash.

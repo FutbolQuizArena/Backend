@@ -539,7 +539,7 @@ def resolver_cruce_desde_duelo(
 ) -> CruceResolucionResponse:
     """Se ejecuta bajo el bloqueo del torneo y dentro de la transacción del duelo."""
     usuarios = {cruce.jugador_a.usuario_id, cruce.jugador_b.usuario_id}
-    if cruce.duelo_id != duelo.id or usuarios != {duelo.jugador1_id, duelo.jugador2_id}:
+    if cruce.duelo_id != duelo.id or usuarios.symmetric_difference((duelo.jugador1_id, duelo.jugador2_id)):
         raise TorneoNoDisponibleError(mensaje="El duelo indicado no corresponde al cruce")
     if duelo.estado != EstadoPartida.FINALIZADA:
         raise TorneoNoDisponibleError(mensaje="El duelo aún no ha finalizado")

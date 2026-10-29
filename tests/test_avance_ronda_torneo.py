@@ -46,6 +46,32 @@ def test_ganador_duelo_y_desempates(numero_ganador, tiempo_1, tiempo_2, invertid
     assert torneo_service._obtener_usuario_ganador_duelo(duelo) == ganador_id
 
 
+@pytest.mark.parametrize("jugador1_id,jugador2_id,duelo_id,aceptado", [
+    (1, 2, 10, True), (2, 1, 10, True),
+    (1, 3, 10, False), (3, 4, 10, False), (1, 2, 11, False),
+])
+def test_resolucion_cruce_valida_identidad_y_jugadores_del_duelo(
+    monkeypatch, jugador1_id, jugador2_id, duelo_id, aceptado,
+):
+    """Admite jugadores en ambos órdenes y rechaza rivales o duelos ajenos al cruce."""
+    torneo = SimpleNamespace(id=1)
+    cruce = SimpleNamespace(
+        duelo_id=10, jugador_a=SimpleNamespace(usuario_id=1),
+        jugador_b=SimpleNamespace(usuario_id=2), estado=EstadoCruce.JUGADO, ganador=object(),
+    )
+    duelo = SimpleNamespace(
+        id=duelo_id, jugador1_id=jugador1_id, jugador2_id=jugador2_id,
+        estado=EstadoPartida.FINALIZADA,
+    )
+    resultado = object()
+    monkeypatch.setattr(torneo_service, "_evaluar_avance_ronda", lambda *args: resultado)
+    if aceptado:
+        assert torneo_service.resolver_cruce_desde_duelo(None, torneo, cruce, duelo) is resultado
+    else:
+        with pytest.raises(TorneoNoDisponibleError, match="no corresponde al cruce"):
+            torneo_service.resolver_cruce_desde_duelo(None, torneo, cruce, duelo)
+
+
 def preparar_duelo_ganado(db, torneo, cruce, ganador_id):
     """Carga respuestas de un duelo real; nunca envía un ganador al endpoint."""
     respuesta = torneo_service.iniciar_duelo_cruce(db, torneo.id, cruce.id, cruce.jugador_a.usuario)
