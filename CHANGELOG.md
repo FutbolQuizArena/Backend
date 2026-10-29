@@ -1,5 +1,11 @@
 # Changelog
 
+## 28/10/2026 Alta y edición administrativa de usuarios
+
+- Se agregaron `POST /api/admin/usuarios` y `PATCH /api/admin/usuarios/{usuario_id}`, restringidos a administradores, con el mismo formato de usuario del listado. El alta permite elegir `JUGADOR` o `ADMINISTRADOR`, guarda la contraseña con bcrypt y nunca devuelve la clave ni el hash.
+- La edición permite modificar nombre, email y rol, conserva puntajes e historial y evita que el administrador se quite su propio rol. Se validan correos duplicados sin distinguir mayúsculas. La baja continúa mediante habilitar/deshabilitar, sin eliminación definitiva de cuentas.
+- Los errores de validación omiten los valores recibidos en respuestas y logs para no repetir contraseñas enviadas.
+
 ## 28/10/2026 Torneos jugables mediante duelos reales
 
 - La API dejó de aceptar `ganador_participante_id`: el ganador se calcula a partir del duelo asignado. La última respuesta avanza el cuadro automáticamente hasta consagrar y premiar al campeón, según RF-09 y RF-11.

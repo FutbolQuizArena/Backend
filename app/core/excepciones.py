@@ -252,6 +252,17 @@ class CategoriaConPreguntasError(ExcepcionBase):
         )
 
 
+class AutoCambioRolError(ExcepcionBase):
+    """Evita que un administrador pierda sus propios permisos por accidente."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            codigo="AUTO_CAMBIO_ROL_NO_PERMITIDO",
+            mensaje="Un administrador no puede quitarse su propio rol de administrador",
+            codigo_estado=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 class AutoDeshabilitacionError(ExcepcionBase):
     """Excepción lanzada cuando un administrador intenta deshabilitar su propia cuenta."""
 
@@ -307,15 +318,19 @@ def registrar_manejadores_excepcion(app: FastAPI) -> None:
     async def manejador_error_validacion(
         solicitud: Request, excepcion: RequestValidationError
     ) -> JSONResponse:
+        errores = [
+            {clave: valor for clave, valor in error.items() if clave != "input"}
+            for error in excepcion.errors()
+        ]
         logger.warning(
             "Fallo de validación de esquema en %s: %s",
             solicitud.url.path,
-            excepcion.errors(),
+            errores,
         )
         return _construir_respuesta_error(
             codigo="ERROR_VALIDACION",
             mensaje="Error de validación en los datos de la solicitud",
-            detalle=str(excepcion.errors()),
+            detalle=str(errores),
             codigo_estado=status.HTTP_422_UNPROCESSABLE_ENTITY,
         )
 

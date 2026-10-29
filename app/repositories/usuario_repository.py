@@ -10,7 +10,7 @@ from app.models.usuario import Usuario
 
 def obtener_por_email(db: Session, email: str) -> Usuario | None:
     """Obtiene un usuario a partir de su correo electrónico. Retorna None si no existe."""
-    return db.query(Usuario).filter(Usuario.email == email).first()
+    return db.query(Usuario).filter(func.lower(Usuario.email) == email.lower()).first()
 
 
 def obtener_por_id(db: Session, id: int) -> Usuario | None:

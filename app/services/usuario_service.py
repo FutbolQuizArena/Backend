@@ -1,9 +1,11 @@
 """Servicio de lógica de negocio para la gestión de usuarios y registro."""
 
 import bcrypt
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.excepciones import (
+    AutoCambioRolError,
     AutoDeshabilitacionError,
     CredencialesInvalidasError,
     EmailYaRegistradoError,
@@ -12,7 +14,7 @@ from app.core.excepciones import (
 from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.repositories import usuario_repository
-from app.schemas.usuario_schema import UsuarioCreate
+from app.schemas.usuario_schema import UsuarioAdminCreate, UsuarioAdminUpdate, UsuarioCreate
 
 
 def hashear_password(password: str) -> str:
@@ -114,6 +116,65 @@ def cambiar_password_usuario(
     nuevo_hash = hashear_password(nueva_password)
     usuario_actual.cambiar_password(nuevo_hash)
     return usuario_repository.actualizar(db, usuario_actual)
+
+
+def _validar_email_disponible(db: Session, email: str, usuario_id: int | None = None) -> None:
+    """Comprueba que el correo no pertenezca a una cuenta diferente."""
+    existente = usuario_repository.obtener_por_email(db, email=email)
+    if existente is not None and existente.id != usuario_id:
+        raise EmailYaRegistradoError()
+
+
+def crear_usuario_admin(db: Session, datos: UsuarioAdminCreate) -> Usuario:
+    """Crea una cuenta con el rol elegido por un administrador, sin exponer la clave."""
+    _validar_email_disponible(db, datos.email)
+
+    usuario = Usuario(
+        nombre=datos.nombre,
+        email=datos.email.lower(),
+        password_hash=hashear_password(datos.password),
+        rol=datos.rol,
+    )
+    try:
+        return usuario_repository.crear(db, usuario)
+    except IntegrityError:
+        db.rollback()
+        _validar_email_disponible(db, datos.email)
+        raise
+
+
+def actualizar_usuario_admin(
+    db: Session,
+    admin_actual: Usuario,
+    usuario_id: int,
+    datos: UsuarioAdminUpdate,
+) -> Usuario:
+    """Edita nombre, email y rol manteniendo contraseña, estado e historial."""
+    usuario = obtener_usuario_admin(db, usuario_id)
+    if (
+        usuario.id == admin_actual.id
+        and datos.rol is not None
+        and datos.rol != RolUsuario.ADMINISTRADOR
+    ):
+        raise AutoCambioRolError()
+
+    if datos.email is not None:
+        _validar_email_disponible(db, datos.email, usuario.id)
+
+    usuario.actualizar_perfil(
+        nombre=datos.nombre if datos.nombre is not None else usuario.nombre,
+        email=datos.email.lower() if datos.email is not None else usuario.email,
+    )
+    if datos.rol is not None:
+        usuario.rol = datos.rol
+
+    try:
+        return usuario_repository.actualizar(db, usuario)
+    except IntegrityError:
+        db.rollback()
+        if datos.email is not None:
+            _validar_email_disponible(db, datos.email, usuario_id)
+        raise
 
 
 def listar_usuarios_admin(

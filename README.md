@@ -166,6 +166,10 @@ El módulo de seguridad (`app/core/seguridad.py`) centraliza la verificación de
 - La dependencia `obtener_usuario_actual` intercepta cada solicitud protegida leyendo el encabezado `Authorization: Bearer <token>`, valida la firma digital, comprueba que no haya expirado y recupera la entidad en la base de datos comprobando que la cuenta esté activa (`esta_habilitado`). Ante cualquier discrepancia responde con código `401 Unauthorized` (`TOKEN_INVALIDO`).
 - `requiere_rol(RolUsuario.ADMINISTRADOR)` implementa la defensa en profundidad: rechaza de inmediato con `403 Forbidden` (`ACCESO_DENEGADO`) a cualquier usuario que no posea privilegios administrativos, protegiendo todas las rutas bajo `/api/admin`.
 
+## Administración de usuarios
+
+Los administradores pueden crear cuentas con `POST /api/admin/usuarios` y editar nombre, email y rol con `PATCH /api/admin/usuarios/{usuario_id}`. Ambas operaciones devuelven el formato del listado sin contraseñas ni hashes. La baja se mantiene mediante el endpoint existente de habilitar/deshabilitar, conservando el historial. Ver [contrato, validaciones y ejemplos para el frontend](ADMIN_USUARIOS.md).
+
 ## Autenticación
 
 El controlador `app/routes/autenticacion_router.py` gestiona el acceso bajo el prefijo `/api/auth`:
