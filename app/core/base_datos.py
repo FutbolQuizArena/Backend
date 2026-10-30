@@ -2,6 +2,7 @@
 
 from typing import Generator
 from sqlalchemy import create_engine
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from app.core.configuracion import CONFIGURACION
 
@@ -26,6 +27,12 @@ argumentos_engine = {
 if url_conexion.startswith("sqlite"):
     argumentos_conexion["check_same_thread"] = False
 else:
+    # Psycopg 3 prepara consultas automáticamente. En el pool de transacciones
+    # de Supabase pueden colisionar sus nombres entre conexiones del servidor.
+    # Resolver el dialecto también contempla el driver por defecto de SQLAlchemy.
+    if make_url(url_conexion).get_dialect().driver == "psycopg":
+        argumentos_conexion["prepare_threshold"] = None
+
     # Configuración de pool robusto para PostgreSQL concurrente
     argumentos_engine.update({
         "pool_size": 20,

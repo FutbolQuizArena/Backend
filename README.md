@@ -119,6 +119,7 @@ El controlador `app/routes/partida_router.py` gestiona el ciclo completo del mod
 El controlador `app/routes/duelo_router.py` implementa las dos modalidades de enfrentamiento directo de trivias:
 
 - **Duelo Online (`POST /api/duelos/online`)**: sistema de emparejamiento automático (*matchmaking*). Si encuentra una partida en estado `PENDIENTE_RIVAL`, asocia al usuario autenticado como jugador 2, pasa el estado a `EN_CURSO` y comparte el mismo conjunto de preguntas. Si no hay rival esperando, crea una nueva partida de duelo y queda en espera.
+- Las búsquedas sin rival vencen a los **120 segundos** (`DUELO_ESPERA_MAX_SEGUNDOS`). Las respuestas incluyen `busqueda_expira_en` para la cuenta regresiva. `POST /api/duelos/{id}/cancelar` cancela una búsqueda propia; devuelve `200` al cerrarla o `409 BUSQUEDA_YA_EMPAREJADA` si ya se encontró rival. Las esperas cerradas no suman puntos ni aparecen como partidas jugadas. Ver [contrato de búsqueda y cancelación para frontend](DUELOS_ONLINE.md).
 - **Duelo Local / Pass & Play (`POST /api/duelos/local`)**: inicia una partida para dos jugadores en un mismo dispositivo por turnos alternados, recibiendo el nombre del invitado sin requerir cuenta adicional.
 - `POST /api/duelos/preguntas/{id}/respuesta` procesa las respuestas de cada competidor calculando los puntos de manera individual.
 - `GET /api/duelos/{id}` y `GET /api/duelos/{id}/estado` permiten a ambos participantes consultar el estado de la partida, el progreso del rival y la resolución final del ganador (`numero_ganador`: 1, 2 o empate).
@@ -150,8 +151,12 @@ Normaliza el código a mayúsculas, valida la contraseña si el torneo es privad
 El cuadro organiza los cruces por rondas sucesivas (**Octavos de final, Cuartos de final, Semifinal y Final**). Cada cruce informa su identificador, ronda, jugador A, jugador B, estado (`PENDIENTE` o `JUGADO`) y el ganador asignado.
 
 El motor de avance de llaves provee:
-- `POST /api/torneos/cruces/{id}/iniciar-duelo`: vincula el cruce del torneo con una partida de duelo real entre los dos competidores emparejados.
-- `POST /api/torneos/cruces/{id}/resolver`: recibe el ganador del cruce, lo clasifica automáticamente al cruce correspondiente de la ronda siguiente y, si se resolvió el cruce final, consagra al campeón y finaliza el torneo pasando su estado a `FINALIZADO`.
+
+- `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/iniciar-duelo`: crea o recupera el único duelo del cruce. Devuelve `duelo_id` y `duelo` con las 10 preguntas del jugador autenticado y su indicador `esta_respondida`.
+- La última respuesta a `POST /api/duelos/preguntas/{pregunta_partida_id}/respuesta` finaliza automáticamente el duelo y el cruce. Cuando todos los cruces de la ronda terminaron, genera la siguiente ronda o consagra al campeón y suma el premio de 1.500 puntos, además de los puntos del duelo.
+- `POST /api/torneos/{torneo_id}/cruces/{cruce_id}/resolver`, con `{ "duelo_id": 123 }`, permite recuperar o reintentar la resolución. Nunca acepta un ganador elegido por el cliente. Los reintentos no duplican rondas ni puntos.
+
+Antes de usar esta versión en una base existente, ejecutar `python -m alembic upgrade head` para agregar la asociación persistente `cruces_torneo.duelo_id`. Las escrituras se serializan por torneo con bloqueos de fila en PostgreSQL y se confirman completas o se revierten ante fallos. Ver [contrato y flujo de integración del frontend](docs/torneos.md).
 
 ## Sesión JWT y seguridad — actividad 1.2.5
 
@@ -162,14 +167,26 @@ El módulo de seguridad (`app/core/seguridad.py`) centraliza la verificación de
 - La dependencia `obtener_usuario_actual` intercepta cada solicitud protegida leyendo el encabezado `Authorization: Bearer <token>`, valida la firma digital, comprueba que no haya expirado y recupera la entidad en la base de datos comprobando que la cuenta esté activa (`esta_habilitado`). Ante cualquier discrepancia responde con código `401 Unauthorized` (`TOKEN_INVALIDO`).
 - `requiere_rol(RolUsuario.ADMINISTRADOR)` implementa la defensa en profundidad: rechaza de inmediato con `403 Forbidden` (`ACCESO_DENEGADO`) a cualquier usuario que no posea privilegios administrativos, protegiendo todas las rutas bajo `/api/admin`.
 
+## Administración de usuarios
+
+Los administradores pueden crear cuentas con `POST /api/admin/usuarios` y editar nombre, email y rol con `PATCH /api/admin/usuarios/{usuario_id}`. Ambas operaciones devuelven el formato del listado sin contraseñas ni hashes. La baja se mantiene mediante el endpoint existente de habilitar/deshabilitar, conservando el historial. Ver [contrato, validaciones y ejemplos para el frontend](ADMIN_USUARIOS.md).
+
 ## Autenticación
 
 El controlador `app/routes/autenticacion_router.py` gestiona el acceso bajo el prefijo `/api/auth`:
 
 - `POST /api/auth/registro`: recibe `{ nombre, email, password }`. Valida nombre no vacío, formato de correo válido y contraseña de longitud mínima. Hashea la clave con algoritmos de derivación de claves seguros y verifica la unicidad del email; ante correos ya existentes responde con `409 Conflict` y código `EMAIL_YA_REGISTRADO`. Asigna por defecto el rol `JUGADOR` y devuelve `201 Created` con el perfil del usuario creado (omitiendo hashes y contraseñas).
 - `POST /api/auth/login`: recibe `{ email, password }`. Valida las credenciales contra la base de datos; si el correo no existe o la contraseña no coincide, responde con `401 Unauthorized` y código `CREDENCIALES_INVALIDAS`. Si la cuenta fue suspendida, responde con `CUENTA_DESHABILITADA`. Al autenticar exitosamente, retorna `{ access_token, token_type: "bearer" }`.
-- `POST /api/auth/logout`: endpoint autenticado para registrar el cierre formal de sesión en el backend.
+- `POST /api/auth/logout`: revoca el token Bearer de la petición en la base de datos. Las peticiones posteriores con ese token reciben `401 TOKEN_INVALIDO` en todas las rutas protegidas. Las otras sesiones del usuario siguen activas; cada login emite un JWT distinto (`jti`). El frontend debe llamar al endpoint antes de descartar el token y confirmar el cierre cuando recibe HTTP 200.
 - Todas las respuestas de error en la API respetan el formato estándar `{ code, message, detail }`, facilitando su consumo y presentación directa en el frontend.
+
+### Migración para la revocación de tokens
+
+El código y la migración `e11aa3222dc9` deben desplegarse juntos. Con la configuración de la base correspondiente, ejecutar `python -m alembic upgrade head` antes de iniciar esta versión. La migración parte de `d8f92144b20a` y crea `tokens_revocados`. No aplicar esta migración sobre la base del despliegue mientras el código remoto aún no la incluya.
+
+Se guarda una huella SHA-256 de la firma decodificada y el vencimiento, nunca el JWT completo. Esto también permite revocar tokens anteriores sin `jti` y evita evadir la revocación cambiando el padding Base64 de la firma. Cada petición protegida consulta la base: las revocaciones sobreviven a reinicios y se comparten entre instancias. Los registros vencidos se eliminan al procesar posteriores cierres de sesión. No se aceptan tokens sin vencimiento.
+
+Para volver a la versión anterior, ejecutar `python -m alembic downgrade d8f92144b20a` desde una copia que incluya la migración, antes de desplegar el código anterior. El downgrade elimina la tabla y sus revocaciones, por lo que los tokens revocados que todavía no expiraron vuelven a ser utilizables por esa versión.
 
 ## Estructura y diseño
 

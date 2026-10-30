@@ -4,7 +4,10 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
+from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import (
+    AccesoDenegadoError,
+    ExcepcionBase,
     ExcepcionNoAutorizado,
     ExcepcionRecursoNoEncontrado,
     ExcepcionValidacion,
@@ -20,8 +23,12 @@ from app.repositories import (
     partida_repository,
     pregunta_repository,
 )
+from app.services import ranking_service
 from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 from app.services.puntaje_service import calcular_puntaje
+
+
+MENSAJE_DUELO_NO_ENCONTRADO = "No se encontró el duelo"
 
 
 def _numero_de_jugador(duelo: PartidaDuelo, usuario_id: int) -> int:
@@ -53,21 +60,54 @@ def _buscar_duelos_pendientes_del_jugador(db: Session, jugador_id: int) -> list[
 
 
 def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> PartidaDuelo:
-    """Empareja al jugador con un duelo en línea (RF-05):
+    """Empareja o crea una espera en una única transacción, sin búsquedas simultáneas."""
+    try:
+        duelo_repository.bloquear_cola_online(db)
+        duelo_repository.cerrar_busquedas_vencidas(
+            db, datetime.now(timezone.utc), CONFIGURACION.DUELO_ESPERA_MAX_SEGUNDOS,
+        )
+        duelo = _buscar_o_crear_duelo_online(db, usuario_actual)
+        db.commit()
+        db.refresh(duelo)
+        return duelo
+    except Exception:
+        db.rollback()
+        raise
 
-    - Si hay un duelo esperando rival (creado por otro jugador), se une a ese duelo,
-      queda EN_CURSO y comparte las mismas 10 preguntas que el jugador 1.
-    - Si no hay ninguno esperando, crea un duelo nuevo con categoría y preguntas
-      al azar, y queda PENDIENTE_RIVAL hasta que otro jugador se sume.
 
-    Nota sobre la corrección de la race condition: antes, el cambio de estado a
-    EN_CURSO se guardaba (commit) ANTES de insertar las preguntas del jugador 2.
-    Si esa inserción fallaba (por ejemplo, por un pedido duplicado), el duelo
-    quedaba en un estado roto: EN_CURSO, con jugador 2 asignado, pero sin sus
-    preguntas. Ahora todo se guarda junto en un solo commit al final: si algo
-    falla, no se guarda nada, y el duelo queda tal cual estaba (PENDIENTE_RIVAL),
-    disponible para que alguien más lo intente de nuevo.
-    """
+def cancelar_busqueda_online(db: Session, duelo_id: int, usuario_actual: Usuario) -> PartidaDuelo:
+    """Cancela una espera propia sin competir con un emparejamiento simultáneo."""
+    try:
+        duelo_repository.bloquear_cola_online(db)
+        duelo = (
+            db.query(PartidaDuelo).filter(PartidaDuelo.id == duelo_id)
+            .populate_existing().with_for_update().first()
+        )
+        if duelo is None:
+            raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
+        if duelo.jugador1_id != usuario_actual.id:
+            raise AccesoDenegadoError(mensaje="Solo quien inició la búsqueda puede cancelarla")
+        if duelo.modalidad != ModalidadDuelo.ONLINE.value:
+            raise ExcepcionValidacion(mensaje="Solo se pueden cancelar búsquedas de duelos online")
+        if duelo.jugador2_id is not None or duelo.estado == EstadoPartida.EN_CURSO:
+            raise ExcepcionBase(
+                codigo="BUSQUEDA_YA_EMPAREJADA",
+                mensaje="Ya se encontró un rival. No se puede cancelar la búsqueda.",
+                codigo_estado=409,
+            )
+        if duelo.estado == EstadoPartida.PENDIENTE_RIVAL:
+            duelo.estado = EstadoPartida.FINALIZADA
+            duelo.fecha_fin = datetime.now(timezone.utc)
+        db.commit()
+        db.refresh(duelo)
+        return duelo
+    except Exception:
+        db.rollback()
+        raise
+
+
+def _buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> PartidaDuelo:
+    """Modifica la cola con el bloqueo adquirido y sin confirmar parcialmente."""
     duelo_pendiente = duelo_repository.buscar_duelo_pendiente_de_rival(
         db=db, jugador_id=usuario_actual.id
     )
@@ -84,6 +124,7 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
             partida_id=duelo_pendiente.id,
             pregunta_ids=[pp.pregunta_id for pp in preguntas_jugador1],
             numero_jugador=2,
+            confirmar=False,
         )
 
         # Si el jugador que se une tenía algún duelo propio previo en PENDIENTE_RIVAL, lo finalizamos
@@ -95,8 +136,6 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
             d.fecha_fin = datetime.now(timezone.utc)
             db.add(d)
 
-        db.commit()
-        db.refresh(duelo_pendiente)
         return duelo_pendiente
 
     # Si no hay rival esperando, verificar si el usuario actual ya posee un duelo pendiente esperando rival
@@ -111,8 +150,6 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
                 sobrante.estado = EstadoPartida.FINALIZADA
                 sobrante.fecha_fin = datetime.now(timezone.utc)
                 db.add(sobrante)
-            db.commit()
-            db.refresh(duelo_activo)
         return duelo_activo
 
     categoria = categoria_repository.obtener_categoria_aleatoria(db)
@@ -130,14 +167,15 @@ def buscar_o_crear_duelo_online(db: Session, usuario_actual: Usuario) -> Partida
         jugador1_id=usuario_actual.id,
         categoria_id=categoria.id,
         modalidad=ModalidadDuelo.ONLINE,
+        confirmar=False,
     )
     partida_repository.agregar_preguntas_a_partida(
         db=db,
         partida_id=duelo_nuevo.id,
         pregunta_ids=[pregunta.id for pregunta in preguntas],
         numero_jugador=1,
+        confirmar=False,
     )
-    db.refresh(duelo_nuevo)
     return duelo_nuevo
 
 
@@ -185,14 +223,40 @@ def responder_pregunta_duelo(
     tiempo_respuesta_segundos: int,
     usuario_actual: Usuario,
 ):
+    """Guarda una respuesta y el avance del torneo en una única transacción."""
+    try:
+        pregunta = _responder_pregunta_duelo(
+            db, pregunta_partida_id, opcion_seleccionada, tiempo_respuesta_segundos, usuario_actual,
+        )
+        db.commit()
+        return pregunta
+    except Exception:
+        db.rollback()
+        raise
+
+
+def _responder_pregunta_duelo(
+    db: Session, pregunta_partida_id: int, opcion_seleccionada: str | None,
+    tiempo_respuesta_segundos: int, usuario_actual: Usuario,
+):
     """Registra la respuesta de un jugador a una de sus preguntas dentro de un duelo."""
+    from app.models.cruce import Cruce
+    from app.repositories import torneo_repository
+
     pregunta_partida = partida_repository.obtener_pregunta_partida_por_id(db, pregunta_partida_id)
     if pregunta_partida is None:
         raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró la pregunta del duelo")
 
     duelo = duelo_repository.obtener_duelo_por_id(db, pregunta_partida.partida_id)
     if duelo is None:
-        raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
+        raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
+
+    cruce = db.query(Cruce).filter(Cruce.duelo_id == duelo.id).first()
+    if cruce:
+        torneo_repository.bloquear_torneo(db, cruce.torneo_id)
+    duelo = (db.query(PartidaDuelo).filter(PartidaDuelo.id == duelo.id)
+             .populate_existing().with_for_update().first())
+    db.refresh(pregunta_partida)
 
     numero_jugador = _numero_de_jugador(duelo, usuario_actual.id)
     if pregunta_partida.numero_jugador != numero_jugador:
@@ -214,46 +278,79 @@ def responder_pregunta_duelo(
         es_correcta=es_correcta,
         puntaje=puntaje,
     )
-    return partida_repository.guardar_respuesta(db, pregunta_partida)
+    db.flush()
+    if cruce:
+        _finalizar_duelo(db, duelo.id)
+    return pregunta_partida
 
 
-def finalizar_duelo_si_corresponde(db: Session, duelo_id: int) -> PartidaDuelo:
-    """Si ambos jugadores respondieron todas sus preguntas, calcula los puntajes finales,
+def finalizar_duelo_si_corresponde(db: Session, duelo_id: int, confirmar: bool = True) -> PartidaDuelo:
+    """Finaliza duelo, puntajes y cruce en una sola transacción, sin duplicar premios."""
+    try:
+        actual = duelo_repository.obtener_duelo_por_id(db, duelo_id)
+        if actual is not None and actual.estado == EstadoPartida.PENDIENTE_RIVAL:
+            duelo_repository.bloquear_cola_online(db)
+            duelo_repository.cerrar_busquedas_vencidas(
+                db, datetime.now(timezone.utc), CONFIGURACION.DUELO_ESPERA_MAX_SEGUNDOS,
+            )
+        duelo = _finalizar_duelo(db, duelo_id)
+        if confirmar:
+            db.commit()
+        return duelo
+    except Exception:
+        db.rollback()
+        raise
 
-    determina el ganador, marca el duelo como FINALIZADA y suma puntaje a ambos usuarios.
-    Si todavía falta alguna respuesta, no hace nada y devuelve el duelo sin cambios.
-    """
-    duelo = duelo_repository.obtener_duelo_por_id(db, duelo_id)
+
+def _finalizar_duelo(db: Session, duelo_id: int) -> PartidaDuelo:
+    from app.models.cruce import Cruce
+    from app.models.enumeraciones import EstadoCruce
+    from app.repositories import torneo_repository
+    from app.services.torneo_service import resolver_cruce_desde_duelo, _obtener_usuario_ganador_duelo
+
+    db.flush()
+    cruce = db.query(Cruce).filter(Cruce.duelo_id == duelo_id).first()
+    # Todas las escrituras toman los bloqueos en el mismo orden: torneo, duelo, usuarios.
+    torneo = torneo_repository.bloquear_torneo(db, cruce.torneo_id) if cruce else None
+    if cruce:
+        db.refresh(cruce)
+    duelo = (db.query(PartidaDuelo).filter(PartidaDuelo.id == duelo_id)
+             .populate_existing().with_for_update().first())
     if duelo is None:
-        raise ExcepcionRecursoNoEncontrado(mensaje="No se encontró el duelo")
-
+        raise ExcepcionRecursoNoEncontrado(mensaje=MENSAJE_DUELO_NO_ENCONTRADO)
+    db.expire(duelo, ["preguntas"])
     if duelo.estado == EstadoPartida.FINALIZADA:
+        if cruce and cruce.estado != EstadoCruce.JUGADO:
+            resolver_cruce_desde_duelo(db, torneo, cruce, duelo)
         return duelo
 
-    preguntas_jugador1 = duelo.preguntas_de_jugador(1)
-    preguntas_jugador2 = duelo.preguntas_de_jugador(2)
-
-    todas_respondidas = all(p.esta_respondida for p in preguntas_jugador1) and all(
-        p.esta_respondida for p in preguntas_jugador2
-    )
-    if not todas_respondidas:
+    preguntas1 = duelo.preguntas_de_jugador(1)
+    preguntas2 = duelo.preguntas_de_jugador(2)
+    completas = (len(preguntas1) == CANTIDAD_PREGUNTAS_POR_PARTIDA
+                 and len(preguntas2) == CANTIDAD_PREGUNTAS_POR_PARTIDA
+                 and all(p.esta_respondida for p in preguntas1 + preguntas2))
+    if not completas:
         return duelo
 
-    duelo.puntaje_jugador1 = sum(p.puntaje_obtenido for p in preguntas_jugador1)
-    duelo.puntaje_jugador2 = sum(p.puntaje_obtenido for p in preguntas_jugador2)
+    duelo.puntaje_jugador1 = sum(p.puntaje_obtenido for p in preguntas1)
+    duelo.puntaje_jugador2 = sum(p.puntaje_obtenido for p in preguntas2)
     duelo.determinar_ganador()
+    if cruce and duelo.numero_ganador is None:
+        ganador_id = _obtener_usuario_ganador_duelo(duelo)
+        duelo.numero_ganador = 1 if ganador_id == duelo.jugador1_id else 2
     duelo.estado = EstadoPartida.FINALIZADA
-
-    db.add(duelo)
-    db.commit()
-    db.refresh(duelo)
-
-    partida_repository.sumar_puntaje_a_usuario(
-        db=db, usuario_id=duelo.jugador1_id, puntos=duelo.puntaje_jugador1
-    )
-    if duelo.jugador2_id is not None:
-        partida_repository.sumar_puntaje_a_usuario(
-            db=db, usuario_id=duelo.jugador2_id, puntos=duelo.puntaje_jugador2
-        )
-
+    duelo.fecha_fin = datetime.now(timezone.utc)
+    db.flush()
+    _acumular_puntajes_duelo(db, duelo)
+    if cruce:
+        resolver_cruce_desde_duelo(db, torneo, cruce, duelo)
     return duelo
+
+
+def _acumular_puntajes_duelo(db: Session, duelo: PartidaDuelo) -> None:
+    """Acumula puntos sin confirmar la transacción y bloqueando usuarios por ID."""
+    puntos = {duelo.jugador1_id: duelo.puntaje_jugador1}
+    if duelo.jugador2_id is not None:
+        puntos[duelo.jugador2_id] = duelo.puntaje_jugador2
+    for usuario_id in sorted(puntos):
+        ranking_service.acumular_puntaje(db, usuario_id, puntos[usuario_id], confirmar=False)

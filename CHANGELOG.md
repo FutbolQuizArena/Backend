@@ -1,5 +1,38 @@
 # Changelog
 
+## 29/10/2026 Corrección Sonar en duelos
+
+- Se centralizó el mensaje `No se encontró el duelo` en una constante para resolver la duplicación señalada por `python:S1192`, conservando las respuestas de error.
+
+## 29/10/2026 Conexión a Supabase
+
+- Se desactivaron las consultas preparadas automáticas de Psycopg 3 para evitar el error intermitente `DuplicatePreparedStatement` con el pool de Supabase. Se agregaron pruebas de configuración; no requiere migraciones ni cambios en frontend.
+
+## 29/10/2026 Emparejamiento de duelos online
+
+- Se corrigieron las esperas separadas ante búsquedas simultáneas mediante un bloqueo compartido en PostgreSQL y una única transacción para guardar el emparejamiento y sus preguntas.
+
+## 28/10/2026 Correcciones Sonar en duelos y torneos
+
+- Se reformuló la comparación de jugadores del duelo asignado al cruce para conservar la validación en cualquier orden y evitar el hallazgo de condición constante.
+- Se separó la acumulación de puntajes al finalizar un duelo, conservando la transacción y el orden de bloqueo por usuario. Se simplificó la construcción del diccionario de últimas rondas por torneo.
+
+## 28/10/2026 Alta y edición administrativa de usuarios
+
+- Se agregaron `POST /api/admin/usuarios` y `PATCH /api/admin/usuarios/{usuario_id}`, restringidos a administradores, con el mismo formato de usuario del listado. El alta permite elegir `JUGADOR` o `ADMINISTRADOR`, guarda la contraseña con bcrypt y nunca devuelve la clave ni el hash.
+- La edición permite modificar nombre, email y rol, conserva puntajes e historial y evita que el administrador se quite su propio rol. Se validan correos duplicados sin distinguir mayúsculas. La baja continúa mediante habilitar/deshabilitar, sin eliminación definitiva de cuentas.
+- Los errores de validación omiten los valores recibidos en respuestas y logs para no repetir contraseñas enviadas.
+
+## 28/10/2026 Torneos jugables mediante duelos reales
+
+- La API dejó de aceptar `ganador_participante_id`: el ganador se calcula a partir del duelo asignado. La última respuesta avanza el cuadro automáticamente hasta consagrar y premiar al campeón, según RF-09 y RF-11.
+- Ingresos, salidas, creación de duelos, respuestas y resoluciones usan transacciones y bloqueos de fila para conservar cupos y evitar duplicaciones ante solicitudes simultáneas o repetidas.
+- El inicio de cruce entrega las preguntas del jugador con `esta_respondida` para poder retomar. Se admiten respuestas nulas cuando vence el tiempo. El desempate por tiempo queda reflejado en el resultado del duelo de torneo.
+- Se seleccionan categorías activas con al menos 10 preguntas activas no eliminadas.
+## 27/10/2026 Revocación de tokens al cerrar sesión
+
+- **Revocación JWT:** Se invalidan los tokens al cerrar sesión y se rechaza su reutilización con HTTP 401, conservando las demás sesiones. Se agregaron persistencia en base de datos, identificadores únicos por token y la migración Alembic e11aa3222dc9. Se actualizó la documentación y se incorporaron pruebas de seguridad, persistencia y migración; suite completa: **353 pruebas aprobadas**.
+
 ## 23/10/2026 Arreglo de issues Sonar
 
 - **Aleatoriedad segura (`python:S2245`, Security, Medium):** Se reemplazó `random.sample()` por `random.SystemRandom().sample()` en `obtener_preguntas_aleatorias_sin_repeticion()` de `app/repositories/pregunta_repository.py`, conservando la selección sin repeticiones de preguntas activas y no eliminadas y el rechazo cuando no hay suficientes preguntas.

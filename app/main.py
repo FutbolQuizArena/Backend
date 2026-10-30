@@ -11,7 +11,9 @@ from app.routes import (
     autenticacion_router,
     categoria_router,
     duelo_router,
+    historial_router,
     partida_router,
+    ranking_router,
     salud_router,
     torneo_router,
     usuario_router,
@@ -109,6 +111,8 @@ def crear_aplicacion() -> FastAPI:
     aplicacion.include_router(torneo_router)
     aplicacion.include_router(duelo_router)
     aplicacion.include_router(partida_router)
+    aplicacion.include_router(ranking_router)
+    aplicacion.include_router(historial_router)
     aplicacion.include_router(admin_router)
 
     configurar_openapi(aplicacion)

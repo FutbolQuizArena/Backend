@@ -1,6 +1,6 @@
 """Controlador para la gestión de usuarios en el panel de administración (Tarea 5.1.3)."""
 
-from typing import Optional
+from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -9,7 +9,9 @@ from app.core.seguridad import obtener_usuario_actual, requiere_rol
 from app.models.enumeraciones import RolUsuario
 from app.models.usuario import Usuario
 from app.schemas.usuario_schema import (
+    UsuarioAdminCreate,
     UsuarioAdminResponse,
+    UsuarioAdminUpdate,
     UsuarioCambiarEstadoRequest,
 )
 from app.services import usuario_service
@@ -22,6 +24,50 @@ admin_usuario_router = APIRouter(
         Depends(requiere_rol(RolUsuario.ADMINISTRADOR)),
     ],
 )
+
+
+@admin_usuario_router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+    summary="Crear usuario desde administración",
+    description="Crea una cuenta habilitada con rol JUGADOR o ADMINISTRADOR. La contraseña se almacena hasheada.",
+    responses={
+        401: {"description": "Token inválido, expirado o ausente."},
+        403: {"description": "Acceso restringido a administradores."},
+        409: {"description": "El correo electrónico ya se encuentra registrado."},
+        422: {"description": "Datos de usuario inválidos."},
+    },
+)
+def crear_usuario(
+    datos: UsuarioAdminCreate,
+    db: Annotated[Session, Depends(obtener_db)],
+) -> UsuarioAdminResponse:
+    """Da de alta un usuario con el rol indicado por el administrador."""
+    return UsuarioAdminResponse.model_validate(usuario_service.crear_usuario_admin(db, datos))
+
+
+@admin_usuario_router.patch(
+    "/{usuario_id}",
+    summary="Editar usuario desde administración",
+    description="Actualiza los campos enviados de nombre, email y rol, conservando contraseña, puntaje y estado.",
+    responses={
+        400: {"description": "Un administrador no puede quitarse su propio rol."},
+        401: {"description": "Token inválido, expirado o ausente."},
+        403: {"description": "Acceso restringido a administradores."},
+        404: {"description": "Usuario no encontrado."},
+        409: {"description": "El correo electrónico ya pertenece a otro usuario."},
+        422: {"description": "Datos de usuario inválidos."},
+    },
+)
+def actualizar_usuario(
+    usuario_id: int,
+    datos: UsuarioAdminUpdate,
+    db: Annotated[Session, Depends(obtener_db)],
+    admin_actual: Annotated[Usuario, Depends(requiere_rol(RolUsuario.ADMINISTRADOR))],
+) -> UsuarioAdminResponse:
+    """Edita los datos administrativos de una cuenta existente."""
+    usuario = usuario_service.actualizar_usuario_admin(db, admin_actual, usuario_id, datos)
+    return UsuarioAdminResponse.model_validate(usuario)
 
 
 @admin_usuario_router.get(

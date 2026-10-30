@@ -456,3 +456,191 @@ def test_metodos_dominio_habilitar_y_deshabilitar() -> None:
 
     usuario.habilitar()
     assert usuario.esta_habilitado is True
+
+
+@pytest.mark.parametrize("rol", ["JUGADOR", "ADMINISTRADOR"])
+def test_crear_usuario_admin_con_rol_y_password_hasheada(
+    cliente: TestClient, headers_admin: dict[str, str], sesion_db: Session, rol: str,
+) -> None:
+    respuesta = cliente.post("/api/admin/usuarios", headers=headers_admin, json={
+        "nombre": "  Nueva cuenta  ", "email": "Nueva@futbolquiz.com",
+        "password": "claveSegura123", "rol": rol,
+    })
+    assert respuesta.status_code == 201
+    datos = respuesta.json()
+    assert datos["nombre"] == "Nueva cuenta"
+    assert datos["rol"] == rol
+    assert datos["puntaje_total"] == 0
+    assert datos["esta_habilitado"] is True
+    assert "password" not in datos
+    assert "password_hash" not in datos
+    guardado = sesion_db.get(Usuario, datos["id"])
+    assert guardado.password_hash != "claveSegura123"
+    assert guardado.autenticar("claveSegura123")
+    listado = cliente.get("/api/admin/usuarios", headers=headers_admin).json()
+    assert datos == next(usuario for usuario in listado if usuario["id"] == datos["id"])
+    login = cliente.post("/api/auth/login", json={
+        "email": "NUEVA@futbolquiz.com", "password": "claveSegura123",
+    })
+    assert login.status_code == 200
+
+
+def test_editar_usuario_admin_preserva_password_puntaje_y_estado(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_jugador: Usuario,
+    sesion_db: Session,
+) -> None:
+    hash_original = usuario_jugador.password_hash
+    usuario_jugador.deshabilitar()
+    sesion_db.commit()
+    respuesta = cliente.patch(
+        f"/api/admin/usuarios/{usuario_jugador.id}", headers=headers_admin,
+        json={"nombre": "Nombre editado", "email": "Editado@futbolquiz.com", "rol": "ADMINISTRADOR"},
+    )
+    assert respuesta.status_code == 200
+    datos = respuesta.json()
+    assert datos["nombre"] == "Nombre editado"
+    assert datos["email"] == "editado@futbolquiz.com"
+    assert datos["rol"] == "ADMINISTRADOR"
+    assert datos["puntaje_total"] == 250
+    assert datos["esta_habilitado"] is False
+    assert "password_hash" not in datos
+    assert "password" not in datos
+    sesion_db.refresh(usuario_jugador)
+    assert usuario_jugador.password_hash == hash_original
+    assert usuario_jugador.rol == RolUsuario.ADMINISTRADOR
+
+
+def test_edicion_parcial_y_permisos_actualizados_en_token_existente(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_jugador: Usuario,
+    headers_jugador: dict[str, str],
+) -> None:
+    ruta = f"/api/admin/usuarios/{usuario_jugador.id}"
+    respuesta = cliente.patch(ruta, headers=headers_admin, json={"rol": "ADMINISTRADOR"})
+    assert respuesta.status_code == 200
+    assert respuesta.json()["nombre"] == usuario_jugador.nombre
+    assert cliente.get("/api/admin/usuarios", headers=headers_jugador).status_code == 200
+    respuesta = cliente.patch(ruta, headers=headers_admin, json={"rol": "JUGADOR"})
+    assert respuesta.status_code == 200
+    assert cliente.get("/api/admin/usuarios", headers=headers_jugador).status_code == 403
+
+
+@pytest.mark.parametrize("metodo,ruta,cuerpo", [
+    ("post", "/api/admin/usuarios", {"nombre": "Cuenta", "email": "cuenta@futbolquiz.com", "password": "secreto123", "rol": "ADMINISTRADOR"}),
+    ("patch", "/api/admin/usuarios/1", {"rol": "ADMINISTRADOR"}),
+])
+def test_crear_editar_usuarios_exige_admin(
+    cliente: TestClient, headers_jugador: dict[str, str], metodo: str, ruta: str, cuerpo: dict,
+) -> None:
+    assert cliente.request(metodo, ruta, json=cuerpo).status_code == 401
+    assert cliente.request(metodo, ruta, json=cuerpo, headers=headers_jugador).status_code == 403
+
+
+def test_crear_y_editar_rechaza_email_duplicado_sin_mutar_usuario(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_jugador: Usuario,
+    usuario_admin: Usuario, sesion_db: Session,
+) -> None:
+    email_ocupado = usuario_admin.email.upper()
+    alta = cliente.post("/api/admin/usuarios", headers=headers_admin, json={
+        "nombre": "Duplicado", "email": email_ocupado, "password": "secreto123", "rol": "JUGADOR",
+    })
+    assert alta.status_code == 409
+    assert alta.json()["code"] == "EMAIL_YA_REGISTRADO"
+    edicion = cliente.patch(f"/api/admin/usuarios/{usuario_jugador.id}", headers=headers_admin,
+                            json={"nombre": "No guardar", "email": email_ocupado})
+    assert edicion.status_code == 409
+    assert edicion.json()["code"] == "EMAIL_YA_REGISTRADO"
+    sesion_db.refresh(usuario_jugador)
+    assert usuario_jugador.nombre == "Lionel Messi"
+    assert usuario_jugador.email == "messi@futbolquiz.com"
+
+
+@pytest.mark.parametrize("cuerpo", [
+    {}, {"nombre": None}, {"email": None}, {"rol": None}, {"nombre": "   "},
+    {"email": "correo-invalido"}, {"rol": "SUPERADMIN"}, {"password": "cambiar123"},
+    {"puntaje_total": 1000}, {"esta_habilitado": False},
+])
+def test_edicion_admin_valida_campos_permitidos(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_jugador: Usuario, cuerpo: dict,
+) -> None:
+    respuesta = cliente.patch(f"/api/admin/usuarios/{usuario_jugador.id}",
+                              headers=headers_admin, json=cuerpo)
+    assert respuesta.status_code == 422
+
+
+@pytest.mark.parametrize("cambio", [
+    {"nombre": "   "}, {"email": "invalido"}, {"rol": "SUPERADMIN"},
+    {"password": "corta"}, {"password": "á" * 37}, {"puntaje_total": 1000},
+])
+def test_alta_admin_valida_datos(
+    cliente: TestClient, headers_admin: dict[str, str], cambio: dict,
+) -> None:
+    cuerpo = {"nombre": "Cuenta", "email": "cuenta@futbolquiz.com", "password": "secreto123", "rol": "JUGADOR"}
+    cuerpo.update(cambio)
+    assert cliente.post("/api/admin/usuarios", headers=headers_admin, json=cuerpo).status_code == 422
+
+
+def test_editar_inexistente_y_evitar_quitarse_rol_admin(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_admin: Usuario,
+) -> None:
+    inexistente = cliente.patch("/api/admin/usuarios/999999", headers=headers_admin, json={"nombre": "Nuevo"})
+    assert inexistente.status_code == 404
+    propia = cliente.patch(f"/api/admin/usuarios/{usuario_admin.id}", headers=headers_admin, json={"rol": "JUGADOR"})
+    assert propia.status_code == 400
+    assert propia.json()["code"] == "AUTO_CAMBIO_ROL_NO_PERMITIDO"
+    assert cliente.get("/api/admin/usuarios", headers=headers_admin).status_code == 200
+
+
+def test_registro_publico_no_permite_elegir_rol_admin(cliente: TestClient) -> None:
+    respuesta = cliente.post("/api/auth/registro", json={
+        "nombre": "Registro público", "email": "publico@futbolquiz.com",
+        "password": "secreto123", "rol": "ADMINISTRADOR",
+    })
+    assert respuesta.status_code == 201
+    assert respuesta.json()["rol"] == "JUGADOR"
+
+
+def test_password_invalida_no_aparece_en_error_ni_logs(
+    cliente: TestClient, headers_admin: dict[str, str], caplog: pytest.LogCaptureFixture,
+) -> None:
+    clave = "dato-privado" * 8
+    respuesta = cliente.post("/api/admin/usuarios", headers=headers_admin, json={
+        "nombre": "Cuenta", "email": "cuenta@futbolquiz.com", "password": clave,
+    })
+    assert respuesta.status_code == 422
+    assert clave not in respuesta.json()["detail"]
+    assert clave not in caplog.text
+
+
+@pytest.mark.parametrize("metodo", ["post", "patch"])
+def test_conflicto_email_en_persistencia_revierte_y_permite_seguir_operando(
+    cliente: TestClient, headers_admin: dict[str, str], usuario_admin: Usuario,
+    usuario_jugador: Usuario, sesion_db: Session, monkeypatch: pytest.MonkeyPatch, metodo: str,
+) -> None:
+    """Simula un correo ocupado entre la validación y el commit, usando la restricción real de BD."""
+    consulta_original = usuario_repository.obtener_por_email
+    primera_consulta = True
+
+    def consultar_email(db: Session, email: str) -> Usuario | None:
+        nonlocal primera_consulta
+        if primera_consulta:
+            primera_consulta = False
+            return None
+        return consulta_original(db, email)
+
+    email_ocupado = usuario_admin.email
+    jugador_id = usuario_jugador.id
+    cantidad_original = sesion_db.query(Usuario).count()
+    monkeypatch.setattr(usuario_repository, "obtener_por_email", consultar_email)
+    cuerpo = {"nombre": "No guardar", "email": email_ocupado, "rol": "JUGADOR"}
+    ruta = f"/api/admin/usuarios/{jugador_id}"
+    if metodo == "post":
+        ruta = "/api/admin/usuarios"
+        cuerpo["password"] = "secreto123"
+    respuesta = cliente.request(metodo, ruta, headers=headers_admin, json=cuerpo)
+    assert respuesta.status_code == 409
+    assert respuesta.json()["code"] == "EMAIL_YA_REGISTRADO"
+    assert sesion_db.query(Usuario).count() == cantidad_original
+    sesion_db.refresh(usuario_jugador)
+    assert usuario_jugador.nombre == "Lionel Messi"
+    assert usuario_jugador.email == "messi@futbolquiz.com"
+    assert cliente.get("/api/admin/usuarios", headers=headers_admin).status_code == 200

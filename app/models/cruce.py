@@ -27,6 +27,10 @@ class Cruce(Base):
         index=True,
     )
     ronda = Column(Integer, nullable=False)
+    duelo_id = Column(
+        Integer, ForeignKey("partidas_duelo.id", ondelete="RESTRICT"),
+        nullable=True, unique=True,
+    )
     jugador_a_id = Column(
         Integer,
         ForeignKey(REFERENCIA_PARTICIPANTE_TORNEO, ondelete="CASCADE"),
@@ -54,6 +58,7 @@ class Cruce(Base):
 
     # Relaciones
     torneo = relationship("Torneo", back_populates="cruces")
+    duelo = relationship("PartidaDuelo", foreign_keys=[duelo_id])
     jugador_a = relationship("ParticipanteTorneo", foreign_keys=[jugador_a_id])
     jugador_b = relationship("ParticipanteTorneo", foreign_keys=[jugador_b_id])
     ganador = relationship("ParticipanteTorneo", foreign_keys=[ganador_id])
@@ -79,5 +84,6 @@ class Cruce(Base):
             )
 
         self.ganador_id = ganador.id
+        self.ganador = ganador
         self.estado = EstadoCruce.JUGADO
 

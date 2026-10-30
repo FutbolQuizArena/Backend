@@ -1,10 +1,12 @@
 """Pruebas de emparejamiento y flujo de duelo en línea (Tarea 2.3.3)."""
 
 from sqlalchemy.orm import Session
+import pytest
 
 from app.models.categoria import Categoria
 from app.models.enumeraciones import EstadoPartida
 from app.models.pregunta import Pregunta
+from app.models.partida_duelo import PartidaDuelo
 from app.models.usuario import Usuario
 from app.services import duelo_service
 
@@ -81,6 +83,51 @@ def test_segundo_jugador_se_empareja_con_el_primero(sesion_db: Session) -> None:
     assert duelo_de_jugador2.estado == EstadoPartida.EN_CURSO
     assert duelo_de_jugador2.jugador2_id == jugador2.id
     assert len(duelo_de_jugador2.preguntas_de_jugador(2)) == 10
+
+
+def test_cuatro_jugadores_forman_dos_duelos(sesion_db: Session) -> None:
+    _crear_categoria_con_preguntas(sesion_db)
+    jugadores = [_crear_usuario(sesion_db, f"j{i}@test.com") for i in range(4)]
+    ids = [duelo_service.buscar_o_crear_duelo_online(sesion_db, j).id for j in jugadores]
+    assert ids[0] == ids[1]
+    assert ids[2] == ids[3]
+    assert ids[0] != ids[2]
+    duelos = sesion_db.query(PartidaDuelo).all()
+    assert len(duelos) == 2
+    assert all(d.estado == EstadoPartida.EN_CURSO for d in duelos)
+    assert all(len(d.preguntas_de_jugador(n)) == 10 for d in duelos for n in (1, 2))
+
+
+@pytest.mark.parametrize("con_rival", [False, True])
+def test_error_de_preguntas_revierte_todo_el_emparejamiento(sesion_db, monkeypatch, con_rival):
+    """Ni una espera nueva ni un rival quedan guardados si falla la transacción."""
+    _crear_categoria_con_preguntas(sesion_db)
+    jugador1 = _crear_usuario(sesion_db, "primero@test.com")
+    jugador2 = _crear_usuario(sesion_db, "segundo@test.com")
+    duelo_id = None
+    if con_rival:
+        duelo_id = duelo_service.buscar_o_crear_duelo_online(sesion_db, jugador1).id
+
+    agregar = duelo_service.partida_repository.agregar_preguntas_a_partida
+
+    def fallar_despues_de_insertar(*args, **kwargs):
+        agregar(*args, **kwargs)
+        raise RuntimeError("Fallo simulado luego de insertar las preguntas")
+
+    monkeypatch.setattr(duelo_service.partida_repository, "agregar_preguntas_a_partida", fallar_despues_de_insertar)
+    with pytest.raises(RuntimeError, match="Fallo simulado"):
+        duelo_service.buscar_o_crear_duelo_online(sesion_db, jugador2)
+
+    duelos = sesion_db.query(PartidaDuelo).all()
+    if con_rival:
+        assert len(duelos) == 1
+        assert duelos[0].id == duelo_id
+        assert duelos[0].estado == EstadoPartida.PENDIENTE_RIVAL
+        assert duelos[0].jugador2_id is None
+        assert len(duelos[0].preguntas_de_jugador(1)) == 10
+        assert duelos[0].preguntas_de_jugador(2) == []
+    else:
+        assert duelos == []
 
 
 def test_duelo_se_finaliza_cuando_ambos_responden_y_gana_el_de_mas_puntaje(sesion_db: Session) -> None:

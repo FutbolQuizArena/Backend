@@ -1,7 +1,7 @@
 """Esquemas Pydantic para la entidad Usuario."""
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 
 from app.models.enumeraciones import RolUsuario
 
@@ -18,6 +18,55 @@ class UsuarioCreate(UsuarioBase):
 
     password: str = Field(..., min_length=6, description="Contraseña en texto plano para procesar en el servicio")
     rol: RolUsuario = Field(default=RolUsuario.JUGADOR, description="Rol asignado al usuario")
+
+
+class UsuarioAdminCreate(UsuarioCreate):
+    """Alta administrativa con rol explícito y contraseña compatible con bcrypt."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, valor: str) -> str:
+        nombre = valor.strip()
+        if not nombre:
+            raise ValueError("El nombre no puede estar vacío")
+        return nombre
+
+    @field_validator("password")
+    @classmethod
+    def validar_longitud_password(cls, valor: str) -> str:
+        if len(valor.encode("utf-8")) > 72:
+            raise ValueError("La contraseña no puede superar los 72 bytes")
+        return valor
+
+
+class UsuarioAdminUpdate(BaseModel):
+    """Edición parcial administrativa, sin contraseña, puntaje ni estado."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nombre: str | None = Field(default=None, min_length=1, max_length=100)
+    email: EmailStr | None = Field(default=None, max_length=255)
+    rol: RolUsuario | None = None
+
+    @field_validator("nombre")
+    @classmethod
+    def validar_nombre(cls, valor: str | None) -> str | None:
+        if valor is None:
+            return None
+        nombre = valor.strip()
+        if not nombre:
+            raise ValueError("El nombre no puede estar vacío")
+        return nombre
+
+    @model_validator(mode="after")
+    def validar_campos_enviados(self) -> "UsuarioAdminUpdate":
+        if not self.model_fields_set:
+            raise ValueError("Debe enviar al menos un campo para actualizar")
+        if any(getattr(self, campo) is None for campo in self.model_fields_set):
+            raise ValueError("Los campos enviados no pueden ser nulos")
+        return self
 
 
 class UsuarioUpdate(UsuarioBase):

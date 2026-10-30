@@ -9,7 +9,10 @@ from app.core.seguridad import obtener_usuario_actual
 from app.models.enumeraciones import EstadoPartida
 from app.models.usuario import Usuario
 from app.repositories import duelo_repository
-from app.schemas.duelo_schema import DueloEstadoResponse, DueloIniciarLocalRequest, DueloJuegoResponse
+from app.schemas.duelo_schema import (
+    DueloCancelarResponse, DueloEstadoResponse, DueloIniciarLocalRequest,
+    DueloJuegoResponse, vencimiento_busqueda,
+)
 from app.schemas.partida_schema import RespuestaPartidaRequest, RespuestaPartidaResponse
 from app.services import duelo_service
 
@@ -42,6 +45,26 @@ def buscar_o_crear_duelo_online(
     duelo = duelo_service.buscar_o_crear_duelo_online(db, usuario_actual=usuario_actual)
     numero_jugador = _numero_de_jugador(duelo, usuario_actual.id)
     return DueloJuegoResponse.desde_duelo(duelo, numero_jugador)
+
+
+@duelo_router.post(
+    "/{duelo_id}/cancelar",
+    summary="Cancelar una búsqueda online sin rival",
+    description=(
+        "Cierra una búsqueda propia en PENDIENTE_RIVAL. Los reintentos son seguros. "
+        "Si el rival ya se unió, devuelve 409 BUSQUEDA_YA_EMPAREJADA."
+    ),
+    responses={403: {"description": "La búsqueda pertenece a otro jugador."},
+               404: {"description": "No se encontró el duelo."},
+               409: {"description": "Ya se encontró rival."}},
+)
+def cancelar_busqueda_online(
+    duelo_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> DueloCancelarResponse:
+    duelo = duelo_service.cancelar_busqueda_online(db, duelo_id, usuario_actual)
+    return DueloCancelarResponse(id=duelo.id, estado=duelo.estado.value)
 
 
 @duelo_router.post(
@@ -187,4 +210,5 @@ def consultar_estado_duelo(
         aciertos_jugador2=duelo.aciertos_jugador2,
         numero_ganador=duelo.numero_ganador,
         es_empate=duelo.es_empate,
+        busqueda_expira_en=vencimiento_busqueda(duelo),
     )

@@ -1,12 +1,21 @@
 """Repositorio de acceso a datos para la entidad Torneo y sus participantes."""
 
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, joinedload, object_session
 
 from app.models.cruce import Cruce
 from app.models.enumeraciones import EstadoTorneo
 from app.models.participante_torneo import ParticipanteTorneo
 from app.models.torneo import Torneo
+
+
+def bloquear_torneo(db: Session, torneo_id: int) -> Torneo | None:
+    """Serializa escrituras del torneo hasta commit/rollback, sin bloquear outer joins."""
+    torneo = (db.query(Torneo).filter(Torneo.id == torneo_id)
+              .populate_existing().with_for_update().first())
+    if torneo is not None:
+        db.expire(torneo, ["participantes", "cruces"])
+    return torneo
 
 
 def _subquery_conteo_participantes(db: Session):
@@ -228,6 +237,7 @@ def obtener_cruce_por_id(db: Session, cruce_id: int) -> Cruce | None:
             joinedload(Cruce.torneo).joinedload(Torneo.participantes),
         )
         .filter(Cruce.id == cruce_id)
+        .populate_existing()
         .first()
     )
 
@@ -242,6 +252,7 @@ def obtener_cruces_por_ronda(db: Session, torneo_id: int, ronda: int) -> list[Cr
             joinedload(Cruce.ganador).joinedload(ParticipanteTorneo.usuario),
         )
         .filter(Cruce.torneo_id == torneo_id, Cruce.ronda == ronda)
+        .populate_existing()
         .order_by(Cruce.id.asc())
         .all()
     )
@@ -262,3 +273,50 @@ def obtener_ronda_actual(db: Session, torneo_id: int) -> int:
         .scalar()
     )
     return ronda_max or 1
+
+
+def listar_participaciones_de_usuario(db: Session, usuario_id: int) -> list[ParticipanteTorneo]:
+    """Devuelve las participaciones de un usuario en torneos, con su torneo cargado, de la más
+    reciente a la más antigua según la creación del torneo (Tarea 4.1.5).
+    """
+    return (
+        db.query(ParticipanteTorneo)
+        .options(joinedload(ParticipanteTorneo.torneo))
+        .join(Torneo, ParticipanteTorneo.torneo_id == Torneo.id)
+        .filter(ParticipanteTorneo.usuario_id == usuario_id)
+        .order_by(Torneo.fecha_creacion.desc(), Torneo.id.desc())
+        .all()
+    )
+
+
+def obtener_cruces_de_participantes(db: Session, participante_ids: list[int]) -> list[Cruce]:
+    """Devuelve todos los cruces en los que intervino alguno de los participantes indicados,
+    en una sola consulta (Tarea 4.1.5).
+    """
+    if not participante_ids:
+        return []
+    return (
+        db.query(Cruce)
+        .filter(
+            or_(
+                Cruce.jugador_a_id.in_(participante_ids),
+                Cruce.jugador_b_id.in_(participante_ids),
+            )
+        )
+        .all()
+    )
+
+
+def obtener_ultima_ronda_por_torneo(db: Session, torneo_ids: list[int]) -> dict[int, int]:
+    """Devuelve, para cada torneo con cruces, el número de su ronda más alta, que es la final
+    cuando el torneo terminó (Tarea 4.1.5). Los torneos sin cruces no aparecen.
+    """
+    if not torneo_ids:
+        return {}
+    filas = (
+        db.query(Cruce.torneo_id, func.max(Cruce.ronda))
+        .filter(Cruce.torneo_id.in_(torneo_ids))
+        .group_by(Cruce.torneo_id)
+        .all()
+    )
+    return dict(filas)

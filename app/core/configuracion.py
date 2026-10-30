@@ -15,6 +15,9 @@ class Configuracion(BaseSettings):
     JWT_EXPIRATION_MIN: int = 60
     JWT_ALGORITMO: str = "HS256"
 
+    # Límite de espera sin rival; las consultas no renuevan este plazo.
+    DUELO_ESPERA_MAX_SEGUNDOS: int = Field(default=120, gt=0)
+
     # Metadatos de la aplicación
     TITULO_APP: str = "FutbolQuiz Arena API"
     VERSION_APP: str = "0.1.0"

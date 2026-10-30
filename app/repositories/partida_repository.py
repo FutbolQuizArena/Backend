@@ -2,11 +2,10 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.enumeraciones import EstadoPartida, TipoPartida
 from app.models.partida import PartidaIndividual, PreguntaPartida
-from app.models.usuario import Usuario
 
 
 def crear_partida_individual(db: Session, jugador_id: int, categoria_id: int) -> PartidaIndividual:
@@ -30,7 +29,8 @@ def obtener_partida_individual_por_id(db: Session, partida_id: int) -> PartidaIn
 
 
 def agregar_preguntas_a_partida(
-    db: Session, partida_id: int, pregunta_ids: list[int], numero_jugador: int = 1
+    db: Session, partida_id: int, pregunta_ids: list[int], numero_jugador: int = 1,
+    confirmar: bool = True,
 ) -> list[PreguntaPartida]:
     """Crea las filas PreguntaPartida asociadas a una partida, en el orden dado."""
     preguntas_partida = []
@@ -43,7 +43,10 @@ def agregar_preguntas_a_partida(
         )
         db.add(pregunta_partida)
         preguntas_partida.append(pregunta_partida)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     return preguntas_partida
 
 
@@ -73,13 +76,19 @@ def finalizar_partida_individual(
     return partida
 
 
-def sumar_puntaje_a_usuario(db: Session, usuario_id: int, puntos: int) -> Usuario | None:
-    """Suma puntos al puntaje_total acumulado del usuario."""
-    usuario = db.query(Usuario).filter(Usuario.id == usuario_id).first()
-    if usuario is None:
-        return None
-    usuario.puntaje_total = (usuario.puntaje_total or 0) + puntos
-    db.add(usuario)
-    db.commit()
-    db.refresh(usuario)
-    return usuario
+def listar_individuales_finalizadas_por_jugador(
+    db: Session, jugador_id: int
+) -> list[PartidaIndividual]:
+    """Devuelve las partidas individuales finalizadas de un jugador, de la más reciente a la
+    más antigua (Tarea 4.1.3). Las partidas en curso no forman parte del historial.
+    """
+    return (
+        db.query(PartidaIndividual)
+        .options(joinedload(PartidaIndividual.categoria))
+        .filter(
+            PartidaIndividual.jugador_id == jugador_id,
+            PartidaIndividual.estado == EstadoPartida.FINALIZADA,
+        )
+        .order_by(PartidaIndividual.fecha_fin.desc(), PartidaIndividual.id.desc())
+        .all()
+    )
