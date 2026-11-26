@@ -30,6 +30,9 @@ class PartidaDuelo(Partida):
     numero_ganador = Column(Integer, nullable=True)  # 1, 2, o None si es empate/no terminó
 
     fecha_emparejamiento = Column(DateTime(timezone=True), nullable=True)
+    ultima_presencia_jugador1 = Column(DateTime(timezone=True), nullable=True)
+    ultima_presencia_jugador2 = Column(DateTime(timezone=True), nullable=True)
+    motivo_finalizacion = Column(String(40), nullable=True)
 
     jugador1 = relationship("Usuario", foreign_keys=[jugador1_id])
     jugador2 = relationship("Usuario", foreign_keys=[jugador2_id])
@@ -67,6 +70,7 @@ class PartidaDuelo(Partida):
     def es_empate(self) -> bool:
         return (
             self.estado == EstadoPartida.FINALIZADA
+            and self.motivo_finalizacion != "SIN_CONEXION"
             and self.numero_ganador is None
             and (not self.es_duelo_online or self.jugador2_id is not None)
         )

@@ -210,5 +210,29 @@ def consultar_estado_duelo(
         aciertos_jugador2=duelo.aciertos_jugador2,
         numero_ganador=duelo.numero_ganador,
         es_empate=duelo.es_empate,
+        **duelo_service.estado_presencia(duelo),
         busqueda_expira_en=vencimiento_busqueda(duelo),
     )
+
+
+@duelo_router.post("/{duelo_id}/presencia", response_model=DueloEstadoResponse)
+def registrar_presencia_duelo(
+    duelo_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> DueloEstadoResponse:
+    """Renueva presencia del participante autenticado; devuelve el estado autoritativo."""
+    duelo_service.registrar_presencia(db, duelo_id, usuario_actual)
+    return consultar_estado_duelo(duelo_id, usuario_actual, db)
+
+
+@duelo_router.get("/{duelo_id}/juego", response_model=DueloJuegoResponse)
+def recuperar_juego_duelo(
+    duelo_id: int,
+    usuario_actual: Usuario = Depends(obtener_usuario_actual),
+    db: Session = Depends(obtener_db),
+) -> DueloJuegoResponse:
+    """Recupera exclusivamente las preguntas y respuestas propias al recargar."""
+    consultar_estado_duelo(duelo_id, usuario_actual, db)
+    duelo = duelo_repository.obtener_duelo_por_id(db, duelo_id)
+    return DueloJuegoResponse.desde_duelo(duelo, _numero_de_jugador(duelo, usuario_actual.id))

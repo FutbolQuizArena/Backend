@@ -1,5 +1,13 @@
 # Changelog
 
+## 25/11/2026 Presencia y abandono en duelos online
+
+- Se agregó presencia persistida por jugador mediante `POST /api/duelos/{id}/presencia`, con un plazo de reconexión de 60 segundos y revisión automática del servidor cada 5 segundos, independiente del cierre del navegador.
+- Se finaliza por abandono a favor del rival conectado o que ya completó sus preguntas. Quien terminó no pierde por desconectarse; si ambos vencen, el duelo queda sin ganador ni premios y el historial informa `SIN_RESULTADO`.
+- Se integró el abandono con la resolución de cruces de torneo y se permite iniciar nuevamente el cruce si ambos jugadores perdieron la conexión, evitando resultados y premios duplicados.
+- Se agregó `GET /api/duelos/{id}/juego` para recuperar preguntas pendientes, puntos y aciertos propios. La búsqueda online permite retomar un duelo libre en curso y se rechazan respuestas posteriores al cierre o al vencimiento de la presencia.
+- Se incorporó la migración Alembic `a12c91de5501`, documentación y pruebas de presencia, reconexión, historial, torneos, revisión periódica y migración reversible. Cambios en `fix/duelos-desconexion`, pendientes de commit e integración en `develop`.
+
 ## 29/10/2026 Corrección Sonar en duelos
 
 - Se centralizó el mensaje `No se encontró el duelo` en una constante para resolver la duplicación señalada por `python:S1192`, conservando las respuestas de error.

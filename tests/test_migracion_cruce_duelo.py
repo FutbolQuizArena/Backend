@@ -17,7 +17,7 @@ def test_migracion_cruce_duelo_upgrade_y_downgrade():
     config = Config(str(raiz / "alembic.ini"))
     config.set_main_option("script_location", str(raiz / "alembic"))
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_heads() == ["f23b48c091aa"]
+    assert scripts.get_heads() == ["a12c91de5501"]
     revision = scripts.get_revision("f23b48c091aa")
     assert revision.down_revision == "e11aa3222dc9"
     migracion = run_path(revision.path)
