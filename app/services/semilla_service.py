@@ -12,6 +12,7 @@ from app.models.categoria import Categoria
 from app.models.enumeraciones import EstadoCategoria, EstadoPregunta
 from app.models.pregunta import Pregunta
 from app.repositories import categoria_repository
+from app.services.disponibilidad_banco import proteger_disponibilidad
 
 
 def resolver_ruta_seed_por_defecto() -> str:
@@ -37,20 +38,16 @@ def cargar_preguntas_desde_json(ruta_archivo: Optional[str] = None) -> list[dict
     return datos
 
 
-def _obtener_o_crear_categoria_activa(db: Session, nombre: str) -> tuple[Categoria, bool]:
-    """Devuelve una categoría activa e indica si fue creada."""
+def _obtener_o_crear_categoria(db: Session, nombre: str) -> tuple[Categoria, bool]:
+    """Crea categorías nuevas activas y conserva el estado editorial de las existentes."""
     categoria = categoria_repository.obtener_categoria_por_nombre(db, nombre)
     if categoria is None:
         categoria = Categoria(nombre=nombre, estado=EstadoCategoria.ACTIVA)
         db.add(categoria)
-        db.commit()
+        db.flush()
         db.refresh(categoria)
         return categoria, True
 
-    if categoria.estado != EstadoCategoria.ACTIVA:
-        categoria.estado = EstadoCategoria.ACTIVA
-        db.commit()
-        db.refresh(categoria)
     return categoria, False
 
 
@@ -82,6 +79,7 @@ def _preparar_datos_pregunta(item: dict[str, Any]) -> dict[str, str] | None:
     }
 
 
+@proteger_disponibilidad
 def sembrar_preguntas_y_categorias(
     db: Session, lista_preguntas: list[dict[str, Any]]
 ) -> dict[str, int]:
@@ -92,7 +90,7 @@ def sembrar_preguntas_y_categorias(
     - question -> Pregunta (enunciado, opciones A-D, respuesta_correcta, dificultad, EstadoPregunta.ACTIVA)
 
     Idempotencia:
-    - Si la categoría ya existe, se asegura de que esté ACTIVA y no se duplica.
+    - Si la categoría ya existe, se conserva su estado y no se duplica.
     - Si la pregunta ya existe para esa categoría, se omite y no se duplica.
 
     Retorna un diccionario con las métricas del proceso.
@@ -119,7 +117,7 @@ def sembrar_preguntas_y_categorias(
         categoria = categorias_cache.get(clave_cat)
 
         if categoria is None:
-            categoria, fue_creada = _obtener_o_crear_categoria_activa(db, cat_nombre)
+            categoria, fue_creada = _obtener_o_crear_categoria(db, cat_nombre)
             if fue_creada:
                 categorias_creadas += 1
             else:
@@ -133,6 +131,8 @@ def sembrar_preguntas_y_categorias(
             preguntas_omitidas += 1
             continue
 
+        # Incluir las preguntas nuevas del mismo lote en la comprobación de duplicados.
+        db.flush()
         # 3. Idempotencia: Verificar si la pregunta ya existe en la categoría
         pregunta_existente = (
             db.query(Pregunta)
@@ -157,7 +157,7 @@ def sembrar_preguntas_y_categorias(
         db.add(nueva_pregunta)
         preguntas_creadas += 1
 
-    db.commit()
+    db.flush()
 
     return {
         "categorias_creadas": categorias_creadas,

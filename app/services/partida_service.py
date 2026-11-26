@@ -16,16 +16,21 @@ from app.services.puntaje_service import calcular_puntaje
 from sqlalchemy.orm import Session
 
 
-def iniciar_partida_individual(db: Session, usuario_actual: Usuario) -> PartidaIndividual:
+def iniciar_partida_individual(
+    db: Session, usuario_actual: Usuario, categoria_id: int | None = None,
+) -> PartidaIndividual:
     """
     Inicia una partida individual nueva (RF-04):
     - Elige una categoría al azar (Tarea 2.1.2).
     - Selecciona 10 preguntas de esa categoría sin repetir (Tarea 2.1.3).
     - Crea la partida y le asigna esas preguntas.
     """
-    categoria = categoria_repository.obtener_categoria_aleatoria(db)
+    categoria = (categoria_repository.obtener_categoria_aleatoria(db) if categoria_id is None
+                 else categoria_repository.obtener_categoria_jugable_por_id(db, categoria_id))
     if categoria is None:
-        raise ExcepcionValidacion(mensaje="No hay categorías disponibles para jugar")
+        mensaje = ("La categoría elegida ya no está disponible. Volvé a girar la ruleta."
+                   if categoria_id is not None else "No hay categorías disponibles para jugar")
+        raise ExcepcionValidacion(mensaje=mensaje)
 
     preguntas = pregunta_repository.obtener_preguntas_aleatorias_sin_repeticion(
         db=db, categoria_id=categoria.id, cantidad=CANTIDAD_PREGUNTAS_POR_PARTIDA

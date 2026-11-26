@@ -1,12 +1,20 @@
 # Changelog
 
+## 25/11/2026 Categorías jugables y protección de disponibilidad
+
+- La ruleta, las partidas y los duelos seleccionan únicamente categorías activas con al menos 10 preguntas activas y no eliminadas, usando el mismo criterio que los cruces de torneo. Administración conserva el listado completo del banco.
+- Se impide dejar el juego sin categorías jugables al desactivar categorías o editar, mover, desactivar y eliminar preguntas. La validación del resultado y la confirmación se realizan en una transacción con bloqueo compartido en PostgreSQL; el rechazo devuelve `409 ULTIMA_CATEGORIA_JUGABLE` y revierte todos los cambios de la operación.
+- Se permite preparar el banco inicial cuando todavía no existe ninguna categoría jugable. La siembra usa el mismo bloqueo, conserva el estado de categorías existentes y no reactiva borradores automáticamente. El borrado de categorías conserva la protección de integridad por preguntas asociadas.
+- El inicio individual acepta `categoria_id` opcional y comprueba que la categoría elegida en la ruleta siga siendo jugable. Sin ese dato se conserva la selección aleatoria entre categorías válidas.
+- Se agregaron pruebas de filtrado, carga inicial, rechazos atómicos, operaciones permitidas y concurrencia real en PostgreSQL mediante esquemas temporales aislados. No requiere una nueva migración.
+
 ## 25/11/2026 Presencia y abandono en duelos online
 
 - Se agregó presencia persistida por jugador mediante `POST /api/duelos/{id}/presencia`, con un plazo de reconexión de 60 segundos y revisión automática del servidor cada 5 segundos, independiente del cierre del navegador.
 - Se finaliza por abandono a favor del rival conectado o que ya completó sus preguntas. Quien terminó no pierde por desconectarse; si ambos vencen, el duelo queda sin ganador ni premios y el historial informa `SIN_RESULTADO`.
 - Se integró el abandono con la resolución de cruces de torneo y se permite iniciar nuevamente el cruce si ambos jugadores perdieron la conexión, evitando resultados y premios duplicados.
 - Se agregó `GET /api/duelos/{id}/juego` para recuperar preguntas pendientes, puntos y aciertos propios. La búsqueda online permite retomar un duelo libre en curso y se rechazan respuestas posteriores al cierre o al vencimiento de la presencia.
-- Se incorporó la migración Alembic `a12c91de5501`, documentación y pruebas de presencia, reconexión, historial, torneos, revisión periódica y migración reversible. Cambios en `fix/duelos-desconexion`, pendientes de commit e integración en `develop`.
+- Se incorporó la migración Alembic `a12c91de5501`, documentación y pruebas de presencia, reconexión, historial, torneos, revisión periódica y migración reversible. Integrado en `develop` mediante PR #25 (`338c0c0`).
 
 ## 29/10/2026 Corrección Sonar en duelos
 

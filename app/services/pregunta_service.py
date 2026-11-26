@@ -8,6 +8,7 @@ from app.core.excepciones import ExcepcionRecursoNoEncontrado
 from app.models.enumeraciones import EstadoPregunta
 from app.models.pregunta import Pregunta
 from app.repositories import categoria_repository, pregunta_repository
+from app.services.disponibilidad_banco import proteger_disponibilidad
 from app.schemas.pregunta_schema import (
     PreguntaAdminResponse,
     PreguntaCreate,
@@ -16,6 +17,7 @@ from app.schemas.pregunta_schema import (
 )
 
 
+@proteger_disponibilidad
 def crear_pregunta(db: Session, datos: PreguntaCreate) -> Pregunta:
     """Crea una nueva pregunta validando previamente la existencia de la categoría."""
     categoria = categoria_repository.obtener_categoria_por_id(db, datos.categoria_id)
@@ -38,7 +40,7 @@ def crear_pregunta(db: Session, datos: PreguntaCreate) -> Pregunta:
         eliminada_en=None,
     )
     nueva_pregunta.categoria = categoria
-    return pregunta_repository.crear(db, nueva_pregunta)
+    return pregunta_repository.crear(db, nueva_pregunta, confirmar=False)
 
 
 def obtener_pregunta(db: Session, pregunta_id: int) -> Pregunta:
@@ -55,6 +57,7 @@ def obtener_pregunta(db: Session, pregunta_id: int) -> Pregunta:
     return pregunta
 
 
+@proteger_disponibilidad
 def actualizar_pregunta(db: Session, pregunta_id: int, datos: PreguntaUpdate) -> Pregunta:
     """Actualiza los campos provistos de una pregunta existente."""
     pregunta = obtener_pregunta(db, pregunta_id)
@@ -86,34 +89,37 @@ def actualizar_pregunta(db: Session, pregunta_id: int, datos: PreguntaUpdate) ->
     if datos.estado is not None:
         pregunta.estado = datos.estado
 
-    return pregunta_repository.actualizar(db, pregunta)
+    return pregunta_repository.actualizar(db, pregunta, confirmar=False)
 
 
+@proteger_disponibilidad
 def cambiar_estado_pregunta(
     db: Session, pregunta_id: int, nuevo_estado: EstadoPregunta
 ) -> Pregunta:
     """Modifica el estado de una pregunta (toggle rápido ACTIVA <-> BORRADOR)."""
     pregunta = obtener_pregunta(db, pregunta_id)
     pregunta.estado = nuevo_estado
-    return pregunta_repository.actualizar(db, pregunta)
+    return pregunta_repository.actualizar(db, pregunta, confirmar=False)
 
 
+@proteger_disponibilidad
 def eliminar_pregunta(db: Session, pregunta_id: int) -> None:
     """
     Aplica soft-delete a la pregunta. Conserva la fila en la base de datos
     para asegurar la integridad referencial con partidas históricas que la hayan usado.
     """
     pregunta = obtener_pregunta(db, pregunta_id)
-    pregunta_repository.marcar_eliminada(db, pregunta)
+    pregunta_repository.marcar_eliminada(db, pregunta, confirmar=False)
 
 
+@proteger_disponibilidad
 def duplicar_pregunta(db: Session, pregunta_id: int) -> Pregunta:
     """
     Clona una pregunta existente.
     Por seguridad editorial, la copia resultante se inicializa en estado BORRADOR.
     """
     pregunta = obtener_pregunta(db, pregunta_id)
-    copia = pregunta_repository.duplicar(db, pregunta, estado_duplicada=EstadoPregunta.BORRADOR)
+    copia = pregunta_repository.duplicar(db, pregunta, estado_duplicada=EstadoPregunta.BORRADOR, confirmar=False)
     copia.categoria = pregunta.categoria
     return copia
 

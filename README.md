@@ -102,7 +102,15 @@ El controlador `app/routes/usuario_router.py` gestiona la consulta y modificaci�
 
 ## Categorías y ruleta — actividad 2.1
 
-El controlador `app/routes/categoria_router.py` expone `GET /api/categorias` (y su alias `GET /api/partidas/categorias`), el cual entrega la lista de categorías en estado `ACTIVA` (Mundiales, Champions League, Copa Libertadores, Copa América, Clubes, etc.).
+El controlador `app/routes/categoria_router.py` expone `GET /api/categorias` (y su alias `GET /api/partidas/categorias`), el cual entrega únicamente categorías en estado `ACTIVA` con al menos 10 preguntas `ACTIVA` y no eliminadas. Este criterio se comparte con la selección aleatoria de partidas y duelos y con los cruces de torneo. El listado administrativo conserva las categorías vacías o en borrador para poder completar la carga.
+
+`POST /api/partidas/individual` acepta el cuerpo opcional `{"categoria_id": 1}` para jugar la categoría elegida en la ruleta; se verifica de nuevo que sea jugable antes de crear la partida. Sin cuerpo o sin ID se elige una categoría jugable al azar. Si todavía no hay ninguna, los listados públicos devuelven `[]` y no se crea una partida incompleta.
+
+Las modificaciones administrativas del banco se serializan mediante un bloqueo transaccional compartido de PostgreSQL. Si antes de la operación existía una categoría jugable, debe seguir existiendo al menos una después. El rechazo devuelve `409` con código `ULTIMA_CATEGORIA_JUGABLE` y revierte la operación completa, incluidos cambios de nombre, estado o categoría de una pregunta. Se cubren las altas, las ediciones, los cambios de estado, las bajas de preguntas y categorías y la siembra por lotes. No hay endpoints de baja masiva adicionales. La carga inicial sigue permitida si el banco aún no era jugable.
+
+El borrado físico de una categoría con preguntas asociadas sigue restringido por integridad; para retirarla del juego se cambia a `BORRADOR`, siempre que quede otra jugable. La siembra conserva el estado de categorías existentes y no reactiva borradores para satisfacer esta regla. Esta corrección no requiere una nueva migración. Al desplegar, reiniciar todos los workers para que las operaciones administrativas compartan el bloqueo.
+
+Las pruebas `tests/test_categorias_jugables_concurrencia.py` usan `TEST_POSTGRES_URL` y crean y eliminan un esquema `test_banco_<uuid>` por caso. No acceden a las tablas de la aplicación. El `search_path` se fija dentro de cada transacción para soportar poolers en modo transacción.
 
 Este catálogo alimenta la ruleta visual de selección de categorías y el selector de modos de juego en el frontend. Cada pregunta del banco está asociada a una categoría activa y almacena 4 opciones, nivel de dificultad y respuesta correcta. El servicio `obtener_preguntas_aleatorias_sin_repeticion()` garantiza que al iniciar cualquier partida se seleccionen 10 preguntas al azar sin repeticiones, verificando previamente que la categoría cuente con stock suficiente.
 

@@ -9,6 +9,7 @@ from app.models.usuario import Usuario
 from app.schemas.categoria_schema import CategoriaResponse
 from app.schemas.partida_schema import (
     PartidaIndividualResponse,
+    PartidaIniciarRequest,
     ResultadoPartidaResponse,
     RespuestaPartidaRequest,
     RespuestaPartidaResponse,
@@ -22,7 +23,7 @@ partida_router = APIRouter(prefix="/api/partidas", tags=["Partidas"])
     "/categorias",
     status_code=status.HTTP_200_OK,
     summary="Listar categorías disponibles para partidas",
-    description="Devuelve las categorías activas para la ruleta y las partidas.",
+    description="Devuelve categorías activas con al menos 10 preguntas activas no eliminadas.",
 )
 def listar_categorias_partidas(
     db: Session = Depends(obtener_db),
@@ -36,17 +37,21 @@ def listar_categorias_partidas(
     status_code=status.HTTP_201_CREATED,
     summary="Iniciar una partida individual",
     description=(
-        "Inicia una nueva partida individual para el usuario autenticado: elige una "
-        "categoría al azar y le asigna 10 preguntas sin repetir. "
+        "Inicia una nueva partida individual para el usuario autenticado: usa la "
+        "categoría elegida en la ruleta o una jugable al azar si se omite, "
+        "y le asigna 10 preguntas sin repetir. "
         "Requiere token JWT Bearer en el encabezado Authorization."
     ),
 )
 def iniciar_partida_individual(
     usuario_actual: Usuario = Depends(obtener_usuario_actual),
     db: Session = Depends(obtener_db),
+    datos: PartidaIniciarRequest | None = None,
 ) -> PartidaIndividualResponse:
     """Endpoint para iniciar una partida individual, delegando la lógica al servicio."""
-    partida = partida_service.iniciar_partida_individual(db, usuario_actual=usuario_actual)
+    partida = partida_service.iniciar_partida_individual(
+        db, usuario_actual=usuario_actual, categoria_id=datos.categoria_id if datos else None,
+    )
     return PartidaIndividualResponse.desde_partida(partida)
 
 
