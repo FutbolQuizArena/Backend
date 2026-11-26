@@ -14,6 +14,7 @@ class ResultadoDuelo(str, enum.Enum):
     VICTORIA = "VICTORIA"
     DERROTA = "DERROTA"
     EMPATE = "EMPATE"
+    SIN_RESULTADO = "SIN_RESULTADO"
 
 
 class HistorialPartidaIndividualItem(BaseModel):
@@ -39,6 +40,7 @@ class HistorialDueloItem(BaseModel):
     puntaje_propio: int = Field(ge=0)
     puntaje_rival: int = Field(ge=0)
     resultado: ResultadoDuelo
+    motivo_finalizacion: str | None = None
     fecha_fin: datetime | None = None
 
 

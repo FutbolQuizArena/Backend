@@ -46,6 +46,11 @@ class DueloEstadoResponse(BaseModel):
     aciertos_jugador2: int = 0
     numero_ganador: int | None
     es_empate: bool
+    motivo_finalizacion: str | None = None
+    jugador1_completo: bool = False
+    jugador2_completo: bool = False
+    jugador1_ausente: bool = False
+    jugador2_ausente: bool = False
     busqueda_expira_en: datetime | None = None
 
 
@@ -70,6 +75,8 @@ class DueloJuegoResponse(BaseModel):
     jugador1_nombre: str | None = None
     jugador2_nombre: str | None = None
     preguntas: list[PreguntaJuegoResponse]
+    puntaje_propio: int = 0
+    aciertos_propios: int = 0
     busqueda_expira_en: datetime | None = None
 
     @classmethod
@@ -106,5 +113,7 @@ class DueloJuegoResponse(BaseModel):
             jugador1_nombre=duelo.jugador1_nombre,
             jugador2_nombre=duelo.jugador2_nombre,
             preguntas=preguntas_juego,
+            puntaje_propio=sum(p.puntaje_obtenido for p in duelo.preguntas_de_jugador(numero_jugador)),
+            aciertos_propios=sum(1 for p in duelo.preguntas_de_jugador(numero_jugador) if p.es_correcta),
             busqueda_expira_en=vencimiento_busqueda(duelo),
         )

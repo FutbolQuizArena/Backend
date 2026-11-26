@@ -81,8 +81,8 @@ def test_ranking_response_rechaza_paginacion_invalida(pagina: int, tamano_pagina
         RankingResponse(jugadores=[], total_jugadores=0, pagina=pagina, tamano_pagina=tamano_pagina)
 
 
-def test_resultado_duelo_tiene_los_tres_valores_en_mayusculas() -> None:
-    assert {r.value for r in ResultadoDuelo} == {"VICTORIA", "DERROTA", "EMPATE"}
+def test_resultado_duelo_incluye_cierre_sin_ganador() -> None:
+    assert {r.value for r in ResultadoDuelo} == {"VICTORIA", "DERROTA", "EMPATE", "SIN_RESULTADO"}
 
 
 def test_historial_duelo_acepta_resultado_como_texto() -> None:

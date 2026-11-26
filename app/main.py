@@ -6,6 +6,7 @@ from fastapi.openapi.utils import get_openapi
 
 from app.core.configuracion import CONFIGURACION
 from app.core.excepciones import registrar_manejadores_excepcion
+from app.services.presencia_duelos import ciclo_presencia
 from app.routes import (
     admin_router,
     autenticacion_router,
@@ -75,6 +76,7 @@ def configurar_openapi(aplicacion: FastAPI) -> None:
 def crear_aplicacion() -> FastAPI:
     """Crea y configura la instancia de FastAPI."""
     aplicacion = FastAPI(
+        lifespan=ciclo_presencia,
         title=CONFIGURACION.TITULO_APP,
         version=CONFIGURACION.VERSION_APP,
         description=CONFIGURACION.DESCRIPCION_APP,

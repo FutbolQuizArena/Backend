@@ -225,6 +225,41 @@ El modelo de datos y las relaciones ORM implementan fielmente el Diagrama de Cla
 
 ## Verificación
 
+### Presencia en duelos online
+
+Antes de iniciar esta versión del servidor, aplicar la migración pendiente:
+
+```powershell
+.venv\Scripts\python.exe -m alembic upgrade head
+```
+
+El Frontend envía `POST /api/duelos/{id}/presencia` cada 5 segundos, con su JWT.
+El servidor persiste la última presencia por jugador y devuelve el estado del duelo,
+`jugador1_ausente`, `jugador2_ausente`, los indicadores de preguntas completas y
+`motivo_finalizacion`. La ausencia se avisa a partir de 15 segundos; el abandono
+vence a los 60 segundos desde la última señal (o desde el emparejamiento si aún
+no llegó ninguna). Los clics y respuestas no reemplazan las señales de presencia.
+
+El ciclo de vida de FastAPI revisa duelos cada 5 segundos sin depender de clientes:
+con el servidor activo, el cierre se registra en la siguiente revisión del plazo.
+También se comprueba al consultar, enviar presencia o intentar responder. Mantener
+habilitado el lifespan de ASGI. No requiere cron ni avisos de cierre del navegador.
+
+Quien completó sus preguntas no abandona por irse. Si un jugador pendiente vence,
+gana el rival conectado o que ya terminó. Si el rival también lleva 15 segundos
+sin señales y tiene preguntas pendientes, se espera su reconexión o su vencimiento.
+Si ambos vencen, se cierra `SIN_CONEXION`, sin ganador ni premios; el historial
+lo identifica como `SIN_RESULTADO`. En torneos ese cruce queda pendiente y puede
+iniciarse de nuevo. Un abandono individual usa `ABANDONO` y resuelve el cruce con
+su ganador, dentro de la misma transacción y sin duplicar puntos.
+
+`GET /api/duelos/{id}/juego` recupera solo las preguntas propias con
+`esta_respondida`. Volver a buscar duelo online recupera un duelo propio en curso.
+La migración otorga un minuto inicial de gracia a los duelos online existentes.
+
+Los tests usan SQLite; la prueba de concurrencia PostgreSQL requiere
+`TEST_POSTGRES_URL` apuntando a una base exclusiva de pruebas.
+
 ```powershell
 # Ejecutar la suite completa de pruebas unitarias y de integración
 .venv\Scripts\pytest.exe -v

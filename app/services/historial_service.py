@@ -43,6 +43,8 @@ def obtener_historial_partidas_individuales(
 
 def _resultado_para_jugador(duelo: PartidaDuelo, numero_jugador: int) -> ResultadoDuelo:
     """Resultado del duelo visto desde el jugador indicado (1 o 2)."""
+    if duelo.motivo_finalizacion == "SIN_CONEXION":
+        return ResultadoDuelo.SIN_RESULTADO
     if duelo.numero_ganador is None:
         return ResultadoDuelo.EMPATE
     if duelo.numero_ganador == numero_jugador:
@@ -62,6 +64,7 @@ def _armar_item_duelo(duelo: PartidaDuelo, usuario_id: int) -> HistorialDueloIte
         puntaje_propio=duelo.puntaje_jugador1 if es_jugador1 else duelo.puntaje_jugador2,
         puntaje_rival=duelo.puntaje_jugador2 if es_jugador1 else duelo.puntaje_jugador1,
         resultado=_resultado_para_jugador(duelo, numero_jugador),
+        motivo_finalizacion=duelo.motivo_finalizacion,
         fecha_fin=duelo.fecha_fin or duelo.fecha_inicio,
     )
 
