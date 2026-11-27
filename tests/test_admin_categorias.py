@@ -429,6 +429,14 @@ def test_modulo2_regresion_categoria_aleatoria_solo_retorna_activas(sesion_db: S
     sesion_db.add_all([cat_borrador, cat_activa])
     sesion_db.commit()
 
+    for categoria in (cat_borrador, cat_activa):
+        sesion_db.add_all([
+            Pregunta(categoria_id=categoria.id, enunciado=f"Pregunta {categoria.id} {n}",
+                     opcion_a="A", opcion_b="B", opcion_c="C", opcion_d="D", respuesta_correcta="A")
+            for n in range(10)
+        ])
+    sesion_db.commit()
+
     for _ in range(10):
         seleccionada = categoria_repository.obtener_categoria_aleatoria(sesion_db)
         assert seleccionada is not None

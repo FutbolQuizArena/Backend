@@ -45,7 +45,7 @@ def test_siembra_normaliza_datos_y_es_idempotente(sesion_db: Session) -> None:
 
 
 @pytest.mark.parametrize("estado", [EstadoCategoria.ACTIVA, EstadoCategoria.BORRADOR])
-def test_siembra_reutiliza_y_activa_categoria(sesion_db: Session, estado: EstadoCategoria) -> None:
+def test_siembra_reutiliza_y_conserva_estado_categoria(sesion_db: Session, estado: EstadoCategoria) -> None:
     categoria = Categoria(nombre="Mundiales", estado=estado)
     sesion_db.add(categoria)
     sesion_db.commit()
@@ -53,7 +53,7 @@ def test_siembra_reutiliza_y_activa_categoria(sesion_db: Session, estado: Estado
         datos_pregunta(difficulty="Fácil"),
         datos_pregunta(category="mundiales", question="Otra pregunta", difficulty="Difícil"),
     ])
-    assert categoria.estado == EstadoCategoria.ACTIVA
+    assert categoria.estado == estado
     assert resultado["categorias_existentes"] == 1
     assert resultado["categorias_creadas"] == 0
     assert resultado["preguntas_creadas"] == 2

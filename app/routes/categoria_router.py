@@ -16,7 +16,7 @@ categoria_router = APIRouter(prefix="/api/categorias", tags=["Categorías"])
     "",
     status_code=status.HTTP_200_OK,
     summary="Listar categorías activas para el juego",
-    description="Devuelve el listado de categorías activas disponibles para la ruleta y las partidas.",
+    description="Devuelve categorías activas con al menos 10 preguntas activas no eliminadas.",
     responses={
         status.HTTP_200_OK: {
             "description": "Listado de categorías activas obtenido exitosamente.",
@@ -27,5 +27,5 @@ categoria_router = APIRouter(prefix="/api/categorias", tags=["Categorías"])
 def listar_categorias_activas(
     db: Annotated[Session, Depends(obtener_db)],
 ) -> list[CategoriaResponse]:
-    """Devuelve todas las categorías activas en el sistema."""
+    """Devuelve solo categorías que permiten completar una partida."""
     return categoria_service.listar_categorias_activas(db)

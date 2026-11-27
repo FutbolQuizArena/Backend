@@ -43,10 +43,13 @@ def obtener_preguntas_aleatorias_sin_repeticion(
     return random.SystemRandom().sample(preguntas, cantidad)
 
 
-def crear(db: Session, pregunta: Pregunta) -> Pregunta:
+def crear(db: Session, pregunta: Pregunta, confirmar: bool = True) -> Pregunta:
     """Persiste una nueva pregunta en la base de datos."""
     db.add(pregunta)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(pregunta)
     return pregunta
 
@@ -65,23 +68,29 @@ def obtener_por_id(
     )
     if not incluir_eliminadas:
         query = query.filter(Pregunta.eliminada_en.is_(None))
-    return query.first()
+    return query.populate_existing().first()
 
 
-def actualizar(db: Session, pregunta: Pregunta) -> Pregunta:
+def actualizar(db: Session, pregunta: Pregunta, confirmar: bool = True) -> Pregunta:
     """Actualiza y refresca los cambios de una pregunta."""
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(pregunta)
     return pregunta
 
 
-def marcar_eliminada(db: Session, pregunta: Pregunta) -> Pregunta:
+def marcar_eliminada(db: Session, pregunta: Pregunta, confirmar: bool = True) -> Pregunta:
     """
     Aplica soft-delete registrando la fecha/hora actual en eliminada_en.
     Conserva la fila física para asegurar integridad referencial en partidas pasadas.
     """
     pregunta.eliminada_en = datetime.now(timezone.utc)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(pregunta)
     return pregunta
 
@@ -90,6 +99,7 @@ def duplicar(
     db: Session,
     pregunta: Pregunta,
     estado_duplicada: EstadoPregunta = EstadoPregunta.BORRADOR,
+    confirmar: bool = True,
 ) -> Pregunta:
     """
     Clona una pregunta existente. Por diseño de seguridad editorial,
@@ -108,7 +118,10 @@ def duplicar(
         eliminada_en=None,
     )
     db.add(copia)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(copia)
     return copia
 
@@ -146,4 +159,4 @@ def listar_paginado(
         .limit(page_size)
         .all()
     )
-    return items, total
+    return items, total

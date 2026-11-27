@@ -20,6 +20,12 @@ class PreguntaJuegoResponse(BaseModel):
     esta_respondida: bool = False
 
 
+class PartidaIniciarRequest(BaseModel):
+    """Categoría de la ruleta; omitirla conserva la selección aleatoria."""
+
+    categoria_id: int | None = Field(default=None, gt=0)
+
+
 class PartidaIndividualResponse(BaseModel):
     """Respuesta al iniciar una partida individual: la partida y sus 10 preguntas."""
 

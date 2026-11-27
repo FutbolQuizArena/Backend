@@ -6,10 +6,12 @@ from sqlalchemy.orm import Session
 from app.core.excepciones import (
     CategoriaConPreguntasError,
     CategoriaYaExisteError,
+    ExcepcionBase,
     ExcepcionRecursoNoEncontrado,
 )
 from app.models.enumeraciones import EstadoCategoria
 from app.repositories import categoria_repository
+from app.services.disponibilidad_banco import MENSAJE_ULTIMA_CATEGORIA, proteger_disponibilidad
 from app.schemas.categoria_schema import (
     CategoriaAdminResponse,
     CategoriaCreate,
@@ -19,7 +21,7 @@ from app.schemas.categoria_schema import (
 
 
 def listar_categorias_activas(db: Session) -> list[CategoriaResponse]:
-    """Devuelve la lista de categorías activas para el juego y la ruleta."""
+    """Devuelve categorías activas con suficientes preguntas jugables para la ruleta."""
     categorias = categoria_repository.listar_categorias_activas(db)
     return [
         CategoriaResponse(
@@ -31,6 +33,7 @@ def listar_categorias_activas(db: Session) -> list[CategoriaResponse]:
     ]
 
 
+@proteger_disponibilidad
 def crear_categoria(db: Session, datos: CategoriaCreate) -> CategoriaAdminResponse:
     """Crea una nueva categoría validando que su nombre no exista previamente."""
     nombre_limpio = datos.nombre.strip()
@@ -41,7 +44,7 @@ def crear_categoria(db: Session, datos: CategoriaCreate) -> CategoriaAdminRespon
         )
 
     estado = datos.estado or EstadoCategoria.ACTIVA
-    categoria = categoria_repository.crear_categoria(db, nombre=nombre_limpio, estado=estado)
+    categoria = categoria_repository.crear_categoria(db, nombre=nombre_limpio, estado=estado, confirmar=False)
     return CategoriaAdminResponse(
         id=categoria.id,
         nombre=categoria.nombre,
@@ -85,6 +88,7 @@ def listar_categorias_admin(
     ]
 
 
+@proteger_disponibilidad
 def actualizar_categoria(
     db: Session,
     categoria_id: int,
@@ -110,6 +114,7 @@ def actualizar_categoria(
         categoria=categoria,
         nombre=nuevo_nombre,
         estado=datos.estado,
+        confirmar=False,
     )
     preguntas_count = categoria_repository.contar_preguntas_asociadas(db, categoria_actualizada.id)
 
@@ -121,6 +126,7 @@ def actualizar_categoria(
     )
 
 
+@proteger_disponibilidad
 def cambiar_estado_categoria(
     db: Session,
     categoria_id: int,
@@ -137,6 +143,7 @@ def cambiar_estado_categoria(
         db=db,
         categoria=categoria,
         estado=nuevo_estado,
+        confirmar=False,
     )
     preguntas_count = categoria_repository.contar_preguntas_asociadas(db, categoria_actualizada.id)
 
@@ -148,6 +155,7 @@ def cambiar_estado_categoria(
     )
 
 
+@proteger_disponibilidad
 def eliminar_categoria(db: Session, categoria_id: int) -> None:
     """Elimina físicamente una categoría si no posee preguntas asociadas."""
     categoria = categoria_repository.obtener_categoria_por_id(db, categoria_id)
@@ -156,9 +164,13 @@ def eliminar_categoria(db: Session, categoria_id: int) -> None:
             mensaje=f"La categoría con ID {categoria_id} no fue encontrada"
         )
 
+    jugables = categoria_repository.listar_categorias_activas(db)
+    if len(jugables) == 1 and jugables[0].id == categoria_id:
+        raise ExcepcionBase(codigo="ULTIMA_CATEGORIA_JUGABLE",
+                            mensaje=MENSAJE_ULTIMA_CATEGORIA, codigo_estado=409)
     if categoria_repository.tiene_preguntas_asociadas(db, categoria_id):
         raise CategoriaConPreguntasError(
             mensaje="No se puede eliminar la categoría porque contiene preguntas asociadas"
         )
 
-    categoria_repository.eliminar_categoria(db, categoria)
+    categoria_repository.eliminar_categoria(db, categoria, confirmar=False)

@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.models.categoria import Categoria
 from app.models.enumeraciones import EstadoCategoria, EstadoPregunta
 from app.models.pregunta import Pregunta
+from app.services.configuracion_partida import CANTIDAD_PREGUNTAS_POR_PARTIDA
 
 
 def listar_categorias(db: Session) -> list[Categoria]:
@@ -17,18 +18,31 @@ def listar_categorias(db: Session) -> list[Categoria]:
 
 
 def listar_categorias_activas(db: Session) -> list[Categoria]:
-    """Devuelve las categorías disponibles en estado ACTIVA ordenadas por ID."""
+    """Lista pública: solo categorías que permiten completar una partida."""
+    return consulta_categorias_jugables(db).order_by(Categoria.id.asc()).all()
+
+
+def consulta_categorias_jugables(db: Session, cantidad: int = CANTIDAD_PREGUNTAS_POR_PARTIDA):
+    """Criterio compartido por ruleta, partidas, duelos y protección del banco."""
     return (
-        db.query(Categoria)
-        .filter(Categoria.estado == EstadoCategoria.ACTIVA)
-        .order_by(Categoria.id.asc())
-        .all()
+        db.query(Categoria).join(Pregunta, Pregunta.categoria_id == Categoria.id)
+        .filter(Categoria.estado == EstadoCategoria.ACTIVA,
+                Pregunta.estado == EstadoPregunta.ACTIVA, Pregunta.eliminada_en.is_(None))
+        .group_by(Categoria.id).having(func.count(Pregunta.id) >= cantidad)
     )
+
+
+def hay_categoria_jugable(db: Session) -> bool:
+    return db.query(consulta_categorias_jugables(db).exists()).scalar()
+
+
+def obtener_categoria_jugable_por_id(db: Session, categoria_id: int) -> Categoria | None:
+    return consulta_categorias_jugables(db).filter(Categoria.id == categoria_id).first()
 
 
 def obtener_categoria_por_id(db: Session, categoria_id: int) -> Categoria | None:
     """Busca una categoría por su ID."""
-    return db.query(Categoria).filter(Categoria.id == categoria_id).first()
+    return db.query(Categoria).filter(Categoria.id == categoria_id).populate_existing().first()
 
 
 def obtener_categoria_por_nombre(db: Session, nombre: str) -> Categoria | None:
@@ -41,29 +55,13 @@ def obtener_categoria_por_nombre(db: Session, nombre: str) -> Categoria | None:
 
 
 def obtener_categoria_aleatoria(db: Session) -> Categoria | None:
-    """Selecciona una categoría al azar entre todas las disponibles en estado ACTIVA.
-    
-    Ajuste de compatibilidad para Módulo 2 (partidas y duelos):
-    Garantiza que una partida jamás seleccione una categoría en BORRADOR.
-    """
-    categorias = (
-        db.query(Categoria)
-        .filter(Categoria.estado == EstadoCategoria.ACTIVA)
-        .all()
-    )
-    if not categorias:
-        return None
-    return secrets.choice(categorias)
+    """Selecciona únicamente categorías con el mínimo de preguntas jugables."""
+    return obtener_categoria_jugable(db, CANTIDAD_PREGUNTAS_POR_PARTIDA)
 
 
 def obtener_categoria_jugable(db: Session, cantidad: int) -> Categoria | None:
     """Elige solo categorías activas con suficientes preguntas activas sin eliminar."""
-    categorias = (
-        db.query(Categoria).join(Pregunta, Pregunta.categoria_id == Categoria.id)
-        .filter(Categoria.estado == EstadoCategoria.ACTIVA,
-                Pregunta.estado == EstadoPregunta.ACTIVA, Pregunta.eliminada_en.is_(None))
-        .group_by(Categoria.id).having(func.count(Pregunta.id) >= cantidad).all()
-    )
+    categorias = consulta_categorias_jugables(db, cantidad).all()
     return secrets.choice(categorias) if categorias else None
 
 
@@ -71,11 +69,15 @@ def crear_categoria(
     db: Session,
     nombre: str,
     estado: EstadoCategoria = EstadoCategoria.ACTIVA,
+    confirmar: bool = True,
 ) -> Categoria:
     """Crea y persiste una nueva categoría en la base de datos."""
     categoria = Categoria(nombre=nombre.strip(), estado=estado)
     db.add(categoria)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(categoria)
     return categoria
 
@@ -140,18 +142,25 @@ def actualizar_categoria(
     categoria: Categoria,
     nombre: Optional[str] = None,
     estado: Optional[EstadoCategoria] = None,
+    confirmar: bool = True,
 ) -> Categoria:
     """Actualiza los campos de una categoría existente."""
     if nombre is not None:
         categoria.nombre = nombre.strip()
     if estado is not None:
         categoria.estado = estado
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
     db.refresh(categoria)
     return categoria
 
 
-def eliminar_categoria(db: Session, categoria: Categoria) -> None:
+def eliminar_categoria(db: Session, categoria: Categoria, confirmar: bool = True) -> None:
     """Elimina físicamente una categoría de la base de datos."""
     db.delete(categoria)
-    db.commit()
+    if confirmar:
+        db.commit()
+    else:
+        db.flush()
